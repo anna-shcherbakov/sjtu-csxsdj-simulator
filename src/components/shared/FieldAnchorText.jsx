@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import clsx from 'clsx'
 import useFormStore from '../../store/useFormStore'
 
@@ -7,7 +8,7 @@ const isValueEmpty = (value) =>
   (typeof value === 'string' ? value.trim() === '' : value === '')
 
 function FieldAnchorText({ fieldId, value, className }) {
-  const selectedFieldId = useFormStore((state) => state.selectedFieldId)
+  const isSelected = useFormStore((state) => state.selectedFieldId === fieldId)
   const setSelectedFieldId = useFormStore((state) => state.setSelectedFieldId)
   const empty = isValueEmpty(value)
   const displayValue = empty ? '\u00A0' : String(value)
@@ -29,7 +30,7 @@ function FieldAnchorText({ fieldId, value, className }) {
       aria-label={`定位字段 ${fieldId}`}
       className={clsx('field-anchor-text', className, {
         'field-anchor-text--empty': empty,
-        'field-anchor-text--selected': selectedFieldId === fieldId,
+        'field-anchor-text--selected': isSelected,
       })}
       data-field-id={fieldId}
       onClick={handleSelect}
@@ -43,4 +44,4 @@ function FieldAnchorText({ fieldId, value, className }) {
   )
 }
 
-export default FieldAnchorText
+export default memo(FieldAnchorText)

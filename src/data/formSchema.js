@@ -22,7 +22,7 @@ export const formSchema = {
             {
                 id: "basic.当前发展状态",
                 label: "当前发展状态",
-                fieldType: "select",
+                fieldType: "radio",
                 defaultValue: "",
                 placeholder: "请输入当前发展状态",
                 description: "",

@@ -1,5 +1,6 @@
-import { useDeferredValue, useEffect, useState } from 'react'
+import { memo, useDeferredValue, useEffect, useRef, useState } from 'react'
 import { Collapse, Empty, Form, Input, Tag, Typography } from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
 import FormFieldRenderer from './FormFieldRenderer'
 import { findFormFieldById, flattenFormFields } from '../../data/formSchema'
 import useFormStore from '../../store/useFormStore'
@@ -29,6 +30,9 @@ function SchemaForm() {
   const selectedFieldId = useFormStore((state) => state.selectedFieldId)
   const [searchText, setSearchText] = useState('')
   const deferredSearchText = useDeferredValue(searchText)
+  const previousSelectedFieldIdRef = useRef(selectedFieldId)
+  const pendingScrollFieldIdRef = useRef(null)
+
   const allFields = flattenFormFields(formSchema)
   const allGroupKeys = Object.keys(formSchema.fields)
   const normalizedSearchText = deferredSearchText.trim().toLowerCase()
@@ -50,20 +54,38 @@ function SchemaForm() {
   const groupedFields = buildVisibleGroups(formSchema, visibleFields)
   const [openKeys, setOpenKeys] = useState(() => allGroupKeys)
 
-  let activeKeys = openKeys.filter((key) =>
+  const activeKeys = openKeys.filter((key) =>
     groupedFields.some((group) => group.key === key),
   )
 
-  if (selectedField && !activeKeys.includes(selectedField.groupLabel)) {
-    activeKeys = [...activeKeys, selectedField.groupLabel]
-  }
+  useEffect(() => {
+    if (!selectedField || previousSelectedFieldIdRef.current === selectedFieldId) {
+      previousSelectedFieldIdRef.current = selectedFieldId
+      return
+    }
+
+    previousSelectedFieldIdRef.current = selectedFieldId
+    pendingScrollFieldIdRef.current = selectedField.id
+
+    const frameId = window.requestAnimationFrame(() => {
+      setOpenKeys((currentKeys) =>
+        currentKeys.includes(selectedField.groupLabel)
+          ? currentKeys
+          : [...currentKeys, selectedField.groupLabel],
+      )
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [selectedField, selectedFieldId])
 
   useEffect(() => {
-    if (!selectedField) {
+    if (!selectedField || pendingScrollFieldIdRef.current !== selectedField.id) {
       return undefined
     }
 
-    const timer = window.setTimeout(() => {
+    const frameId = window.requestAnimationFrame(() => {
       const fieldElement = document.getElementById(
         `schema-field-${selectedField.id}`,
       )
@@ -72,12 +94,14 @@ function SchemaForm() {
         behavior: 'smooth',
         block: 'center',
       })
-    }, 120)
+
+      pendingScrollFieldIdRef.current = null
+    })
 
     return () => {
-      window.clearTimeout(timer)
+      window.cancelAnimationFrame(frameId)
     }
-  }, [selectedField])
+  }, [activeKeys, selectedField])
 
   const handleSearchChange = (value) => {
     setSearchText(value)
@@ -103,42 +127,22 @@ function SchemaForm() {
   return (
     <div className="schema-form">
       <div className="schema-form__header">
-        <div>
-          <Typography.Title className="schema-form__title" level={4}>
-            字段配置
-          </Typography.Title>
-          <Typography.Text className="schema-form__subtitle" type="secondary">
-            左侧表单由全局 schema 驱动，当前模板切换不会影响表单字段。
-          </Typography.Text>
-        </div>
+        <Typography.Title className="schema-form__title" level={4}>
+          字段表单
+        </Typography.Title>
         <Tag>
           {visibleFields.length} / {allFields.length}
         </Tag>
       </div>
 
       <div className="schema-form__search">
-        <Input.Search
+        <Input
           allowClear
           onChange={(event) => handleSearchChange(event.target.value)}
-          placeholder="按字段名称或 id 搜索"
+          placeholder="搜索字段"
+          prefix={<SearchOutlined />}
           value={searchText}
         />
-      </div>
-
-      <div className="schema-form__selection">
-        {selectedField ? (
-          <Typography.Text>
-            当前高亮字段：<strong>{selectedField.label}</strong>
-          </Typography.Text>
-        ) : selectedFieldId ? (
-          <Typography.Text type="secondary">
-            当前高亮字段尚未映射到左侧表单：{selectedFieldId}
-          </Typography.Text>
-        ) : (
-          <Typography.Text type="secondary">
-            点击左侧表单项或右侧模板字段后，这里会自动滚动并高亮对应项。
-          </Typography.Text>
-        )}
       </div>
 
       <div className="schema-form__body">
@@ -181,4 +185,4 @@ function SchemaForm() {
   )
 }
 
-export default SchemaForm
+export default memo(SchemaForm)

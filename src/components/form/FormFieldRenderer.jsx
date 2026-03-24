@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import {
   DeleteOutlined,
   PlusOutlined,
@@ -34,7 +35,8 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
   if (fieldType === 'textarea') {
     return (
       <TextArea
-        autoSize={{ minRows: 3, maxRows: 7 }}
+        autoSize={{ minRows: 4, maxRows: 10 }}
+        className="schema-form__textarea"
         onChange={(event) => onChange(event.target.value)}
         onFocus={onFocus}
         placeholder={field.placeholder}
@@ -47,6 +49,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
     return (
       <Select
         allowClear
+        className="schema-form__select"
         onChange={(nextValue) => onChange(nextValue ?? '')}
         onFocus={onFocus}
         options={normalizeOptions(field.options)}
@@ -70,6 +73,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
 
   return (
     <Input
+      className="schema-form__input"
       onChange={(event) => onChange(event.target.value)}
       onFocus={onFocus}
       placeholder={field.placeholder}
@@ -85,14 +89,14 @@ function FormFieldRenderer({ field, domId }) {
       : state.formData[field.id] ?? '',
   )
   const error = useFormStore((state) => state.validationErrors[field.id])
-  const selectedFieldId = useFormStore((state) => state.selectedFieldId)
+  const isSelected = useFormStore(
+    (state) => state.selectedFieldId === field.id,
+  )
   const setFieldValue = useFormStore((state) => state.setFieldValue)
   const setListFieldValue = useFormStore((state) => state.setListFieldValue)
   const appendListRow = useFormStore((state) => state.appendListRow)
   const removeListRow = useFormStore((state) => state.removeListRow)
   const setSelectedFieldId = useFormStore((state) => state.setSelectedFieldId)
-
-  const isSelected = selectedFieldId === field.id
 
   const handleSelectField = () => {
     setSelectedFieldId(field.id)
@@ -209,9 +213,6 @@ function FormFieldRenderer({ field, domId }) {
       id={domId}
       onClick={handleSelectField}
     >
-      <div className="form-field-card__meta">
-        <span className="form-field-card__code">{field.id}</span>
-      </div>
       <Form.Item
         className="schema-form__item"
         help={error || null}
@@ -229,4 +230,4 @@ function FormFieldRenderer({ field, domId }) {
   )
 }
 
-export default FormFieldRenderer
+export default memo(FormFieldRenderer)
