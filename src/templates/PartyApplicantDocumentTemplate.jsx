@@ -1,5 +1,5 @@
-import A4Page from './A4Page'
-import FieldAnchorText from './FieldAnchorText'
+import A4Page from '../components/shared/A4Page'
+import FieldAnchorText from '../components/shared/FieldAnchorText'
 
 const REGISTRATION_REVIEW_ITEMS = [
   '本人是否明确表示入党意愿',

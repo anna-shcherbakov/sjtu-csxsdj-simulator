@@ -1,5 +1,5 @@
-import A4Page from './A4Page'
-import FieldAnchorText from './FieldAnchorText'
+import A4Page from '../components/shared/A4Page'
+import FieldAnchorText from '../components/shared/FieldAnchorText'
 
 const RESUME_ROW_COUNT = 6
 const FAMILY_ROW_COUNT = 6

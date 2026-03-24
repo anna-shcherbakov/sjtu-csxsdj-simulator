@@ -1,5 +1,5 @@
-import A4Page from './A4Page'
-import FieldAnchorText from './FieldAnchorText'
+import A4Page from '../components/shared/A4Page'
+import FieldAnchorText from '../components/shared/FieldAnchorText'
 
 const INSTRUCTION_ITEMS = [
   '本册用于记录预备党员在考察期间的重要情况，请按自然页码顺序填写，不得随意增删页。',

@@ -1,8 +1,8 @@
 import { CheckCircleOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, Segmented, Select, Tag, Typography } from 'antd'
-import { findFormFieldById } from '../data/formSchema'
-import { TEMPLATE_OPTIONS, ZOOM_OPTIONS } from '../data/templates'
-import useFormStore from '../store/useFormStore'
+import { findFormFieldById } from '../../data/formSchema'
+import { TEMPLATE_OPTIONS, ZOOM_OPTIONS } from '../../data/templates'
+import useFormStore from '../../store/useFormStore'
 
 function TemplateToolbar({ onValidate, onReset }) {
   const activeTemplateId = useFormStore((state) => state.activeTemplateId)

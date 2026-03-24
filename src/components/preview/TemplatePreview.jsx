@@ -1,10 +1,10 @@
 import { Empty, Tag, Typography } from 'antd'
-import PartyApplicantDocumentTemplate from './PartyApplicantDocumentTemplate'
-import PartyApplicationWishTemplate from './PartyApplicationWishTemplate'
-import PartyTrainingInspectionBookTemplate from './PartyTrainingInspectionBookTemplate'
-import PartyTrainingInspectionBookTemplate3 from './PartyTrainingInspectionBookTemplate3'
-import { TEMPLATE_OPTIONS } from '../data/templates'
-import useFormStore from '../store/useFormStore'
+import PartyApplicantDocumentTemplate from '../../templates/PartyApplicantDocumentTemplate'
+import PartyApplicationWishTemplate from '../../templates/PartyApplicationWishTemplate'
+import PartyTrainingInspectionBookTemplate from '../../templates/PartyTrainingInspectionBookTemplate'
+import PartyTrainingInspectionBookTemplate3 from '../../templates/PartyTrainingInspectionBookTemplate3'
+import { TEMPLATE_OPTIONS } from '../../data/templates'
+import useFormStore from '../../store/useFormStore'
 
 function TemplatePreview() {
   const activeTemplateId = useFormStore((state) => state.activeTemplateId)

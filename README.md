@@ -81,8 +81,12 @@ npm run lint
 ```text
 .
 ├─ src/
-│  ├─ components/         # 左侧表单、右侧模板、A4 页面与通用渲染组件
+│  ├─ components/
+│  │  ├─ form/           # 左侧表单相关组件
+│  │  ├─ preview/        # 右侧预览与工具栏组件
+│  │  └─ shared/         # A4 页面、字段锚点等通用组件
 │  ├─ data/               # formSchema、模板元数据、字段校验函数
+│  ├─ templates/         # 各材料模板页面
 │  ├─ store/              # Zustand 状态管理
 │  ├─ App.jsx             # 页面主入口
 │  └─ styles.css          # 全局样式
@@ -96,7 +100,7 @@ npm run lint
 ## 开发约定
 
 - 左侧表单由 `src/data/formSchema.js` 统一驱动。
-- 右侧模板由 `src/components/*Template*.jsx` 维护。
+- 右侧模板页面由 `src/templates/*.jsx` 维护。
 - 模板切换只影响右侧预览，不切换左侧表单 schema。
 - 字段校验支持两层：
   - 字段自身的 `validation`

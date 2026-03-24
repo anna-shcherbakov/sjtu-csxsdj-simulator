@@ -5,7 +5,7 @@ import {
 } from '@ant-design/icons'
 import { Button, Form, Input, Radio, Select, Tooltip } from 'antd'
 import clsx from 'clsx'
-import useFormStore from '../store/useFormStore'
+import useFormStore from '../../store/useFormStore'
 
 const { TextArea } = Input
 

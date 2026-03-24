@@ -1,8 +1,8 @@
 import { useDeferredValue, useEffect, useState } from 'react'
 import { Collapse, Empty, Form, Input, Tag, Typography } from 'antd'
 import FormFieldRenderer from './FormFieldRenderer'
-import { findFormFieldById, flattenFormFields } from '../data/formSchema'
-import useFormStore from '../store/useFormStore'
+import { findFormFieldById, flattenFormFields } from '../../data/formSchema'
+import useFormStore from '../../store/useFormStore'
 
 const buildVisibleGroups = (schema, visibleFields) => {
   const visibleFieldIds = new Set(visibleFields.map((field) => field.id))
