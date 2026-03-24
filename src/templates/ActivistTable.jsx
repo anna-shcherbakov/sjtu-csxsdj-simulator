@@ -835,7 +835,7 @@ function Page14MassOpinion({ formData, zoom }) {
   )
 }
 
-function PartyTrainingInspectionBookTemplate({ formData, zoom }) {
+function ActivistTable({ formData, zoom }) {
   return (
     <>
       <Page1Cover formData={formData} zoom={zoom} />
@@ -856,4 +856,4 @@ function PartyTrainingInspectionBookTemplate({ formData, zoom }) {
   )
 }
 
-export default PartyTrainingInspectionBookTemplate
+export default ActivistTable

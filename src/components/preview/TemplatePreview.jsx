@@ -1,17 +1,17 @@
 import { memo } from 'react'
 import { Empty, Typography } from 'antd'
-import PartyApplicantDocumentTemplate from '../../templates/PartyApplicantDocumentTemplate'
-import PartyApplicationWishTemplate from '../../templates/PartyApplicationWishTemplate'
-import PartyTrainingInspectionBookTemplate from '../../templates/PartyTrainingInspectionBookTemplate'
-import PartyTrainingInspectionBookTemplate3 from '../../templates/PartyTrainingInspectionBookTemplate3'
+import ActivistTable from '../../templates/ActivistTable'
+import ProbationaryTable from '../../templates/ProbationaryTable'
+import TalkTable from '../../templates/TalkTable'
+import WishTable from '../../templates/WishTable'
 import { TEMPLATE_OPTIONS } from '../../data/templates'
 import useFormStore from '../../store/useFormStore'
 
 const TEMPLATE_COMPONENTS = {
-  'party-applicant-document': PartyApplicantDocumentTemplate,
-  'party-application-wish-book': PartyApplicationWishTemplate,
-  'party-training-inspection-book': PartyTrainingInspectionBookTemplate,
-  'party-training-inspection-book-v2': PartyTrainingInspectionBookTemplate3,
+  'party-applicant-document': TalkTable,
+  'party-application-wish-book': WishTable,
+  'party-training-inspection-book': ActivistTable,
+  'party-training-inspection-book-v2': ProbationaryTable,
 }
 
 function TemplatePreview() {

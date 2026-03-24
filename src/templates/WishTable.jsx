@@ -632,7 +632,7 @@ function BackCoverPage({ zoom }) {
   )
 }
 
-function PartyApplicationWishTemplate({ formData, zoom }) {
+function WishTable({ formData, zoom }) {
   return (
     <>
       <CoverPage formData={formData} zoom={zoom} />
@@ -684,4 +684,4 @@ function PartyApplicationWishTemplate({ formData, zoom }) {
   )
 }
 
-export default PartyApplicationWishTemplate
+export default WishTable

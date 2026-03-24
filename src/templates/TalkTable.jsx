@@ -329,7 +329,7 @@ function Page4Blank({ zoom }) {
   )
 }
 
-function PartyApplicantDocumentTemplate({ formData, zoom }) {
+function TalkTable({ formData, zoom }) {
   return (
     <>
       <Page1Cover formData={formData} zoom={zoom} />
@@ -340,4 +340,4 @@ function PartyApplicantDocumentTemplate({ formData, zoom }) {
   )
 }
 
-export default PartyApplicantDocumentTemplate
+export default TalkTable

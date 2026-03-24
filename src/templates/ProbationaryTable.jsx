@@ -649,7 +649,7 @@ function Page9PreConversionBranchReview({ formData, zoom }) {
   )
 }
 
-function PartyTrainingInspectionBookTemplate3({ formData, zoom }) {
+function ProbationaryTable({ formData, zoom }) {
   return (
     <>
       <Page1Cover formData={formData} zoom={zoom} />
@@ -665,4 +665,4 @@ function PartyTrainingInspectionBookTemplate3({ formData, zoom }) {
   )
 }
 
-export default PartyTrainingInspectionBookTemplate3
+export default ProbationaryTable
