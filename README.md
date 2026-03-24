@@ -1,16 +1,128 @@
-# React + Vite
+# 党建材料模板工作台
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+基于 React + Vite + Ant Design 的前端工作台，用于维护党建材料字段表单，并在右侧实时预览固定 A4 模板页面。
 
-Currently, two official plugins are available:
+当前版本采用“左侧单表单、右侧多模板预览”的交互模式：
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 左侧为全局统一的 `formSchema`
+- 右侧可在多个固定模板之间切换
+- 支持字段搜索、分组折叠、缩放预览、字段校验、重置表单
+- 支持点击模板字段后联动左侧表单定位
 
-## React Compiler
+## 模板列表
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+当前内置 4 套模板：
 
-## Expanding the ESLint configuration
+- 模板 1：入党申请人登记暨谈话表（4 页）
+- 模板 2：入党培养考察记录册（14 页）
+- 模板 3：预备党员培养考察记录册（9 页）
+- 模板 4：入党志愿书（14 页）
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 技术栈
+
+- React 19
+- Vite 8
+- Ant Design 6
+- Zustand
+
+## 环境要求
+
+- Node.js：建议使用较新的 LTS 版本
+- npm：建议与当前 Node.js 版本配套
+
+## 安装
+
+安装前，请先确认您已获得本软件及其源代码的合法授权。
+
+```bash
+npm install
+```
+
+如果依赖已经安装完成，可直接跳过这一步。
+
+## 启动与构建
+
+开发模式：
+
+```bash
+npm run dev
+```
+
+生产构建：
+
+```bash
+npm run build
+```
+
+本地预览构建产物：
+
+```bash
+npm run preview
+```
+
+代码检查：
+
+```bash
+npm run lint
+```
+
+## 使用说明
+
+1. 启动项目后，在左侧表单中填写或修改字段值。
+2. 顶部工具栏可切换模板，并调整右侧 A4 预览缩放比例。
+3. 点击“校验”可执行字段级校验和跨字段校验。
+4. 点击“重置”可将表单恢复为 `formSchema` 中定义的默认值。
+5. 右侧模板中的字段支持高亮联动。点击模板中的字段后，左侧表单会自动展开并滚动到对应项。
+6. 左侧字段支持搜索；复杂字段支持 `list` 类型的增行、删行和逐列编辑。
+7. 字段右侧的问号图标会显示该字段的填写说明；简短提示显示在输入框 `placeholder` 中。
+
+## 项目结构
+
+```text
+.
+├─ src/
+│  ├─ components/         # 左侧表单、右侧模板、A4 页面与通用渲染组件
+│  ├─ data/               # formSchema、模板元数据、字段校验函数
+│  ├─ store/              # Zustand 状态管理
+│  ├─ App.jsx             # 页面主入口
+│  └─ styles.css          # 全局样式
+├─ EULA                   # End User License Agreement（英文）
+├─ EULA-zh                # 最终用户许可协议（中文）
+├─ LICENSE                # 版权与使用限制（英文）
+├─ LICENSE-zh             # 版权与使用限制（中文）
+└─ README.md
+```
+
+## 开发约定
+
+- 左侧表单由 `src/data/formSchema.js` 统一驱动。
+- 右侧模板由 `src/components/*Template*.jsx` 维护。
+- 模板切换只影响右侧预览，不切换左侧表单 schema。
+- 字段校验支持两层：
+  - 字段自身的 `validation`
+  - schema 级跨字段 `rules`
+
+## 版权与授权
+
+本项目不是开源软件。
+
+根据根目录中的 `LICENSE`、`LICENSE-zh`、`EULA`、`EULA-zh`，本项目及其源代码、构建产物和相关材料均受版权及许可协议保护，核心约束如下：
+
+- 版权所有：2026 上海交通大学计算机学院
+- 保留所有权利
+- 本软件为授权使用，并非出售
+- 本软件及其源代码属于专有且保密的知识产权
+- 仅授权个人或授权范围内的用户可使用本软件
+- 未经作者事先明确书面许可，不得使用、复制、修改、合并、发布、分发、传播、再许可或销售本软件
+- 不得共享可执行文件，不得对软件进行反向工程、反编译或试图还原源代码
+- 不得将本软件用于商业用途或任何未经授权的场景
+- 上述限制同时适用于源代码和编译后的可执行文件
+
+如您不同意上述许可与限制条款，请勿安装、复制、运行或使用本项目。
+
+详细条款请以以下文件为准：
+
+- 中文许可协议：[`EULA-zh`](./EULA-zh)
+- 英文许可协议：[`EULA`](./EULA)
+- 中文版权声明：[`LICENSE-zh`](./LICENSE-zh)
+- 英文版权声明：[`LICENSE`](./LICENSE)
