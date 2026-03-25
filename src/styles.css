@@ -2188,6 +2188,16 @@ textarea {
   text-align: center;
 }
 
+.training-field-anchor--section-inline-fill {
+  position: static;
+  flex: 1;
+  min-width: 0;
+  min-height: 26px;
+  justify-content: flex-start;
+  padding: 0 6px;
+  text-align: left;
+}
+
 .training-quarter-table td,
 .training-quarter-inner-table td {
   padding: 0;
@@ -2274,12 +2284,23 @@ textarea {
   flex-wrap: wrap;
 }
 
+.training-section-inline-fill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
 .training-basic-table__blank {
   min-height: 42px;
 }
 
 .training-opinion-layout--notice {
   gap: 18px;
+  min-height: 0;
+  height: auto;
+  padding: 0;
 }
 
 .training-public-notice-paragraph {
@@ -2562,7 +2583,7 @@ textarea {
 }
 
 .training-public-notice-spacer--compact {
-  min-height: 96px;
+  min-height: 8px;
 }
 
 .training-section-page--activist-notice {

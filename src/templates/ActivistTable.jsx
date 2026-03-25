@@ -963,7 +963,7 @@ function Page13PublicityAndBranchReview({ formData, zoom }) {
       contentClassName="training-section-page training-section-page--activist-notice"
       zoom={zoom}
     >
-      <table className="training-section-table training-section-table--activist-notice">
+      <table style={{marginTop: 96}} className="training-section-table training-section-table--activist-notice">
         <tbody>
           <tr>
             <td className="training-vertical-cell">
@@ -993,6 +993,7 @@ function Page13PublicityAndBranchReview({ formData, zoom }) {
                 </p>
                 <p className="training-public-notice-option">□无反馈</p>
                 <p className="training-public-notice-option">□有反馈（根据实际情况记录）：</p>
+                <div style={{height: 96}}></div>
               </div>
             </td>
           </tr>
@@ -1065,14 +1066,14 @@ function Page13PublicityAndBranchReview({ formData, zoom }) {
               备注
             </td>
             <td className="training-section-body-cell training-section-body-cell--compact">
-              <p className="training-fixed-paragraph training-fixed-paragraph--plain">
-                《入党志愿书》编号：
+              <div className="training-section-inline-fill">
+                <span>《入党志愿书》编号：</span>
                 <InlineField
-                  className="training-field-anchor--inline-plain"
+                  className="training-field-anchor--cell-fill training-field-anchor--section-inline-fill"
                   fieldId="wish.志愿书编号"
                   value={formData['wish.志愿书编号']}
                 />
-              </p>
+              </div>
             </td>
           </tr>
         </tbody>
