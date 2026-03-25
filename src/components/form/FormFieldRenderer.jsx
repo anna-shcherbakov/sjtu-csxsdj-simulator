@@ -99,7 +99,7 @@ function FormFieldRenderer({ field, domId }) {
   const setSelectedFieldId = useFormStore((state) => state.setSelectedFieldId)
 
   const handleSelectField = () => {
-    setSelectedFieldId(field.id)
+    setSelectedFieldId(field.id, 'form')
   }
 
   const handleAddListRow = (event) => {

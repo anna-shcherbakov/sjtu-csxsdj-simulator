@@ -13,6 +13,8 @@ const REGISTRATION_REVIEW_ITEMS = [
   '递交申请书时间是否年满 18 周岁',
 ]
 
+const NEGATIVE_REVIEW_ITEM = '有否摘抄他人入党申请书或网上范例的情况'
+
 function VerticalText({ text, className }) {
   return (
     <div className={className}>
@@ -35,6 +37,19 @@ function LineField({ fieldId, value, className }) {
   )
 }
 
+function HandwritingLine({ className }) {
+  return <span className={className} aria-hidden="true" />
+}
+
+function ReviewJudgeCell({ checked, label }) {
+  return (
+    <td className="party-review-judge">
+      <span className="party-review-judge__label">{label}</span>
+      {checked ? <span className="party-review-judge__mark">√</span> : null}
+    </td>
+  )
+}
+
 function Page1Cover({ formData, zoom }) {
   return (
     <A4Page className="party-template-page" contentClassName="party-cover-page" zoom={zoom}>
@@ -42,12 +57,15 @@ function Page1Cover({ formData, zoom }) {
 
       <div className="party-cover-page__info">
         <div className="party-cover-line">
-          <div className="party-cover-line__label">姓名</div>
+          <div className="party-cover-line__label party-cover-line__label--name">
+            <span>姓</span>
+            <span>名</span>
+          </div>
           <div className="party-cover-line__content">
             <LineField
               className="party-line-fill"
-              fieldId="name"
-              value={formData.name}
+              fieldId="basic.姓名"
+              value={formData['basic.姓名']}
             />
           </div>
         </div>
@@ -57,8 +75,8 @@ function Page1Cover({ formData, zoom }) {
           <div className="party-cover-line__content">
             <LineField
               className="party-line-fill"
-              fieldId="partyBranchAtInterview"
-              value={formData.partyBranchAtInterview}
+              fieldId="talk.入党谈话时所属党支部"
+              value={formData['talk.入党谈话时所属党支部']}
             />
           </div>
         </div>
@@ -95,32 +113,32 @@ function Page2Registration({ formData, zoom }) {
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="name"
-                value={formData.name}
+                fieldId="basic.姓名"
+                value={formData['basic.姓名']}
               />
             </td>
             <td className="party-table-label">性别</td>
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="gender"
-                value={formData.gender}
+                fieldId="basic.性别"
+                value={formData['basic.性别']}
               />
             </td>
             <td className="party-table-label">民族</td>
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="ethnicity"
-                value={formData.ethnicity}
+                fieldId="basic.民族"
+                value={formData['basic.民族']}
               />
             </td>
             <td className="party-table-label">籍贯</td>
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="nativePlace"
-                value={formData.nativePlace}
+                fieldId="basic.籍贯"
+                value={formData['basic.籍贯']}
               />
             </td>
           </tr>
@@ -132,8 +150,8 @@ function Page2Registration({ formData, zoom }) {
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="className"
-                value={formData.className}
+                fieldId="basic.班级"
+                value={formData['basic.班级']}
               />
             </td>
             <td className="party-table-label party-table-label--stacked">
@@ -143,24 +161,24 @@ function Page2Registration({ formData, zoom }) {
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="studentId"
-                value={formData.studentId}
+                fieldId="basic.学号"
+                value={formData['basic.学号']}
               />
             </td>
             <td className="party-table-label">入团年月</td>
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="leagueJoinDate"
-                value={formData.leagueJoinDate}
+                fieldId="basic.入团年月"
+                value={formData['basic.入团年月']}
               />
             </td>
             <td className="party-table-label">曾任职务</td>
             <td className="party-table-value">
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="formerPosition"
-                value={formData.formerPosition}
+                fieldId="talk.曾任职务"
+                value={formData['talk.曾任职务']}
               />
             </td>
           </tr>
@@ -171,16 +189,16 @@ function Page2Registration({ formData, zoom }) {
             <td className="party-table-value" colSpan={3}>
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="applicationDate"
-                value={formData.applicationDate}
+                fieldId="submit.入党申请书落款日期"
+                value={formData['submit.入党申请书落款日期']}
               />
             </td>
             <td className="party-table-label">身份证号</td>
             <td className="party-table-value" colSpan={3}>
               <FieldAnchorText
                 className="party-field-anchor"
-                fieldId="idNumber"
-                value={formData.idNumber}
+                fieldId="basic.身份证号"
+                value={formData['basic.身份证号']}
               />
             </td>
           </tr>
@@ -209,8 +227,14 @@ function Page2Registration({ formData, zoom }) {
                 </td>
               ) : null}
               <td className="party-review-text">{`${index + 1}. ${item}`}</td>
-              <td className="party-review-judge">是</td>
-              <td className="party-review-judge">否</td>
+              <ReviewJudgeCell
+                checked={item !== NEGATIVE_REVIEW_ITEM}
+                label="是"
+              />
+              <ReviewJudgeCell
+                checked={item === NEGATIVE_REVIEW_ITEM}
+                label="否"
+              />
             </tr>
           ))}
         </tbody>
@@ -219,27 +243,15 @@ function Page2Registration({ formData, zoom }) {
       <div className="party-registration-page__signature">
         <div className="party-signature-group party-signature-group--wide">
           <span className="party-signature-group__label">审核人党内职务：</span>
-          <LineField
-            className="party-signature-group__line"
-            fieldId="reviewerPartyPosition"
-            value={formData.reviewerPartyPosition}
-          />
+          <HandwritingLine className="party-signature-group__line" />
         </div>
         <div className="party-signature-group party-signature-group--medium">
           <span className="party-signature-group__label">签名：</span>
-          <LineField
-            className="party-signature-group__line"
-            fieldId="reviewerSignature"
-            value={formData.reviewerSignature}
-          />
+          <HandwritingLine className="party-signature-group__line" />
         </div>
         <div className="party-signature-group party-signature-group--date">
           <span className="party-signature-group__label">日期：</span>
-          <LineField
-            className="party-signature-group__line"
-            fieldId="reviewerDate"
-            value={formData.reviewerDate}
-          />
+          <HandwritingLine className="party-signature-group__line" />
         </div>
       </div>
     </A4Page>
@@ -255,7 +267,7 @@ function Page3InterviewRecord({ formData, zoom }) {
     >
       <table className="party-interview-table">
         <tbody>
-          <tr>
+          <tr className="party-interview-table__main-row">
             <td className="party-interview-vertical-cell">
               <VerticalText
                 className="party-vertical-text party-vertical-text--interview"
@@ -267,49 +279,42 @@ function Page3InterviewRecord({ formData, zoom }) {
                 <div className="party-interview-record-box">
                   <FieldAnchorText
                     className="party-field-anchor party-field-anchor--record"
-                    fieldId="interviewRecord"
-                    value={formData.interviewRecord}
+                    fieldId="talk.谈话记录（收到入党申请书后一个月完成）"
+                    value={formData['talk.谈话记录（收到入党申请书后一个月完成）']}
                   />
                 </div>
 
                 <div className="party-interview-footer">
-                  <div className="party-signature-group party-signature-group--wide">
-                    <span className="party-signature-group__label">
-                      谈话人党内职务：
-                    </span>
-                    <LineField
-                      className="party-signature-group__line"
-                      fieldId="interviewerPartyPosition"
-                      value={formData.interviewerPartyPosition}
-                    />
+                  <div className="party-interview-footer__row">
+                    <div className="party-signature-group party-signature-group--wide party-signature-group--interview-duty">
+                      <span className="party-signature-group__label">
+                        谈话人党内职务：
+                      </span>
+                      <HandwritingLine className="party-signature-group__line" />
+                    </div>
+                    <div className="party-signature-group party-signature-group--medium party-signature-group--interview-signature">
+                      <span className="party-signature-group__label">签 名：</span>
+                      <HandwritingLine className="party-signature-group__line" />
+                    </div>
                   </div>
-                  <div className="party-signature-group party-signature-group--medium">
-                    <span className="party-signature-group__label">签 名：</span>
-                    <LineField
-                      className="party-signature-group__line"
-                      fieldId="interviewerSignature"
-                      value={formData.interviewerSignature}
-                    />
-                  </div>
-                  <div className="party-signature-group party-signature-group--date">
-                    <span className="party-signature-group__label">日期：</span>
-                    <LineField
-                      className="party-signature-group__line"
-                      fieldId="interviewDate"
-                      value={formData.interviewDate}
-                    />
+                  <div className="party-interview-footer__row party-interview-footer__row--date">
+                    <div className="party-signature-group party-signature-group--date party-signature-group--interview-date">
+                      <span className="party-signature-group__label">日期：</span>
+                      <LineField
+                        className="party-signature-group__line"
+                        fieldId="talk.申请人谈话日期"
+                        value={formData['talk.申请人谈话日期']}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </td>
           </tr>
-        </tbody>
-      </table>
-
-      <table className="party-remark-table">
-        <tbody>
-          <tr>
-            <td className="party-remark-table__label">备注</td>
+          <tr className="party-interview-table__remark-row">
+            <td className="party-remark-table__label party-interview-vertical-cell">
+              <VerticalText className="party-vertical-text party-vertical-text--remark" text="备注" />
+            </td>
             <td className="party-remark-table__blank" />
           </tr>
         </tbody>

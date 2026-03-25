@@ -266,7 +266,7 @@ function App() {
       )?.id
 
       if (firstErrorFieldId) {
-        setSelectedFieldId(firstErrorFieldId)
+        setSelectedFieldId(firstErrorFieldId, 'system')
       }
 
       messageApi.error(`发现 ${Object.keys(result.errors).length} 个未通过校验的字段`)

@@ -28,9 +28,10 @@ const buildVisibleGroups = (schema, visibleFields) => {
 function SchemaForm() {
   const formSchema = useFormStore((state) => state.formSchema)
   const selectedFieldId = useFormStore((state) => state.selectedFieldId)
+  const selectedFieldSource = useFormStore((state) => state.selectedFieldSource)
+  const selectedFieldToken = useFormStore((state) => state.selectedFieldToken)
   const [searchText, setSearchText] = useState('')
   const deferredSearchText = useDeferredValue(searchText)
-  const previousSelectedFieldIdRef = useRef(selectedFieldId)
   const pendingScrollFieldIdRef = useRef(null)
 
   const allFields = flattenFormFields(formSchema)
@@ -59,15 +60,19 @@ function SchemaForm() {
   )
 
   useEffect(() => {
-    if (!selectedField || previousSelectedFieldIdRef.current === selectedFieldId) {
-      previousSelectedFieldIdRef.current = selectedFieldId
-      return
+    if (!selectedField || selectedFieldSource === 'form') {
+      pendingScrollFieldIdRef.current = null
+      return undefined
     }
 
-    previousSelectedFieldIdRef.current = selectedFieldId
     pendingScrollFieldIdRef.current = selectedField.id
+    let cancelled = false
 
-    const frameId = window.requestAnimationFrame(() => {
+    Promise.resolve().then(() => {
+      if (cancelled) {
+        return
+      }
+
       setOpenKeys((currentKeys) =>
         currentKeys.includes(selectedField.groupLabel)
           ? currentKeys
@@ -76,12 +81,16 @@ function SchemaForm() {
     })
 
     return () => {
-      window.cancelAnimationFrame(frameId)
+      cancelled = true
     }
-  }, [selectedField, selectedFieldId])
+  }, [selectedField, selectedFieldSource, selectedFieldToken])
 
   useEffect(() => {
     if (!selectedField || pendingScrollFieldIdRef.current !== selectedField.id) {
+      return undefined
+    }
+
+    if (!activeKeys.includes(selectedField.groupLabel)) {
       return undefined
     }
 
@@ -92,7 +101,8 @@ function SchemaForm() {
 
       fieldElement?.scrollIntoView({
         behavior: 'smooth',
-        block: 'center',
+        block: 'nearest',
+        inline: 'nearest',
       })
 
       pendingScrollFieldIdRef.current = null
@@ -101,7 +111,7 @@ function SchemaForm() {
     return () => {
       window.cancelAnimationFrame(frameId)
     }
-  }, [activeKeys, selectedField])
+  }, [activeKeys, selectedField, selectedFieldToken])
 
   const handleSearchChange = (value) => {
     setSearchText(value)

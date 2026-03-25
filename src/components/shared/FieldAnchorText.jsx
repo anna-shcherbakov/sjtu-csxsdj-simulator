@@ -15,13 +15,13 @@ function FieldAnchorText({ fieldId, value, className }) {
 
   const handleSelect = (event) => {
     event.stopPropagation()
-    setSelectedFieldId(fieldId)
+    setSelectedFieldId(fieldId, 'preview')
   }
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
-      setSelectedFieldId(fieldId)
+      setSelectedFieldId(fieldId, 'preview')
     }
   }
 

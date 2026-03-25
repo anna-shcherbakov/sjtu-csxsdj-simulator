@@ -1,10 +1,12 @@
+import { useMemo } from 'react'
 import {
   CheckCircleOutlined,
   QuestionCircleOutlined,
   ReloadOutlined,
 } from '@ant-design/icons'
 import { Button, Popover, Segmented, Slider, Typography } from 'antd'
-import { TEMPLATE_OPTIONS } from '../../data/templates'
+import clsx from 'clsx'
+import { getTemplateIdsByFieldId, TEMPLATE_OPTIONS } from '../../data/templates'
 import useFormStore from '../../store/useFormStore'
 
 const helpContent = (
@@ -22,9 +24,20 @@ const helpContent = (
 
 function TemplateToolbar({ onValidate, onReset }) {
   const activeTemplateId = useFormStore((state) => state.activeTemplateId)
+  const selectedFieldId = useFormStore((state) => state.selectedFieldId)
+  const selectedFieldSource = useFormStore((state) => state.selectedFieldSource)
+  const selectedFieldToken = useFormStore((state) => state.selectedFieldToken)
   const zoom = useFormStore((state) => state.zoom)
   const setActiveTemplateId = useFormStore((state) => state.setActiveTemplateId)
   const setZoom = useFormStore((state) => state.setZoom)
+
+  const matchingTemplateIds = useMemo(() => {
+    if (selectedFieldSource !== 'form' || !selectedFieldId) {
+      return []
+    }
+
+    return getTemplateIdsByFieldId(selectedFieldId)
+  }, [selectedFieldId, selectedFieldSource])
 
   return (
     <div className="template-toolbar">
@@ -32,7 +45,22 @@ function TemplateToolbar({ onValidate, onReset }) {
         <Segmented
           onChange={setActiveTemplateId}
           options={TEMPLATE_OPTIONS.map((template) => ({
-            label: template.shortLabel,
+            label: (
+              <span
+                key={`${template.id}-${selectedFieldToken}`}
+                className={clsx('template-toolbar__segment-label', {
+                  'is-flashing':
+                    selectedFieldSource === 'form' &&
+                    selectedFieldToken > 0 &&
+                    matchingTemplateIds.includes(template.id),
+                  'is-match':
+                    selectedFieldSource === 'form' &&
+                    matchingTemplateIds.includes(template.id),
+                })}
+              >
+                {template.shortLabel}
+              </span>
+            ),
             value: template.id,
           }))}
           size="large"

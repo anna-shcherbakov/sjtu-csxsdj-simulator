@@ -86,6 +86,8 @@ const useFormStore = create((set, get) => ({
   formData: initialFormData,
   activeTemplateId: DEFAULT_TEMPLATE_ID,
   selectedFieldId: null,
+  selectedFieldSource: null,
+  selectedFieldToken: 0,
   validationErrors: {},
   zoom: DEFAULT_ZOOM,
 
@@ -96,6 +98,7 @@ const useFormStore = create((set, get) => ({
         [fieldId]: value,
       },
       selectedFieldId: fieldId,
+      selectedFieldSource: 'form',
       validationErrors: removeFieldError(state.validationErrors, fieldId),
     })),
 
@@ -108,15 +111,16 @@ const useFormStore = create((set, get) => ({
         index === rowIndex ? { ...row, [columnId]: value } : row,
       )
 
-      return {
-        formData: {
-          ...state.formData,
-          [fieldId]: nextRows,
-        },
-        selectedFieldId: fieldId,
-        validationErrors: removeFieldError(state.validationErrors, fieldId),
-      }
-    }),
+        return {
+          formData: {
+            ...state.formData,
+            [fieldId]: nextRows,
+          },
+          selectedFieldId: fieldId,
+          selectedFieldSource: 'form',
+          validationErrors: removeFieldError(state.validationErrors, fieldId),
+        }
+      }),
 
   appendListRow: (fieldId) =>
     set((state) => {
@@ -135,6 +139,7 @@ const useFormStore = create((set, get) => ({
           [fieldId]: [...currentRows, buildInitialListRow(field)],
         },
         selectedFieldId: fieldId,
+        selectedFieldSource: 'form',
         validationErrors: removeFieldError(state.validationErrors, fieldId),
       }
     }),
@@ -151,13 +156,21 @@ const useFormStore = create((set, get) => ({
           [fieldId]: currentRows.filter((_, index) => index !== rowIndex),
         },
         selectedFieldId: fieldId,
+        selectedFieldSource: 'form',
         validationErrors: removeFieldError(state.validationErrors, fieldId),
       }
     }),
 
   setActiveTemplateId: (templateId) => set({ activeTemplateId: templateId }),
 
-  setSelectedFieldId: (fieldId) => set({ selectedFieldId: fieldId }),
+  setSelectedFieldId: (fieldId, source = 'system', options = {}) =>
+    set((state) => ({
+      selectedFieldId: fieldId,
+      selectedFieldSource: source,
+      selectedFieldToken: options.announce === false
+        ? state.selectedFieldToken
+        : state.selectedFieldToken + 1,
+    })),
 
   setZoom: (zoom) => set({ zoom }),
 
@@ -181,6 +194,7 @@ const useFormStore = create((set, get) => ({
       formData: buildInitialFormData(get().formSchema),
       validationErrors: {},
       selectedFieldId: null,
+      selectedFieldSource: null,
     })),
 }))
 
