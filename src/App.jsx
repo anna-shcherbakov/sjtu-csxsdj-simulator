@@ -286,10 +286,10 @@ function App() {
       locale={zhCN}
       theme={{
         token: {
-          colorPrimary: '#1768ac',
-          colorInfo: '#1768ac',
+          colorPrimary: '#c62828',
+          colorInfo: '#c62828',
           borderRadius: 12,
-          colorBgLayout: '#edf2f7',
+          colorBgLayout: '#f6eeee',
           motionDurationMid: '0.14s',
           motionDurationSlow: '0.18s',
           motionEaseInOut: 'cubic-bezier(0.2, 0, 0, 1)',

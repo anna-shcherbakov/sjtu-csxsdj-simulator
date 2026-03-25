@@ -1,12 +1,10 @@
-import { useMemo } from 'react'
 import {
   CheckCircleOutlined,
   QuestionCircleOutlined,
   ReloadOutlined,
 } from '@ant-design/icons'
-import { Button, Popover, Segmented, Slider, Typography } from 'antd'
-import clsx from 'clsx'
-import { getTemplateIdsByFieldId, TEMPLATE_OPTIONS } from '../../data/templates'
+import { Button, Popover, Select, Slider, Typography } from 'antd'
+import { TEMPLATE_OPTIONS } from '../../data/templates'
 import useFormStore from '../../store/useFormStore'
 
 const helpContent = (
@@ -24,67 +22,54 @@ const helpContent = (
 
 function TemplateToolbar({ onValidate, onReset }) {
   const activeTemplateId = useFormStore((state) => state.activeTemplateId)
-  const selectedFieldId = useFormStore((state) => state.selectedFieldId)
-  const selectedFieldSource = useFormStore((state) => state.selectedFieldSource)
-  const selectedFieldToken = useFormStore((state) => state.selectedFieldToken)
   const zoom = useFormStore((state) => state.zoom)
   const setActiveTemplateId = useFormStore((state) => state.setActiveTemplateId)
   const setZoom = useFormStore((state) => state.setZoom)
 
-  const matchingTemplateIds = useMemo(() => {
-    if (selectedFieldSource !== 'form' || !selectedFieldId) {
-      return []
-    }
-
-    return getTemplateIdsByFieldId(selectedFieldId)
-  }, [selectedFieldId, selectedFieldSource])
-
   return (
     <div className="template-toolbar">
       <div className="template-toolbar__info">
-        <Segmented
-          onChange={setActiveTemplateId}
-          options={TEMPLATE_OPTIONS.map((template) => ({
-            label: (
-              <span
-                key={`${template.id}-${selectedFieldToken}`}
-                className={clsx('template-toolbar__segment-label', {
-                  'is-flashing':
-                    selectedFieldSource === 'form' &&
-                    selectedFieldToken > 0 &&
-                    matchingTemplateIds.includes(template.id),
-                  'is-match':
-                    selectedFieldSource === 'form' &&
-                    matchingTemplateIds.includes(template.id),
-                })}
-              >
-                {template.shortLabel}
-              </span>
-            ),
-            value: template.id,
-          }))}
-          size="large"
-          value={activeTemplateId}
-        />
+        <div className="template-toolbar__field">
+          <Typography.Text className="template-toolbar__field-label">
+            模板切换
+          </Typography.Text>
+          <Select
+            className="template-toolbar__select"
+            onChange={setActiveTemplateId}
+            options={TEMPLATE_OPTIONS.map((template) => ({
+              label: template.displayLabel,
+              value: template.id,
+            }))}
+            popupClassName="template-toolbar__select-popup"
+            size="large"
+            value={activeTemplateId}
+            variant="filled"
+          />
+        </div>
       </div>
 
       <div className="template-toolbar__controls">
-        <div className="template-toolbar__zoom-group">
-          <Slider
-            className="template-toolbar__zoom-slider"
-            max={150}
-            min={50}
-            onChange={setZoom}
-            step={1}
-            tooltip={{ formatter: (value) => `${value}%` }}
-            value={zoom}
-          />
-          <Typography.Text
-            className="template-toolbar__zoom-value"
-            type="secondary"
-          >
-            {zoom}%
+        <div className="template-toolbar__field template-toolbar__field--zoom">
+          <Typography.Text className="template-toolbar__field-label">
+            缩放
           </Typography.Text>
+          <div className="template-toolbar__zoom-group">
+            <Slider
+              className="template-toolbar__zoom-slider"
+              max={150}
+              min={50}
+              onChange={setZoom}
+              step={1}
+              tooltip={{ formatter: (value) => `${value}%` }}
+              value={zoom}
+            />
+            <Typography.Text
+              className="template-toolbar__zoom-value"
+              type="secondary"
+            >
+              {zoom}%
+            </Typography.Text>
+          </div>
         </div>
 
         <Button

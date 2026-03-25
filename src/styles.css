@@ -11,20 +11,20 @@
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  --app-bg: #edf2f7;
-  --panel-bg: rgba(255, 255, 255, 0.86);
-  --panel-border: rgba(148, 163, 184, 0.26);
+  --app-bg: #f6eeee;
+  --panel-bg: rgba(255, 250, 250, 0.9);
+  --panel-border: rgba(198, 40, 40, 0.12);
   --panel-shadow:
     0 20px 55px rgba(15, 23, 42, 0.08),
     0 6px 20px rgba(15, 23, 42, 0.05);
-  --accent-500: #1768ac;
-  --accent-100: #dbeafe;
-  --accent-050: #f3f8fe;
+  --accent-500: #c62828;
+  --accent-100: #fde2e2;
+  --accent-050: #fff5f5;
   --text-strong: #0f172a;
   --text-normal: #334155;
   --text-muted: #64748b;
-  --line-soft: #dbe3ec;
-  --line-strong: #9aa7b7;
+  --line-soft: #eadcdc;
+  --line-strong: #b9a1a1;
   --danger-050: #fff1f2;
   --danger-300: #fda4af;
 }
@@ -42,8 +42,8 @@ body,
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(23, 104, 172, 0.1), transparent 28%),
-    linear-gradient(180deg, #f3f6fa 0%, var(--app-bg) 100%);
+    radial-gradient(circle at top left, rgba(198, 40, 40, 0.1), transparent 28%),
+    linear-gradient(180deg, #faf4f4 0%, var(--app-bg) 100%);
   color: var(--text-normal);
   overflow: hidden;
 }
@@ -68,9 +68,9 @@ textarea {
   justify-content: space-between;
   gap: 24px;
   padding: 18px 24px 16px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  border-bottom: 1px solid rgba(198, 40, 40, 0.1);
   backdrop-filter: blur(18px);
-  background: rgba(245, 248, 252, 0.9);
+  background: rgba(252, 247, 247, 0.94);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -131,8 +131,8 @@ textarea {
 
 .app-splitter:hover::before,
 .app-splitter.is-dragging::before {
-  background: rgba(23, 104, 172, 0.72);
-  box-shadow: 0 0 0 6px rgba(23, 104, 172, 0.1);
+  background: rgba(198, 40, 40, 0.72);
+  box-shadow: 0 0 0 6px rgba(198, 40, 40, 0.1);
   transform: translate(-50%, -50%) scaleY(1.04);
 }
 
@@ -189,7 +189,7 @@ textarea {
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  border-bottom: 1px solid rgba(198, 40, 40, 0.08);
 }
 
 .schema-form__title.ant-typography {
@@ -216,10 +216,10 @@ textarea {
 
 .schema-form__collapse .ant-collapse-item {
   margin-bottom: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  border: 1px solid rgba(198, 40, 40, 0.12);
   border-radius: 16px !important;
   overflow: hidden;
-  background: linear-gradient(180deg, rgba(248, 251, 255, 0.88), rgba(255, 255, 255, 0.9));
+  background: linear-gradient(180deg, rgba(255, 247, 247, 0.92), rgba(255, 252, 252, 0.94));
   box-shadow:
     0 10px 24px rgba(15, 23, 42, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -227,7 +227,7 @@ textarea {
 
 .schema-form__collapse .ant-collapse-header {
   align-items: center !important;
-  background: linear-gradient(180deg, rgba(243, 248, 254, 0.9), rgba(255, 255, 255, 0.9));
+  background: linear-gradient(180deg, rgba(255, 241, 241, 0.94), rgba(255, 250, 250, 0.92));
   border-radius: 16px !important;
 }
 
@@ -257,11 +257,11 @@ textarea {
 .form-field-card {
   width: 100%;
   min-width: 0;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  border-left: 4px solid rgba(23, 104, 172, 0.16);
+  border: 1px solid rgba(198, 40, 40, 0.14);
+  border-left: 4px solid rgba(198, 40, 40, 0.16);
   border-radius: 14px;
   padding: 14px 14px 4px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.95));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 246, 246, 0.95));
   box-shadow:
     0 6px 18px rgba(15, 23, 42, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
@@ -273,18 +273,18 @@ textarea {
 }
 
 .form-field-card:hover {
-  border-color: rgba(23, 104, 172, 0.34);
-  border-left-color: rgba(23, 104, 172, 0.3);
+  border-color: rgba(198, 40, 40, 0.34);
+  border-left-color: rgba(198, 40, 40, 0.3);
   box-shadow:
-    0 10px 24px rgba(23, 104, 172, 0.08),
+    0 10px 24px rgba(198, 40, 40, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.88);
 }
 
 .form-field-card.is-selected {
-  border-color: rgba(23, 104, 172, 0.42);
+  border-color: rgba(198, 40, 40, 0.42);
   border-left-color: var(--accent-500);
   background: var(--accent-050);
-  box-shadow: 0 12px 32px rgba(23, 104, 172, 0.12);
+  box-shadow: 0 12px 32px rgba(198, 40, 40, 0.12);
 }
 
 .form-field-card.has-error {
@@ -339,7 +339,7 @@ textarea {
 .schema-form__item .ant-input-affix-wrapper,
 .schema-form__item .ant-select-selector {
   border-color: rgba(148, 163, 184, 0.34) !important;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fff7f7 100%) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
@@ -347,15 +347,15 @@ textarea {
 .schema-form__item .ant-input-textarea:hover textarea,
 .schema-form__item .ant-input-affix-wrapper:hover,
 .schema-form__item .ant-select:hover .ant-select-selector {
-  border-color: rgba(23, 104, 172, 0.34) !important;
+  border-color: rgba(198, 40, 40, 0.34) !important;
 }
 
 .schema-form__item .ant-input:focus,
 .schema-form__item .ant-input-textarea textarea:focus,
 .schema-form__item .ant-input-affix-wrapper-focused,
 .schema-form__item .ant-select-focused .ant-select-selector {
-  border-color: rgba(23, 104, 172, 0.58) !important;
-  box-shadow: 0 0 0 3px rgba(23, 104, 172, 0.1) !important;
+  border-color: rgba(198, 40, 40, 0.58) !important;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1) !important;
 }
 
 .schema-form__item .ant-form-item-control,
@@ -374,20 +374,20 @@ textarea {
 
 .schema-form__search .ant-input-affix-wrapper {
   padding-inline: 12px;
-  border-color: rgba(148, 163, 184, 0.3);
-  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(198, 40, 40, 0.12);
+  background: rgba(255, 252, 252, 0.96);
   box-shadow:
     0 4px 14px rgba(15, 23, 42, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .schema-form__search .ant-input-affix-wrapper:hover {
-  border-color: rgba(23, 104, 172, 0.34);
+  border-color: rgba(198, 40, 40, 0.34);
 }
 
 .schema-form__search .ant-input-affix-wrapper-focused {
-  border-color: rgba(23, 104, 172, 0.58);
-  box-shadow: 0 0 0 3px rgba(23, 104, 172, 0.1);
+  border-color: rgba(198, 40, 40, 0.58);
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
 }
 
 .schema-form__search .ant-input-prefix {
@@ -507,7 +507,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 16px;
-  min-width: min(100%, 560px);
+  min-width: min(100%, 680px);
 }
 
 .template-toolbar__info,
@@ -521,6 +521,35 @@ textarea {
 .template-toolbar__controls {
   flex: 1;
   justify-content: flex-end;
+}
+
+.template-toolbar__field {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.template-toolbar__field--zoom {
+  flex: 0 1 auto;
+}
+
+.template-toolbar__field-label.ant-typography {
+  margin: 0;
+  flex: 0 0 auto;
+  color: var(--text-normal);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.template-toolbar__select {
+  width: clamp(240px, 28vw, 300px);
+  min-width: 240px;
+}
+
+.template-toolbar__select .ant-select-selector {
+  border-radius: 12px !important;
 }
 
 .template-toolbar__zoom-group {
@@ -540,11 +569,11 @@ textarea {
 }
 
 .template-toolbar__zoom-slider .ant-slider-track {
-  background: linear-gradient(90deg, #7fb2df 0%, #1768ac 100%);
+  background: linear-gradient(90deg, #efa0a0 0%, #c62828 100%);
 }
 
 .template-toolbar__zoom-slider .ant-slider-handle::after {
-  box-shadow: 0 0 0 2px rgba(23, 104, 172, 0.2);
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.2);
 }
 
 .template-toolbar__zoom-value.ant-typography {
@@ -559,43 +588,12 @@ textarea {
   white-space: nowrap;
 }
 
-.template-toolbar__segment-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 54px;
-  padding: 2px 4px;
-  border-radius: 999px;
-  position: relative;
-  z-index: 1;
-  transform-origin: center;
-  will-change: transform;
-  transition:
-    color 0.18s ease,
-    transform 0.18s ease;
+.template-toolbar__select-popup .ant-select-item-option-selected {
+  background: var(--accent-050);
 }
 
-.template-toolbar__segment-label.is-match {
-  color: #0f4f85;
-}
-
-.template-toolbar__segment-label.is-flashing {
-  animation: template-segment-pulse 0.34s ease-in-out 3;
-}
-
-@keyframes template-segment-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  40% {
-    transform: scale(1.12);
-  }
-
-  70% {
-    transform: scale(0.97);
-  }
+.template-toolbar__select-popup .ant-select-item-option-active {
+  background: rgba(198, 40, 40, 0.08);
 }
 
 .template-help-popover .ant-popover-inner {
@@ -631,7 +629,8 @@ textarea {
   display: flex;
   align-items: center;
   padding: 18px 24px 14px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  border-bottom: 1px solid rgba(198, 40, 40, 0.08);
+  background: rgba(255, 249, 249, 0.86);
 }
 
 .preview-panel__title.ant-typography {
@@ -653,11 +652,11 @@ textarea {
   min-height: 0;
   overflow: auto;
   background:
-    linear-gradient(180deg, rgba(222, 229, 237, 0.92), rgba(214, 221, 230, 0.92)),
+    linear-gradient(180deg, rgba(242, 233, 233, 0.94), rgba(235, 227, 227, 0.94)),
     repeating-linear-gradient(
       45deg,
-      rgba(255, 255, 255, 0.08) 0,
-      rgba(255, 255, 255, 0.08) 14px,
+      rgba(255, 255, 255, 0.12) 0,
+      rgba(255, 255, 255, 0.12) 14px,
       transparent 14px,
       transparent 28px
     );
@@ -703,7 +702,7 @@ textarea {
   flex: 0 0 42px;
   pointer-events: auto;
   border: 1px solid rgba(148, 163, 184, 0.22);
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 251, 251, 0.96);
   box-shadow:
     0 12px 28px rgba(15, 23, 42, 0.12),
     0 4px 12px rgba(15, 23, 42, 0.08);
@@ -711,7 +710,7 @@ textarea {
 }
 
 .preview-panel__field-nav-button.ant-btn:hover {
-  border-color: rgba(23, 104, 172, 0.28);
+  border-color: rgba(198, 40, 40, 0.28);
   color: var(--accent-800);
   background: #fff;
 }
@@ -740,7 +739,7 @@ textarea {
 
 .a4-page {
   background: #fff;
-  border: 1px solid #d8dee8;
+  border: 1px solid #e7d8d8;
   border-radius: 6px;
   overflow: hidden;
   box-shadow:
@@ -869,7 +868,7 @@ textarea {
 }
 
 .doc-box--soft {
-  background: #f8fbff;
+  background: #fff7f7;
 }
 
 .doc-grid {
@@ -889,7 +888,7 @@ textarea {
   padding: 12px 14px;
   border-radius: 14px;
   border: 1px solid var(--line-soft);
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #fff7f7 100%);
 }
 
 .doc-meta-card__label {
@@ -978,8 +977,8 @@ textarea {
 }
 
 .field-anchor-text:hover {
-  background: rgba(23, 104, 172, 0.08);
-  border-color: rgba(23, 104, 172, 0.26);
+  background: rgba(198, 40, 40, 0.08);
+  border-color: rgba(198, 40, 40, 0.26);
 }
 
 .field-anchor-text--empty {
@@ -991,8 +990,8 @@ textarea {
 
 .field-anchor-text--selected {
   background: var(--accent-100);
-  border-color: rgba(23, 104, 172, 0.48);
-  box-shadow: 0 0 0 1px rgba(23, 104, 172, 0.12);
+  border-color: rgba(198, 40, 40, 0.48);
+  box-shadow: 0 0 0 1px rgba(198, 40, 40, 0.12);
 }
 
 .field-anchor-text--block {
@@ -1103,13 +1102,13 @@ textarea {
 }
 
 .party-template-page .field-anchor-text--selected {
-  background: rgba(23, 104, 172, 0.12);
+  background: rgba(198, 40, 40, 0.12);
   border-color: transparent;
   box-shadow: none;
 }
 
 .party-template-page .field-anchor-text:hover {
-  background: rgba(23, 104, 172, 0.08);
+  background: rgba(198, 40, 40, 0.08);
   border-color: transparent;
 }
 
@@ -1569,13 +1568,13 @@ textarea {
 }
 
 .training-template-page .field-anchor-text--selected {
-  background: rgba(23, 104, 172, 0.12);
+  background: rgba(198, 40, 40, 0.12);
   border-color: transparent;
   box-shadow: none;
 }
 
 .training-template-page .field-anchor-text:hover {
-  background: rgba(23, 104, 172, 0.08);
+  background: rgba(198, 40, 40, 0.08);
   border-color: transparent;
 }
 
@@ -2644,13 +2643,13 @@ textarea {
 }
 
 .wish-template-page .field-anchor-text--selected {
-  background: rgba(23, 104, 172, 0.12);
+  background: rgba(198, 40, 40, 0.12);
   border-color: transparent;
   box-shadow: none;
 }
 
 .wish-template-page .field-anchor-text:hover {
-  background: rgba(23, 104, 172, 0.08);
+  background: rgba(198, 40, 40, 0.08);
   border-color: transparent;
 }
 
