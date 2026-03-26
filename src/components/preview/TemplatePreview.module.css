@@ -1,0 +1,103 @@
+.preview-panel__header {
+  display: flex;
+  align-items: center;
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid rgba(198, 40, 40, 0.08);
+  background: rgba(255, 249, 249, 0.86);
+}
+
+.preview-panel__title:global(.ant-typography) {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 20px;
+}
+
+.preview-panel__canvas-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.preview-panel__canvas {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background:
+    linear-gradient(180deg, rgba(242, 233, 233, 0.94), rgba(235, 227, 227, 0.94)),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.12) 0,
+      rgba(255, 255, 255, 0.12) 14px,
+      transparent 14px,
+      transparent 28px
+    );
+}
+
+.preview-panel__stack {
+  min-width: fit-content;
+  padding: 24px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.preview-panel__field-nav {
+  position: absolute;
+  top: 18px;
+  right: 30px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.preview-panel__field-nav-button,
+.preview-panel__field-nav-spacer {
+  width: 42px;
+  height: 42px;
+}
+
+.preview-panel__field-nav-button:global(.ant-btn) {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex: 0 0 42px;
+  pointer-events: auto;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(255, 251, 251, 0.96);
+  box-shadow:
+    0 12px 28px rgba(15, 23, 42, 0.12),
+    0 4px 12px rgba(15, 23, 42, 0.08);
+  color: var(--accent-700);
+}
+
+.preview-panel__field-nav-button:global(.ant-btn:hover) {
+  border-color: rgba(198, 40, 40, 0.28);
+  color: var(--accent-800);
+  background: #fff;
+}
+
+.preview-panel__field-nav-spacer {
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .preview-panel__header {
+    padding: 18px 18px 14px;
+  }
+
+  .preview-panel__stack {
+    padding: 18px 16px 28px;
+  }
+}

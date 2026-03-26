@@ -1,5 +1,9 @@
+import clsx from 'clsx'
 import A4Page from '../components/shared/A4Page'
 import FieldAnchorText from '../components/shared/FieldAnchorText'
+import styles from './WishTable.module.css'
+
+const c = (...names) => clsx(names.map((name) => styles[name]).filter(Boolean))
 
 const RESUME_ROW_COUNT = 6
 const FAMILY_ROW_COUNT = 6
@@ -20,8 +24,10 @@ const COVER_LINES = [
 function InlineField({ fieldId, value, className }) {
   return (
     <FieldAnchorText
-      className={['wish-field-anchor', className].filter(Boolean).join(' ')}
+      className={clsx(c('wish-field-anchor'), className)}
+      emptyClassName={c('wish-field-anchor--empty')}
       fieldId={fieldId}
+      selectedClassName={c('wish-field-anchor--selected')}
       value={value}
     />
   )
@@ -31,7 +37,7 @@ function LineField({ fieldId, value, className }) {
   return (
     <span className={className}>
       <InlineField
-        className="wish-field-anchor--line"
+        className={c('wish-field-anchor--line')}
         fieldId={fieldId}
         value={value}
       />
@@ -42,7 +48,7 @@ function LineField({ fieldId, value, className }) {
 function BlockField({ fieldId, value, className }) {
   return (
     <InlineField
-      className={['wish-field-anchor--block', className].filter(Boolean).join(' ')}
+      className={clsx(c('wish-field-anchor--block'), className)}
       fieldId={fieldId}
       value={value}
     />
@@ -51,7 +57,7 @@ function BlockField({ fieldId, value, className }) {
 
 function VerticalText({ text }) {
   return (
-    <div className="wish-vertical-text">
+    <div className={c('wish-vertical-text')}>
       {Array.from(text).map((char, index) => (
         <span key={`${char}-${index}`}>{char === ' ' ? '\u00A0' : char}</span>
       ))}
@@ -60,17 +66,17 @@ function VerticalText({ text }) {
 }
 
 function PageTitle({ children }) {
-  return <h2 className="wish-page-title">{children}</h2>
+  return <h2 className={c('wish-page-title')}>{children}</h2>
 }
 
 function SignatureLine({ dateFieldId, dateValue, signatureLabel }) {
   return (
-    <div className="wish-signature-row">
+    <div className={c('wish-signature-row')}>
       <span>{signatureLabel}</span>
-      <span className="wish-signature-placeholder" />
+      <span className={c('wish-signature-placeholder')} />
       <span>日期：</span>
       <LineField
-        className="wish-signature-line wish-signature-line--date"
+        className={c('wish-signature-line', 'wish-signature-line--date')}
         fieldId={dateFieldId}
         value={dateValue}
       />
@@ -80,13 +86,13 @@ function SignatureLine({ dateFieldId, dateValue, signatureLabel }) {
 
 function StaticSignatureRow({ signatureLabel, showDate = false }) {
   return (
-    <div className="wish-signature-row">
+    <div className={c('wish-signature-row')}>
       <span>{signatureLabel}</span>
-      <span className="wish-signature-placeholder" />
+      <span className={c('wish-signature-placeholder')} />
       {showDate ? (
         <>
           <span>日期：</span>
-          <span className="wish-signature-line wish-signature-line--date" />
+          <span className={c('wish-signature-line', 'wish-signature-line--date')} />
         </>
       ) : null}
     </div>
@@ -102,9 +108,9 @@ function SectionCard({
   title,
 }) {
   return (
-    <section className="wish-section-card">
-      <div className="wish-section-card__title">{title}</div>
-      <div className={['wish-section-card__body', bodyClassName].filter(Boolean).join(' ')}>
+    <section className={c('wish-section-card')}>
+      <div className={c('wish-section-card__title')}>{title}</div>
+      <div className={clsx(c('wish-section-card__body'), bodyClassName)}>
         {children}
       </div>
       {dateFieldId ? (
@@ -123,25 +129,25 @@ function SectionCard({
 function CoverPage({ formData, zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-cover-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-cover-page')}
       zoom={zoom}
     >
-      <div className="wish-cover-page__emblem" aria-hidden="true">
+      <div className={c('wish-cover-page__emblem')} aria-hidden="true">
         <span>★</span>
       </div>
 
-      <div className="wish-cover-page__title-block">
-        <div className="wish-cover-page__title-small">中国共产党</div>
-        <div className="wish-cover-page__title-large">入党志愿书</div>
+      <div className={c('wish-cover-page__title-block')}>
+        <div className={c('wish-cover-page__title-small')}>中国共产党</div>
+        <div className={c('wish-cover-page__title-large')}>入党志愿书</div>
       </div>
 
-      <div className="wish-cover-page__lines">
+      <div className={c('wish-cover-page__lines')}>
         {COVER_LINES.map((item) => (
-          <div className="wish-cover-line" key={item.fieldId}>
-            <div className="wish-cover-line__label">{item.label}</div>
+          <div className={c('wish-cover-line')} key={item.fieldId}>
+            <div className={c('wish-cover-line__label')}>{item.label}</div>
             <LineField
-              className="wish-cover-line__value"
+              className={c('wish-cover-line__value')}
               fieldId={item.fieldId}
               value={formData[item.fieldId]}
             />
@@ -149,7 +155,7 @@ function CoverPage({ formData, zoom }) {
         ))}
       </div>
 
-      <div className="wish-cover-page__footer">中共中央组织部印制</div>
+      <div className={c('wish-cover-page__footer')}>中共中央组织部印制</div>
     </A4Page>
   )
 }
@@ -157,21 +163,21 @@ function CoverPage({ formData, zoom }) {
 function InstructionsPage({ zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-simple-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-simple-page')}
       zoom={zoom}
     >
       <PageTitle>填写说明</PageTitle>
 
-      <div className="wish-paragraph-stack">
+      <div className={c('wish-paragraph-stack')}>
         {INSTRUCTION_PARAGRAPHS.map((item) => (
-          <p className="wish-paragraph" key={item}>
+          <p className={c('wish-paragraph')} key={item}>
             {item}
           </p>
         ))}
       </div>
 
-      <div className="wish-page-note">
+      <div className={c('wish-page-note')}>
         注：本页为固定说明页，审核《入党志愿书》或同类材料时请一并核对。
       </div>
     </A4Page>
@@ -181,13 +187,13 @@ function InstructionsPage({ zoom }) {
 function OathPage({ zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-oath-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-oath-page')}
       zoom={zoom}
     >
       <PageTitle>入党誓词</PageTitle>
-      <div className="wish-oath-page__body">
-        <p className="wish-oath-page__text">{OATH_TEXT}</p>
+      <div className={c('wish-oath-page__body')}>
+        <p className={c('wish-oath-page__text')}>{OATH_TEXT}</p>
       </div>
     </A4Page>
   )
@@ -196,69 +202,69 @@ function OathPage({ zoom }) {
 function BasicInfoAndWishPage({ formData, zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-table-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-table-page')}
       zoom={zoom}
     >
       <PageTitle>基本信息及入党志愿</PageTitle>
 
-      <table className="wish-basic-table">
+      <table className={c('wish-basic-table')}>
         <tbody>
           <tr>
-            <td className="wish-table__label">姓名</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>姓名</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="applicantName" value={formData.applicantName} />
             </td>
-            <td className="wish-table__label">性别</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>性别</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="gender" value={formData.gender} />
             </td>
-            <td className="wish-table__label">民族</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>民族</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="ethnicity" value={formData.ethnicity} />
             </td>
           </tr>
           <tr>
-            <td className="wish-table__label">出生日期</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>出生日期</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="birthDate" value={formData.birthDate} />
             </td>
-            <td className="wish-table__label">籍贯</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>籍贯</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="nativePlace" value={formData.nativePlace} />
             </td>
-            <td className="wish-table__label">文化程度</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>文化程度</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="education" value={formData.education} />
             </td>
           </tr>
           <tr>
-            <td className="wish-table__label">学位</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>学位</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="degree" value={formData.degree} />
             </td>
-            <td className="wish-table__label">现所在单位</td>
-            <td className="wish-table__value" colSpan={3}>
+            <td className={c('wish-table__label')}>现所在单位</td>
+            <td className={c('wish-table__value')} colSpan={3}>
               <InlineField fieldId="currentUnit" value={formData.currentUnit} />
             </td>
           </tr>
           <tr>
-            <td className="wish-table__label">现任职务</td>
-            <td className="wish-table__value" colSpan={3}>
+            <td className={c('wish-table__label')}>现任职务</td>
+            <td className={c('wish-table__value')} colSpan={3}>
               <InlineField fieldId="position" value={formData.position} />
             </td>
-            <td className="wish-table__label">身份证号</td>
-            <td className="wish-table__value">
+            <td className={c('wish-table__label')}>身份证号</td>
+            <td className={c('wish-table__value')}>
               <InlineField fieldId="idNumber" value={formData.idNumber} />
             </td>
           </tr>
         </tbody>
       </table>
 
-      <section className="wish-large-section">
-        <div className="wish-large-section__title">入党志愿</div>
+      <section className={c('wish-large-section')}>
+        <div className={c('wish-large-section__title')}>入党志愿</div>
         <BlockField
-          className="wish-field-anchor--essay"
+          className={c('wish-field-anchor--essay')}
           fieldId="partyApplicationContent"
           value={formData.partyApplicationContent}
         />
@@ -272,15 +278,15 @@ function ResumePage({ formData, zoom }) {
 
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-table-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-table-page')}
       zoom={zoom}
     >
       <PageTitle>本人经历</PageTitle>
 
-      <div className="wish-resume-spacer" />
+      <div className={c('wish-resume-spacer')} />
 
-      <table className="wish-grid-table">
+      <table className={c('wish-grid-table')}>
         <thead>
           <tr>
             <th>起始日期</th>
@@ -327,35 +333,35 @@ function ResumePage({ formData, zoom }) {
 function PoliticalReviewPage({ formData, zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-table-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-table-page')}
       zoom={zoom}
     >
       <PageTitle>政治审查及现实表现</PageTitle>
 
-      <div className="wish-section-stack">
-        <section className="wish-large-section wish-large-section--compact">
-          <div className="wish-large-section__title">政治审查结论</div>
+      <div className={c('wish-section-stack')}>
+        <section className={c('wish-large-section', 'wish-large-section--compact')}>
+          <div className={c('wish-large-section__title')}>政治审查结论</div>
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId="politicalReviewConclusion"
             value={formData.politicalReviewConclusion}
           />
         </section>
 
-        <section className="wish-large-section wish-large-section--compact">
-          <div className="wish-large-section__title">奖惩情况</div>
+        <section className={c('wish-large-section', 'wish-large-section--compact')}>
+          <div className={c('wish-large-section__title')}>奖惩情况</div>
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId="rewardPunishmentInfo"
             value={formData.rewardPunishmentInfo}
           />
         </section>
 
-        <section className="wish-large-section wish-large-section--compact">
-          <div className="wish-large-section__title">主要现实表现</div>
+        <section className={c('wish-large-section', 'wish-large-section--compact')}>
+          <div className={c('wish-large-section__title')}>主要现实表现</div>
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId="majorPerformance"
             value={formData.majorPerformance}
           />
@@ -370,13 +376,13 @@ function FamilyPage({ formData, zoom }) {
 
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-table-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-table-page')}
       zoom={zoom}
     >
       <PageTitle>家庭主要成员及主要社会关系</PageTitle>
 
-      <table className="wish-grid-table">
+      <table className={c('wish-grid-table')}>
         <thead>
           <tr>
             <th>姓名</th>
@@ -417,7 +423,7 @@ function FamilyPage({ formData, zoom }) {
         </tbody>
       </table>
 
-      <div className="wish-family-spacer" />
+      <div className={c('wish-family-spacer')} />
     </A4Page>
   )
 }
@@ -425,28 +431,28 @@ function FamilyPage({ formData, zoom }) {
 function VerticalIssuePage({ formData, zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-vertical-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-vertical-page')}
       zoom={zoom}
     >
-      <table className="wish-vertical-page__table">
+      <table className={c('wish-vertical-page__table')}>
         <tbody>
           <tr>
-            <td className="wish-vertical-page__rail">
+            <td className={c('wish-vertical-page__rail')}>
               <VerticalText text="需要向党组织说明的问题" />
             </td>
-            <td className="wish-vertical-page__body">
+            <td className={c('wish-vertical-page__body')}>
               <BlockField
-                className="wish-field-anchor--essay wish-field-anchor--issue"
+                className={c('wish-field-anchor--essay', 'wish-field-anchor--issue')}
                 fieldId="selfStatementIssues"
                 value={formData.selfStatementIssues}
               />
 
-              <div className="wish-signature-row wish-signature-row--bottom">
+              <div className={c('wish-signature-row', 'wish-signature-row--bottom')}>
                 <span>本人签名：</span>
-                <span className="wish-signature-placeholder" />
+                <span className={c('wish-signature-placeholder')} />
                 <span>日期：</span>
-                <span className="wish-signature-line wish-signature-line--date" />
+                <span className={c('wish-signature-line', 'wish-signature-line--date')} />
               </div>
             </td>
           </tr>
@@ -459,13 +465,13 @@ function VerticalIssuePage({ formData, zoom }) {
 function IntroducerOpinionsPage({ formData, zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-simple-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-simple-page')}
       zoom={zoom}
     >
       <PageTitle>入党介绍人意见</PageTitle>
 
-      <div className="wish-section-stack">
+      <div className={c('wish-section-stack')}>
         <SectionCard
           dateFieldId="introducer1Date"
           dateValue={formData.introducer1Date}
@@ -473,7 +479,7 @@ function IntroducerOpinionsPage({ formData, zoom }) {
           title="介绍人一意见"
         >
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId="introducer1Opinion"
             value={formData.introducer1Opinion}
           />
@@ -486,7 +492,7 @@ function IntroducerOpinionsPage({ formData, zoom }) {
           title="介绍人二意见"
         >
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId="introducer2Opinion"
             value={formData.introducer2Opinion}
           />
@@ -510,11 +516,11 @@ function TwoDecisionPage({
 }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-simple-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-simple-page')}
       zoom={zoom}
     >
-      <div className="wish-section-stack">
+      <div className={c('wish-section-stack')}>
         <SectionCard
           dateFieldId={topDateFieldId}
           dateValue={topDateValue}
@@ -522,7 +528,7 @@ function TwoDecisionPage({
           title={topTitle}
         >
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId={topFieldId}
             value={formData[topFieldId]}
           />
@@ -535,7 +541,7 @@ function TwoDecisionPage({
           title={bottomTitle}
         >
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId={bottomFieldId}
             value={formData[bottomFieldId]}
           />
@@ -548,13 +554,13 @@ function TwoDecisionPage({
 function ConversionApprovalPage({ formData, remarkFieldId, title, zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-simple-page"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-simple-page')}
       zoom={zoom}
     >
       <PageTitle>{title}</PageTitle>
 
-      <div className="wish-section-stack wish-section-stack--dense">
+      <div className={c('wish-section-stack', 'wish-section-stack--dense')}>
         <SectionCard
           dateFieldId="conversionResolutionDate"
           dateValue={formData.conversionResolutionDate}
@@ -562,13 +568,13 @@ function ConversionApprovalPage({ formData, remarkFieldId, title, zoom }) {
           title="转正相关决议"
         >
           <BlockField
-            className="wish-field-anchor--essay wish-field-anchor--section"
+            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
             fieldId="conversionResolution"
             value={formData.conversionResolution}
           />
         </SectionCard>
 
-        <div className="wish-approval-grid">
+        <div className={c('wish-approval-grid')}>
           <SectionCard
             dateFieldId="generalBranchDate"
             dateValue={formData.generalBranchDate}
@@ -576,7 +582,7 @@ function ConversionApprovalPage({ formData, remarkFieldId, title, zoom }) {
             title="总支审查意见"
           >
             <BlockField
-              className="wish-field-anchor--essay wish-field-anchor--approval"
+              className={c('wish-field-anchor--essay', 'wish-field-anchor--approval')}
               fieldId="generalBranchOpinion"
               value={formData.generalBranchOpinion}
             />
@@ -589,7 +595,7 @@ function ConversionApprovalPage({ formData, remarkFieldId, title, zoom }) {
             title="基层党委审批意见"
           >
             <BlockField
-              className="wish-field-anchor--essay wish-field-anchor--approval"
+              className={c('wish-field-anchor--essay', 'wish-field-anchor--approval')}
               fieldId="committeeApprovalOpinion"
               value={formData.committeeApprovalOpinion}
             />
@@ -597,10 +603,10 @@ function ConversionApprovalPage({ formData, remarkFieldId, title, zoom }) {
         </div>
 
         {remarkFieldId ? (
-          <section className="wish-large-section wish-large-section--remark">
-            <div className="wish-large-section__title">备注</div>
+          <section className={c('wish-large-section', 'wish-large-section--remark')}>
+            <div className={c('wish-large-section__title')}>备注</div>
             <BlockField
-              className="wish-field-anchor--essay wish-field-anchor--remark"
+              className={c('wish-field-anchor--essay', 'wish-field-anchor--remark')}
               fieldId={remarkFieldId}
               value={formData[remarkFieldId]}
             />
@@ -614,17 +620,17 @@ function ConversionApprovalPage({ formData, remarkFieldId, title, zoom }) {
 function BackCoverPage({ zoom }) {
   return (
     <A4Page
-      className="wish-template-page"
-      contentClassName="wish-back-cover"
+      className={c('wish-template-page')}
+      contentClassName={c('wish-back-cover')}
       zoom={zoom}
     >
-      <div className="wish-back-cover__center">
-        <div className="wish-back-cover__title">中共中央组织部</div>
-        <div className="wish-back-cover__year">二〇二六年制</div>
-        <p className="wish-back-cover__note">
+      <div className={c('wish-back-cover__center')}>
+        <div className={c('wish-back-cover__title')}>中共中央组织部</div>
+        <div className={c('wish-back-cover__year')}>二〇二六年制</div>
+        <p className={c('wish-back-cover__note')}>
           本册为固定印制材料，供党组织填写、审批和归档使用。
         </p>
-        <p className="wish-back-cover__note">
+        <p className={c('wish-back-cover__note')}>
           印刷说明页为固定文字，不纳入结构化字段录入范围。
         </p>
       </div>

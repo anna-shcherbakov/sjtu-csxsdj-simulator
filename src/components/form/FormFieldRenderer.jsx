@@ -7,6 +7,7 @@ import {
 import { Button, Form, Input, Radio, Select, Tooltip } from 'antd'
 import clsx from 'clsx'
 import useFormStore from '../../store/useFormStore'
+import styles from './FormFieldRenderer.module.css'
 
 const { TextArea } = Input
 
@@ -17,11 +18,11 @@ const normalizeOptions = (options = []) =>
 
 function FieldHelpLabel({ label, description }) {
   return (
-    <span className="schema-field-label">
+    <span className={styles['schema-field-label']}>
       <span>{label}</span>
       <Tooltip title={description || '暂无填写说明'}>
         <QuestionCircleOutlined
-          className="schema-field-label__icon"
+          className={styles['schema-field-label__icon']}
           onClick={(event) => event.stopPropagation()}
         />
       </Tooltip>
@@ -36,7 +37,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
     return (
       <TextArea
         autoSize={{ minRows: 4, maxRows: 10 }}
-        className="schema-form__textarea"
+        className={styles['schema-form__textarea']}
         onChange={(event) => onChange(event.target.value)}
         onFocus={onFocus}
         placeholder={field.placeholder}
@@ -49,7 +50,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
     return (
       <Select
         allowClear
-        className="schema-form__select"
+        className={styles['schema-form__select']}
         onChange={(nextValue) => onChange(nextValue ?? '')}
         onFocus={onFocus}
         options={normalizeOptions(field.options)}
@@ -62,7 +63,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
   if (fieldType === 'radio') {
     return (
       <Radio.Group
-        className="schema-form__radio-group"
+        className={styles['schema-form__radio-group']}
         onChange={(event) => onChange(event.target.value ?? '')}
         onFocus={onFocus}
         options={normalizeOptions(field.options)}
@@ -73,7 +74,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
 
   return (
     <Input
-      className="schema-form__input"
+      className={styles['schema-form__input']}
       onChange={(event) => onChange(event.target.value)}
       onFocus={onFocus}
       placeholder={field.placeholder}
@@ -111,8 +112,8 @@ function FormFieldRenderer({ field, domId }) {
     const rows = Array.isArray(value) ? value : []
 
     return (
-      <div className="list-field">
-        <div className="list-field__toolbar">
+      <div className={styles['list-field']}>
+        <div className={styles['list-field__toolbar']}>
           <Button
             icon={<PlusOutlined />}
             onClick={handleAddListRow}
@@ -123,8 +124,8 @@ function FormFieldRenderer({ field, domId }) {
           </Button>
         </div>
 
-        <div className="list-field__table-wrap">
-          <table className="list-field__table">
+        <div className={styles['list-field__table-wrap']}>
+          <table className={styles['list-field__table']}>
             <thead>
               <tr>
                 {field.columns.map((column) => (
@@ -135,7 +136,7 @@ function FormFieldRenderer({ field, domId }) {
                     />
                   </th>
                 ))}
-                <th className="list-field__actions">操作</th>
+                <th className={styles['list-field__actions']}>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -158,7 +159,7 @@ function FormFieldRenderer({ field, domId }) {
                         })}
                       </td>
                     ))}
-                    <td className="list-field__actions">
+                    <td className={styles['list-field__actions']}>
                       <Button
                         danger
                         icon={<DeleteOutlined />}
@@ -177,10 +178,10 @@ function FormFieldRenderer({ field, domId }) {
               ) : (
                 <tr>
                   <td
-                    className="list-field__empty-cell"
+                    className={styles['list-field__empty-cell']}
                     colSpan={field.columns.length + 1}
                   >
-                    <div className="list-field__empty">
+                    <div className={styles['list-field__empty']}>
                       暂无数据，点击“新增一行”开始填写。
                     </div>
                   </td>
@@ -205,16 +206,16 @@ function FormFieldRenderer({ field, domId }) {
 
   return (
     <div
-      className={clsx('form-field-card', {
-        'has-error': Boolean(error),
-        'is-selected': isSelected,
+      className={clsx(styles['form-field-card'], {
+        [styles['has-error']]: Boolean(error),
+        [styles['is-selected']]: isSelected,
       })}
       data-field-id={field.id}
       id={domId}
       onClick={handleSelectField}
     >
       <Form.Item
-        className="schema-form__item"
+        className={styles['schema-form__item']}
         help={error || null}
         label={
           <FieldHelpLabel

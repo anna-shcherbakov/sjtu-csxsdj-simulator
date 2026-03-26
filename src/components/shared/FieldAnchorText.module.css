@@ -1,0 +1,37 @@
+.field-anchor-text {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  min-width: 64px;
+  max-width: 100%;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px dashed transparent;
+  color: var(--text-strong);
+  font-weight: 500;
+  white-space: pre-wrap;
+  word-break: break-word;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.field-anchor-text:hover {
+  background: rgba(198, 40, 40, 0.08);
+  border-color: rgba(198, 40, 40, 0.26);
+}
+
+.field-anchor-text--empty {
+  color: #94a3b8;
+  font-weight: 400;
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+.field-anchor-text--selected {
+  background: var(--accent-100);
+  border-color: rgba(198, 40, 40, 0.48);
+  box-shadow: 0 0 0 1px rgba(198, 40, 40, 0.12);
+}

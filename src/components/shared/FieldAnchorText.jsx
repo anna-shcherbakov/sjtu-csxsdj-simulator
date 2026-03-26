@@ -1,13 +1,20 @@
 import { memo } from 'react'
 import clsx from 'clsx'
 import useFormStore from '../../store/useFormStore'
+import styles from './FieldAnchorText.module.css'
 
 const isValueEmpty = (value) =>
   value === undefined ||
   value === null ||
   (typeof value === 'string' ? value.trim() === '' : value === '')
 
-function FieldAnchorText({ fieldId, value, className }) {
+function FieldAnchorText({
+  fieldId,
+  value,
+  className,
+  emptyClassName,
+  selectedClassName,
+}) {
   const isSelected = useFormStore((state) => state.selectedFieldId === fieldId)
   const setSelectedFieldId = useFormStore((state) => state.setSelectedFieldId)
   const empty = isValueEmpty(value)
@@ -28,10 +35,14 @@ function FieldAnchorText({ fieldId, value, className }) {
   return (
     <span
       aria-label={`定位字段 ${fieldId}`}
-      className={clsx('field-anchor-text', className, {
-        'field-anchor-text--empty': empty,
-        'field-anchor-text--selected': isSelected,
-      })}
+      className={clsx(
+        styles['field-anchor-text'],
+        className,
+        empty && styles['field-anchor-text--empty'],
+        empty && emptyClassName,
+        isSelected && styles['field-anchor-text--selected'],
+        isSelected && selectedClassName,
+      )}
       data-field-id={fieldId}
       onClick={handleSelect}
       onKeyDown={handleKeyDown}

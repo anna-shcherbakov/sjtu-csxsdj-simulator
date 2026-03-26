@@ -7,6 +7,7 @@ import TalkTable from '../../templates/TalkTable'
 import WishTable from '../../templates/WishTable'
 import { TEMPLATE_OPTIONS } from '../../data/templates'
 import useFormStore from '../../store/useFormStore'
+import styles from './TemplatePreview.module.css'
 
 const TEMPLATE_COMPONENTS = {
   'party-applicant-document': TalkTable,
@@ -156,15 +157,15 @@ function TemplatePreview() {
 
   return (
     <>
-      <div className="preview-panel__header">
-        <Typography.Title className="preview-panel__title" level={4}>
+      <div className={styles['preview-panel__header']}>
+        <Typography.Title className={styles['preview-panel__title']} level={4}>
           {activeTemplate?.displayLabel}
         </Typography.Title>
       </div>
 
-      <div className="preview-panel__canvas-wrap">
-        <div className="preview-panel__canvas" ref={canvasRef}>
-          <div className="preview-panel__stack">
+      <div className={styles['preview-panel__canvas-wrap']}>
+        <div className={styles['preview-panel__canvas']} ref={canvasRef}>
+          <div className={styles['preview-panel__stack']}>
             {ActiveTemplateComponent ? (
               <ActiveTemplateComponent formData={formData} zoom={zoom} />
             ) : (
@@ -175,28 +176,34 @@ function TemplatePreview() {
 
         {selectedFieldSource === 'form' &&
         (fieldNavigator.showUp || fieldNavigator.showDown) ? (
-          <div className="preview-panel__field-nav">
+          <div className={styles['preview-panel__field-nav']}>
             {fieldNavigator.showUp ? (
               <Button
                 aria-label="跳转到上一个字段位置"
-                className="preview-panel__field-nav-button"
+                className={styles['preview-panel__field-nav-button']}
                 icon={<ArrowUpOutlined />}
                 onClick={() => handleFieldNavigate('up')}
                 shape="circle"
               />
             ) : (
-              <span className="preview-panel__field-nav-spacer" aria-hidden="true" />
+              <span
+                aria-hidden="true"
+                className={styles['preview-panel__field-nav-spacer']}
+              />
             )}
             {fieldNavigator.showDown ? (
               <Button
                 aria-label="跳转到下一个字段位置"
-                className="preview-panel__field-nav-button"
+                className={styles['preview-panel__field-nav-button']}
                 icon={<ArrowDownOutlined />}
                 onClick={() => handleFieldNavigate('down')}
                 shape="circle"
               />
             ) : (
-              <span className="preview-panel__field-nav-spacer" aria-hidden="true" />
+              <span
+                aria-hidden="true"
+                className={styles['preview-panel__field-nav-spacer']}
+              />
             )}
           </div>
         ) : null}

@@ -1,0 +1,59 @@
+.training-field-anchor--inline-mini {
+  display: inline-block;
+  min-width: 34px;
+  text-align: center;
+  border-bottom: 1px solid #000;
+}
+
+.training-instruction-list {
+  margin: 28px 0 0;
+  padding-left: 26px;
+  display: grid;
+  gap: 24px;
+  font-size: 18px;
+  line-height: 1.9;
+}
+
+.training-quarter-footer-cell {
+  padding: 10px 16px !important;
+}
+
+.training-page-title--compact {
+  margin-bottom: 14px;
+}
+
+.training-quarter-record-table__body {
+  padding: 0 !important;
+}
+
+.training-quarter-record-page {
+  min-height: 920px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 12px;
+}
+
+.training-basic-table--probationary td {
+  font-size: 13px;
+}
+
+.training-basic-table__paragraph-cell {
+  line-height: 1.85;
+  white-space: pre-wrap;
+}
+
+.training-basic-table__inline-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.training-basic-table__blank {
+  min-height: 42px;
+}
+
+.training-public-notice-spacer {
+  flex: 1;
+  min-height: 620px;
+}

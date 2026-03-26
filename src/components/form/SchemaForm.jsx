@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons'
 import FormFieldRenderer from './FormFieldRenderer'
 import { findFormFieldById, flattenFormFields } from '../../data/formSchema'
 import useFormStore from '../../store/useFormStore'
+import styles from './SchemaForm.module.css'
 
 const buildVisibleGroups = (schema, visibleFields) => {
   const visibleFieldIds = new Set(visibleFields.map((field) => field.id))
@@ -135,9 +136,9 @@ function SchemaForm() {
   }
 
   return (
-    <div className="schema-form">
-      <div className="schema-form__header">
-        <Typography.Title className="schema-form__title" level={4}>
+    <div className={styles['schema-form']}>
+      <div className={styles['schema-form__header']}>
+        <Typography.Title className={styles['schema-form__title']} level={4}>
           字段表单
         </Typography.Title>
         <Tag>
@@ -145,7 +146,7 @@ function SchemaForm() {
         </Tag>
       </div>
 
-      <div className="schema-form__search">
+      <div className={styles['schema-form__search']}>
         <Input
           allowClear
           onChange={(event) => handleSearchChange(event.target.value)}
@@ -155,23 +156,23 @@ function SchemaForm() {
         />
       </div>
 
-      <div className="schema-form__body">
+      <div className={styles['schema-form__body']}>
         {visibleFields.length > 0 ? (
           <Form layout="vertical" requiredMark={false}>
             <Collapse
               activeKey={activeKeys}
               bordered={false}
-              className="schema-form__collapse"
+              className={styles['schema-form__collapse']}
               items={groupedFields.map((group) => ({
                 key: group.key,
                 label: (
-                  <div className="schema-form__group-header">
+                  <div className={styles['schema-form__group-header']}>
                     <span>{group.label}</span>
                     <Tag>{group.fields.length}</Tag>
                   </div>
                 ),
                 children: (
-                  <div className="schema-form__group-body">
+                  <div className={styles['schema-form__group-body']}>
                     {group.fields.map((field) => (
                       <FormFieldRenderer
                         domId={`schema-field-${field.id}`}

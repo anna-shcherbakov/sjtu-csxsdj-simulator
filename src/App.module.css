@@ -1,0 +1,206 @@
+:global(:root) {
+  color: #1f2937;
+  font-family:
+    'Source Han Sans SC',
+    'Noto Sans SC',
+    'PingFang SC',
+    'Microsoft YaHei',
+    sans-serif;
+  font-synthesis: none;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  --app-bg: #f6eeee;
+  --panel-bg: rgba(255, 250, 250, 0.9);
+  --panel-border: rgba(198, 40, 40, 0.12);
+  --panel-shadow:
+    0 20px 55px rgba(15, 23, 42, 0.08),
+    0 6px 20px rgba(15, 23, 42, 0.05);
+  --accent-500: #c62828;
+  --accent-100: #fde2e2;
+  --accent-050: #fff5f5;
+  --text-strong: #0f172a;
+  --text-normal: #334155;
+  --text-muted: #64748b;
+  --line-soft: #eadcdc;
+  --line-strong: #b9a1a1;
+  --danger-050: #fff1f2;
+  --danger-300: #fda4af;
+}
+
+:global(*) {
+  box-sizing: border-box;
+}
+
+:global(html),
+:global(body),
+:global(#root) {
+  height: 100%;
+}
+
+:global(body) {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(198, 40, 40, 0.1), transparent 28%),
+    linear-gradient(180deg, #faf4f4 0%, var(--app-bg) 100%);
+  color: var(--text-normal);
+  overflow: hidden;
+}
+
+:global(button),
+:global(input),
+:global(select),
+:global(textarea) {
+  font: inherit;
+}
+
+.app-shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 24px 16px;
+  border-bottom: 1px solid rgba(198, 40, 40, 0.1);
+  backdrop-filter: blur(18px);
+  background: rgba(252, 247, 247, 0.94);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.app-toolbar__title {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+}
+
+.app-content {
+  --sidebar-width: 420px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 0;
+  padding: 22px 24px 24px;
+  overflow: hidden;
+}
+
+.app-sidebar {
+  flex: 0 0 auto;
+  flex-basis: var(--sidebar-width);
+  min-width: 320px;
+  width: var(--sidebar-width);
+  display: flex;
+  min-height: 0;
+  will-change: width, flex-basis;
+}
+
+.app-splitter {
+  position: relative;
+  flex: 0 0 18px;
+  width: 18px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.app-splitter::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 88px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.42);
+  transform: translate(-50%, -50%);
+  transition:
+    background 0.14s ease,
+    box-shadow 0.14s ease,
+    transform 0.14s ease;
+}
+
+.app-splitter:hover::before,
+.app-splitter.is-dragging::before {
+  background: rgba(198, 40, 40, 0.72);
+  box-shadow: 0 0 0 6px rgba(198, 40, 40, 0.1);
+  transform: translate(-50%, -50%) scaleY(1.04);
+}
+
+.app-preview {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  min-height: 0;
+}
+
+.app-content--dragging .app-panel {
+  pointer-events: none;
+}
+
+.app-content--dragging .app-sidebar,
+.app-content--dragging .app-preview {
+  transition: none !important;
+}
+
+.app-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 22px;
+  box-shadow: var(--panel-shadow);
+  overflow: hidden;
+}
+
+.sidebar-panel {
+  padding: 0;
+}
+
+@media (max-width: 1280px) {
+  .app-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .app-sidebar {
+    min-width: 0;
+    flex-basis: auto;
+    width: auto;
+  }
+
+  .app-splitter {
+    display: none;
+  }
+
+  .app-preview {
+    min-height: 72vh;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-toolbar {
+    padding: 18px;
+  }
+
+  .app-toolbar__title {
+    font-size: 20px;
+  }
+
+  .app-content {
+    padding: 16px;
+    gap: 16px;
+  }
+}

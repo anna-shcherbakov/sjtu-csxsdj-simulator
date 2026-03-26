@@ -5,6 +5,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   clearScreen: false,
   plugins: [react()],
+  css: {
+    modules: {
+      localsConvention: 'camelCase',
+    },
+  },
   server: {
     host: process.env.TAURI_DEV_HOST || false,
     port: 5173,

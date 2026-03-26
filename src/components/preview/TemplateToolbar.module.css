@@ -1,0 +1,130 @@
+.template-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: min(100%, 680px);
+}
+
+.template-toolbar__info,
+.template-toolbar__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.template-toolbar__controls {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.template-toolbar__field {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.template-toolbar__field--zoom {
+  flex: 0 1 auto;
+}
+
+.template-toolbar__field-label:global(.ant-typography) {
+  margin: 0;
+  flex: 0 0 auto;
+  color: var(--text-normal);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.template-toolbar__select {
+  width: clamp(240px, 28vw, 300px);
+  min-width: 240px;
+}
+
+.template-toolbar__select :global(.ant-select-selector) {
+  border-radius: 12px !important;
+}
+
+.template-toolbar__zoom-group {
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.template-toolbar__zoom-slider {
+  flex: 1;
+  margin: 0;
+}
+
+.template-toolbar__zoom-slider :global(.ant-slider-rail) {
+  background: rgba(148, 163, 184, 0.24);
+}
+
+.template-toolbar__zoom-slider :global(.ant-slider-track) {
+  background: linear-gradient(90deg, #efa0a0 0%, #c62828 100%);
+}
+
+.template-toolbar__zoom-slider :global(.ant-slider-handle::after) {
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.2);
+}
+
+.template-toolbar__zoom-value:global(.ant-typography) {
+  min-width: 46px;
+  margin: 0;
+  text-align: right;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.template-toolbar__help {
+  white-space: nowrap;
+}
+
+.template-toolbar__select-popup :global(.ant-select-item-option-selected) {
+  background: var(--accent-050);
+}
+
+.template-toolbar__select-popup :global(.ant-select-item-option-active) {
+  background: rgba(198, 40, 40, 0.08);
+}
+
+.template-help-popover :global(.ant-popover-inner) {
+  border-radius: 14px;
+  box-shadow:
+    0 18px 42px rgba(15, 23, 42, 0.14),
+    0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.template-help-popover__content {
+  max-width: 300px;
+  display: grid;
+  gap: 10px;
+}
+
+.template-help-popover__title {
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.template-help-popover__list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--text-normal);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .template-toolbar {
+    justify-content: flex-start;
+    min-width: 0;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}

@@ -1,5 +1,11 @@
+import clsx from 'clsx'
 import A4Page from '../components/shared/A4Page'
 import FieldAnchorText from '../components/shared/FieldAnchorText'
+import styles from './ProbationaryTable.module.css'
+import sharedStyles from './templates.module.css'
+
+const c = (...names) =>
+  clsx(names.map((name) => styles[name] ?? sharedStyles[name]).filter(Boolean))
 
 const INSTRUCTION_ITEMS = [
   '本册用于记录预备党员在考察期间的重要情况，请按自然页码顺序填写，不得随意增删页。',
@@ -20,8 +26,10 @@ function VerticalText({ className, text }) {
 function InlineField({ fieldId, value, className }) {
   return (
     <FieldAnchorText
-      className={['training-field-anchor', className].filter(Boolean).join(' ')}
+      className={clsx(c('training-field-anchor'), className)}
+      emptyClassName={c('training-field-anchor--empty')}
       fieldId={fieldId}
+      selectedClassName={c('training-field-anchor--selected')}
       value={value}
     />
   )
@@ -31,7 +39,7 @@ function LineField({ fieldId, value, className }) {
   return (
     <span className={className}>
       <InlineField
-        className="training-field-anchor--line"
+        className={c('training-field-anchor--line')}
         fieldId={fieldId}
         value={value}
       />
@@ -53,16 +61,16 @@ function QuarterSection({
   return (
     <>
       <tr>
-        <td className="training-quarter-title-cell">
+        <td className={c('training-quarter-title-cell')}>
           {quarterLabel}（自
           <InlineField
-            className="training-field-anchor--inline-mini"
+            className={c('training-field-anchor--inline-mini')}
             fieldId={startMonthFieldId}
             value={startMonthValue}
           />
           月至
           <InlineField
-            className="training-field-anchor--inline-mini"
+            className={c('training-field-anchor--inline-mini')}
             fieldId={endMonthFieldId}
             value={endMonthValue}
           />
@@ -70,26 +78,26 @@ function QuarterSection({
         </td>
       </tr>
       <tr>
-        <td className="training-quarter-opinion-cell">
+        <td className={c('training-quarter-opinion-cell')}>
           <InlineField
-            className="training-field-anchor--block training-field-anchor--opinion"
+            className={c('training-field-anchor--block', 'training-field-anchor--opinion')}
             fieldId={opinionFieldId}
             value={opinionValue}
           />
         </td>
       </tr>
       <tr>
-        <td className="training-quarter-footer-cell">
-          <div className="training-quarter-footer">
-            <div className="training-quarter-evaluation">
+        <td className={c('training-quarter-footer-cell')}>
+          <div className={c('training-quarter-footer')}>
+            <div className={c('training-quarter-evaluation')}>
               本季度思想汇报综合评价：本季度思想汇报已审核，合格
             </div>
-            <div className="training-inline-signature">
+            <div className={c('training-inline-signature')}>
               <span>考察人签名：</span>
-              <span className="training-signature-placeholder" />
+              <span className={c('training-signature-placeholder')} />
               <span>日期：</span>
               <LineField
-                className="training-signature-line training-signature-line--date"
+                className={c('training-signature-line', 'training-signature-line--date')}
                 fieldId={dateFieldId}
                 value={dateValue}
               />
@@ -104,20 +112,20 @@ function QuarterSection({
 function VerticalFramePage({ children, title, zoom }) {
   return (
     <A4Page
-      className="training-template-page"
-      contentClassName="training-opinion-page"
+      className={c('training-template-page')}
+      contentClassName={c('training-opinion-page')}
       zoom={zoom}
     >
-      <table className="training-large-opinion-table">
+      <table className={c('training-large-opinion-table')}>
         <tbody>
           <tr>
-            <td className="training-vertical-cell">
+            <td className={c('training-vertical-cell')}>
               <VerticalText
-                className="training-vertical-text training-vertical-text--long"
+                className={c('training-vertical-text', 'training-vertical-text--long')}
                 text={title}
               />
             </td>
-            <td className="training-opinion-cell">{children}</td>
+            <td className={c('training-opinion-cell')}>{children}</td>
           </tr>
         </tbody>
       </table>
@@ -136,19 +144,19 @@ function OpinionPage({
 }) {
   return (
     <VerticalFramePage title={title} zoom={zoom}>
-      <div className="training-opinion-layout">
+      <div className={c('training-opinion-layout')}>
         <InlineField
-          className="training-field-anchor--block training-field-anchor--opinion"
+          className={c('training-field-anchor--block', 'training-field-anchor--opinion')}
           fieldId={opinionFieldId}
           value={opinionValue}
         />
 
-        <div className="training-inline-signature training-inline-signature--right">
+        <div className={c('training-inline-signature', 'training-inline-signature--right')}>
           <span>{signatureLabel}</span>
-          <span className="training-signature-placeholder training-signature-placeholder--wide" />
+          <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
           <span>日期：</span>
           <LineField
-            className="training-signature-line training-signature-line--date"
+            className={c('training-signature-line', 'training-signature-line--date')}
             fieldId={dateFieldId}
             value={dateValue}
           />
@@ -161,15 +169,15 @@ function OpinionPage({
 function BlankOpinionPage({ dateFieldId, dateValue, signatureLabel, title, zoom }) {
   return (
     <VerticalFramePage title={title} zoom={zoom}>
-      <div className="training-opinion-layout">
-        <div className="training-empty-body" />
+      <div className={c('training-opinion-layout')}>
+        <div className={c('training-empty-body')} />
 
-        <div className="training-inline-signature training-inline-signature--right">
+        <div className={c('training-inline-signature', 'training-inline-signature--right')}>
           <span>{signatureLabel}</span>
-          <span className="training-signature-placeholder training-signature-placeholder--wide" />
+          <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
           <span>日期：</span>
           <LineField
-            className="training-signature-line training-signature-line--date"
+            className={c('training-signature-line', 'training-signature-line--date')}
             fieldId={dateFieldId}
             value={dateValue}
           />
@@ -188,28 +196,28 @@ function EducationRecordPage({
 }) {
   return (
     <A4Page
-      className="training-template-page"
-      contentClassName="training-quarter-page"
+      className={c('training-template-page')}
+      contentClassName={c('training-quarter-page')}
       zoom={zoom}
     >
-      <table className="training-large-opinion-table training-quarter-record-table">
+      <table className={c('training-large-opinion-table', 'training-quarter-record-table')}>
         <tbody>
           <tr>
-            <td className="training-vertical-cell">
+            <td className={c('training-vertical-cell')}>
               <VerticalText
-                className="training-vertical-text training-vertical-text--long"
+                className={c('training-vertical-text', 'training-vertical-text--long')}
                 text="预备党员考察情况"
               />
             </td>
-            <td className="training-quarter-record-table__body">
-              <div className="training-quarter-record-page">
+            <td className={c('training-quarter-record-table__body')}>
+              <div className={c('training-quarter-record-page')}>
                 {pageTitle ? (
-                  <h2 className="training-page-title training-page-title--compact">
+                  <h2 className={c('training-page-title', 'training-page-title--compact')}>
                     {pageTitle}
                   </h2>
                 ) : null}
 
-                <table className="training-quarter-inner-table">
+                <table className={c('training-quarter-inner-table')}>
                   <tbody>
                     <QuarterSection
                       dateFieldId={quarterA.dateFieldId}
@@ -247,46 +255,46 @@ function EducationRecordPage({
 function Page1Cover({ formData, zoom }) {
   return (
     <A4Page
-      className="training-template-page"
-      contentClassName="training-cover-page"
+      className={c('training-template-page')}
+      contentClassName={c('training-cover-page')}
       zoom={zoom}
     >
-      <h2 className="training-cover-page__title">预备党员培养考察记录册</h2>
+      <h2 className={c('training-cover-page__title')}>预备党员培养考察记录册</h2>
 
-      <div className="training-cover-page__info">
-        <div className="training-cover-line">
-          <div className="training-cover-line__label">姓 名</div>
+      <div className={c('training-cover-page__info')}>
+        <div className={c('training-cover-line')}>
+          <div className={c('training-cover-line__label')}>姓 名</div>
           <LineField
-            className="training-cover-line__content"
+            className={c('training-cover-line__content')}
             fieldId="personName"
             value={formData.personName}
           />
         </div>
-        <div className="training-cover-line">
-          <div className="training-cover-line__label">所 在 单 位</div>
+        <div className={c('training-cover-line')}>
+          <div className={c('training-cover-line__label')}>所 在 单 位</div>
           <LineField
-            className="training-cover-line__content"
+            className={c('training-cover-line__content')}
             fieldId="organizationOrClass"
             value={formData.organizationOrClass}
           />
         </div>
-        <div className="training-cover-line">
-          <div className="training-cover-line__label">党委(党工委)</div>
-          <div className="training-cover-line__content training-cover-line__content--fixed">
+        <div className={c('training-cover-line')}>
+          <div className={c('training-cover-line__label')}>党委(党工委)</div>
+          <div className={c('training-cover-line__content', 'training-cover-line__content--fixed')}>
             计算机学院党委
           </div>
         </div>
-        <div className="training-cover-line">
-          <div className="training-cover-line__label">所 在 党 支 部</div>
+        <div className={c('training-cover-line')}>
+          <div className={c('training-cover-line__label')}>所 在 党 支 部</div>
           <LineField
-            className="training-cover-line__content"
+            className={c('training-cover-line__content')}
             fieldId="probationaryPartyBranch"
             value={formData.probationaryPartyBranch}
           />
         </div>
       </div>
 
-      <div className="training-cover-page__imprint">中共上海交通大学委员会组织部制</div>
+      <div className={c('training-cover-page__imprint')}>中共上海交通大学委员会组织部制</div>
     </A4Page>
   )
 }
@@ -294,19 +302,19 @@ function Page1Cover({ formData, zoom }) {
 function Page2Instructions({ zoom }) {
   return (
     <A4Page
-      className="training-template-page"
-      contentClassName="training-instructions-page"
+      className={c('training-template-page')}
+      contentClassName={c('training-instructions-page')}
       zoom={zoom}
     >
-      <h2 className="training-page-title">填写说明</h2>
+      <h2 className={c('training-page-title')}>填写说明</h2>
 
-      <ol className="training-instruction-list">
+      <ol className={c('training-instruction-list')}>
         {INSTRUCTION_ITEMS.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ol>
 
-      <div className="training-instructions-footer">
+      <div className={c('training-instructions-footer')}>
         ☆注：是否审核《入党培养考察记录册》或同类材料 ☑是□否
       </div>
     </A4Page>
@@ -316,25 +324,25 @@ function Page2Instructions({ zoom }) {
 function Page3BasicInfo({ formData, zoom }) {
   return (
     <A4Page
-      className="training-template-page"
-      contentClassName="training-basic-page"
+      className={c('training-template-page')}
+      contentClassName={c('training-basic-page')}
       zoom={zoom}
     >
-      <h2 className="training-page-title">预备党员基本情况</h2>
+      <h2 className={c('training-page-title')}>预备党员基本情况</h2>
 
-      <table className="training-basic-table training-basic-table--probationary">
+      <table className={c('training-basic-table', 'training-basic-table--probationary')}>
         <tbody>
           <tr>
-            <td className="training-basic-table__label">姓名</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>姓名</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField fieldId="personName" value={formData.personName} />
             </td>
-            <td className="training-basic-table__label">性别</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>性别</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField fieldId="gender" value={formData.gender} />
             </td>
-            <td className="training-basic-table__label">出生年月</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>出生年月</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="birthYearMonth"
                 value={formData.birthYearMonth}
@@ -342,19 +350,19 @@ function Page3BasicInfo({ formData, zoom }) {
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__label">籍贯</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>籍贯</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField fieldId="nativePlace" value={formData.nativePlace} />
             </td>
-            <td className="training-basic-table__label">文化程度</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>文化程度</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="educationLevel"
                 value={formData.educationLevel}
               />
             </td>
-            <td className="training-basic-table__label">职务</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>职务</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="currentPosition"
                 value={formData.currentPosition}
@@ -362,19 +370,19 @@ function Page3BasicInfo({ formData, zoom }) {
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__label">入党申请书落款日期</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>入党申请书落款日期</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="partyApplicationDate"
                 value={formData.partyApplicationDate}
               />
             </td>
-            <td className="training-basic-table__label">确定为入党积极分子日期</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>确定为入党积极分子日期</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField fieldId="activistDate" value={formData.activistDate} />
             </td>
-            <td className="training-basic-table__label">确定为发展对象日期</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>确定为发展对象日期</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="developmentTargetDate"
                 value={formData.developmentTargetDate}
@@ -382,23 +390,23 @@ function Page3BasicInfo({ formData, zoom }) {
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__label">召开支部大会日期</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>召开支部大会日期</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="branchMeetingApproveProbationaryDate"
                 value={formData.branchMeetingApproveProbationaryDate}
               />
             </td>
-            <td className="training-basic-table__label">支部大会通过预备日期</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>支部大会通过预备日期</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="branchMeetingApproveProbationaryDate"
                 value={formData.branchMeetingApproveProbationaryDate}
               />
             </td>
-            <td className="training-basic-table__label">预备期起止日期</td>
-            <td className="training-basic-table__value">
-              <span className="training-basic-table__inline-text">
+            <td className={c('training-basic-table__label')}>预备期起止日期</td>
+            <td className={c('training-basic-table__value')}>
+              <span className={c('training-basic-table__inline-text')}>
                 起
                 <InlineField
                   fieldId="branchMeetingApproveProbationaryDate"
@@ -413,71 +421,71 @@ function Page3BasicInfo({ formData, zoom }) {
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__label">延长预备期起止日期</td>
-            <td className="training-basic-table__value training-basic-table__blank" colSpan={5}>
-              <span className="training-basic-table__inline-text">起      止</span>
+            <td className={c('training-basic-table__label')}>延长预备期起止日期</td>
+            <td className={c('training-basic-table__value', 'training-basic-table__blank')} colSpan={5}>
+              <span className={c('training-basic-table__inline-text')}>起      止</span>
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__subheader">考察人</td>
-            <td className="training-basic-table__subheader">姓名</td>
-            <td className="training-basic-table__subheader">所在党支部</td>
-            <td className="training-basic-table__subheader">职务</td>
-            <td className="training-basic-table__subheader" colSpan={2}>
+            <td className={c('training-basic-table__subheader')}>考察人</td>
+            <td className={c('training-basic-table__subheader')}>姓名</td>
+            <td className={c('training-basic-table__subheader')}>所在党支部</td>
+            <td className={c('training-basic-table__subheader')}>职务</td>
+            <td className={c('training-basic-table__subheader')} colSpan={2}>
               是否正式党员
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__label">考察人 1</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>考察人 1</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="inspector1Name"
                 value={formData.inspector1Name}
               />
             </td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="probationaryPartyBranch"
                 value={formData.probationaryPartyBranch}
               />
             </td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="inspector1Position"
                 value={formData.inspector1Position}
               />
             </td>
-            <td className="training-basic-table__value training-basic-table__value--center" colSpan={2}>
+            <td className={c('training-basic-table__value', 'training-basic-table__value--center')} colSpan={2}>
               是
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__label">考察人 2</td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__label')}>考察人 2</td>
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="inspector2Name"
                 value={formData.inspector2Name}
               />
             </td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="probationaryPartyBranch"
                 value={formData.probationaryPartyBranch}
               />
             </td>
-            <td className="training-basic-table__value">
+            <td className={c('training-basic-table__value')}>
               <InlineField
                 fieldId="inspector2Position"
                 value={formData.inspector2Position}
               />
             </td>
-            <td className="training-basic-table__value training-basic-table__value--center" colSpan={2}>
+            <td className={c('training-basic-table__value', 'training-basic-table__value--center')} colSpan={2}>
               是
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__section-label">编入党支部或党小组</td>
-            <td className="training-basic-table__value training-basic-table__paragraph-cell" colSpan={5}>
+            <td className={c('training-basic-table__section-label')}>编入党支部或党小组</td>
+            <td className={c('training-basic-table__value', 'training-basic-table__paragraph-cell')} colSpan={5}>
               于
               <InlineField
                 fieldId="committeeApprovalDate"
@@ -492,8 +500,8 @@ function Page3BasicInfo({ formData, zoom }) {
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__section-label">宣誓记录</td>
-            <td className="training-basic-table__value training-basic-table__paragraph-cell" colSpan={5}>
+            <td className={c('training-basic-table__section-label')}>宣誓记录</td>
+            <td className={c('training-basic-table__value', 'training-basic-table__paragraph-cell')} colSpan={5}>
               于
               <InlineField fieldId="oathDate" value={formData.oathDate} />
               在
@@ -505,23 +513,23 @@ function Page3BasicInfo({ formData, zoom }) {
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__section-label">入党时主要优缺点</td>
+            <td className={c('training-basic-table__section-label')}>入党时主要优缺点</td>
             <td
-              className="training-basic-table__value training-basic-table__value--tall"
+              className={c('training-basic-table__value', 'training-basic-table__value--tall')}
               colSpan={5}
             >
               <InlineField
-                className="training-field-anchor--block training-field-anchor--opinion"
+                className={c('training-field-anchor--block', 'training-field-anchor--opinion')}
                 fieldId="admissionStrengthsWeaknesses"
                 value={formData.admissionStrengthsWeaknesses}
               />
             </td>
           </tr>
           <tr>
-            <td className="training-basic-table__label">备注</td>
-            <td className="training-basic-table__value" colSpan={5}>
+            <td className={c('training-basic-table__label')}>备注</td>
+            <td className={c('training-basic-table__value')} colSpan={5}>
               <InlineField
-                className="training-field-anchor--block training-field-anchor--note"
+                className={c('training-field-anchor--block', 'training-field-anchor--note')}
                 fieldId="basicInfoRemark"
                 value={formData.basicInfoRemark}
               />
@@ -609,8 +617,8 @@ function Page7PublicConsultation({ formData, zoom }) {
 function Page8PublicNotice({ formData, zoom }) {
   return (
     <VerticalFramePage title="预备党员转正前公示情况" zoom={zoom}>
-      <div className="training-opinion-layout training-opinion-layout--notice">
-        <p className="training-fixed-paragraph training-fixed-paragraph--plain training-public-notice-paragraph">
+      <div className={c('training-opinion-layout', 'training-opinion-layout--notice')}>
+        <p className={c('training-fixed-paragraph', 'training-fixed-paragraph--plain', 'training-public-notice-paragraph')}>
           <InlineField fieldId="personName" value={formData.personName} />
           同志拟于
           <InlineField
@@ -629,7 +637,7 @@ function Page8PublicNotice({ formData, zoom }) {
           />
           通过其按期转为正式党员的决议。公示范围及方式为电信群楼张贴，无来访（电、函）无邮件反馈情况。
         </p>
-        <div className="training-public-notice-spacer" />
+        <div className={c('training-public-notice-spacer')} />
       </div>
     </VerticalFramePage>
   )

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
 import { ConfigProvider, message } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import SchemaForm from './components/form/SchemaForm'
@@ -6,6 +7,7 @@ import TemplatePreview from './components/preview/TemplatePreview'
 import TemplateToolbar from './components/preview/TemplateToolbar'
 import { flattenFormFields } from './data/formSchema'
 import useFormStore from './store/useFormStore'
+import styles from './App.module.css'
 
 const SIDEBAR_WIDTH_STORAGE_KEY = 'dangjian:sidebar-width'
 const DEFAULT_SIDEBAR_WIDTH = 420
@@ -297,18 +299,23 @@ function App() {
       }}
     >
       {contextHolder}
-      <div className="app-shell">
-        <header className="app-toolbar">
-          <h1 className="app-toolbar__title">党建材料模板工作台</h1>
+      <div className={styles['app-shell']}>
+        <header className={styles['app-toolbar']}>
+          <h1 className={styles['app-toolbar__title']}>党建材料模板工作台</h1>
           <TemplateToolbar onReset={handleReset} onValidate={handleValidate} />
         </header>
 
         <main
-          className={`app-content${isDragging ? ' app-content--dragging' : ''}`}
+          className={clsx(
+            styles['app-content'],
+            isDragging && styles['app-content--dragging'],
+          )}
           ref={contentRef}
         >
-          <aside className="app-sidebar">
-            <section className="app-panel sidebar-panel">
+          <aside className={styles['app-sidebar']}>
+            <section
+              className={clsx(styles['app-panel'], styles['sidebar-panel'])}
+            >
               <SchemaForm />
             </section>
           </aside>
@@ -320,15 +327,18 @@ function App() {
               aria-valuemax={Math.round(maxSidebarWidth)}
               aria-valuemin={MIN_SIDEBAR_WIDTH}
               aria-valuenow={Math.round(resolvedSidebarWidth)}
-              className={`app-splitter${isDragging ? ' is-dragging' : ''}`}
+              className={clsx(
+                styles['app-splitter'],
+                isDragging && styles['is-dragging'],
+              )}
               onPointerDown={handleSplitterPointerDown}
               role="separator"
               tabIndex={-1}
             />
           ) : null}
 
-          <section className="app-preview">
-            <section className="app-panel preview-panel">
+          <section className={styles['app-preview']}>
+            <section className={styles['app-panel']}>
               <TemplatePreview />
             </section>
           </section>

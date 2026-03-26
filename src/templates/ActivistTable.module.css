@@ -1,0 +1,677 @@
+.training-cover-page--activist {
+  align-items: stretch;
+}
+
+.training-cover-page__title--activist {
+  margin: 246px 0 0;
+  text-align: center;
+  font-size: 62px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+}
+
+.training-cover-page__info--activist {
+  width: 100%;
+  margin-top: 176px;
+  padding-left: 48px;
+  padding-right: 24px;
+  gap: 8px;
+}
+
+.training-cover-page--activist .training-cover-line {
+  gap: 10px;
+}
+
+.training-cover-line__label--activist {
+  flex: 0 0 198px;
+  font-size: 25px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  white-space: nowrap;
+}
+
+.training-cover-line__label--compact {
+  letter-spacing: 0.06em;
+  text-indent: 0.06em;
+}
+
+.training-cover-line__content--activist {
+  min-height: 42px;
+  font-size: 24px;
+  line-height: 1.25;
+  padding: 0 8px 4px;
+}
+
+.training-cover-line__content--activist .training-field-anchor {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.training-cover-line__content--activist.training-cover-line__content--fixed {
+  white-space: nowrap;
+}
+
+.training-cover-page__imprint--activist {
+  margin-bottom: 78px;
+  text-align: center;
+  font-size: 26px;
+  letter-spacing: 0.06em;
+}
+
+.training-opinion-page,
+.training-split-page,
+.training-section-page,
+.training-basic-page,
+.training-quarter-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.training-large-opinion-table,
+.training-split-table,
+.training-section-table,
+.training-basic-table,
+.training-quarter-table,
+.training-quarter-inner-table,
+.training-inner-grid-table,
+.training-fixed-review-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.training-large-opinion-table td,
+.training-split-table td,
+.training-section-table td,
+.training-basic-table td,
+.training-quarter-table td,
+.training-quarter-inner-table td,
+.training-inner-grid-table td,
+.training-inner-grid-table th,
+.training-fixed-review-table td {
+  border: 1px solid #000;
+  vertical-align: middle;
+  color: #000;
+}
+
+.training-signature-line--medium {
+  width: 210px;
+}
+
+.training-signature-placeholder--stamp {
+  width: 136px;
+}
+
+.training-split-table td {
+  padding: 0;
+}
+
+.training-split-cell {
+  padding: 0;
+}
+
+.training-split-section {
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 18px 14px;
+}
+
+.training-stamp-row {
+  margin-top: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 15px;
+}
+
+.training-section-table td {
+  padding: 0;
+}
+
+.training-section-title-cell {
+  width: 130px;
+  padding: 14px 10px !important;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.training-section-title-cell--small {
+  font-size: 16px;
+}
+
+.training-section-body-cell {
+  padding: 14px 16px !important;
+}
+
+.training-section-body-cell--compact {
+  min-height: 96px;
+}
+
+.training-section-with-footer {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.training-instructions-page--activist {
+  display: flex;
+  flex-direction: column;
+}
+
+.training-page-title--activist-instructions {
+  letter-spacing: 0.08em;
+}
+
+.training-instruction-sections--activist {
+  margin: 28px 0 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: #000;
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+.training-instruction-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.training-instruction-section__marker {
+  flex: 0 0 42px;
+  white-space: nowrap;
+  font-size: 24px;
+}
+
+.training-instruction-section__content {
+  flex: 1;
+}
+
+.training-instruction-section__content p {
+  margin: 0;
+  font-size: 24px;
+}
+
+.training-instructions-footer--activist {
+  margin-top: auto;
+  padding-top: 28px;
+  padding-left: 26px;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.training-basic-table__record {
+  min-height: 86px;
+  display: flex;
+  flex-direction: column;
+}
+
+.training-page-title--activist-basic {
+  margin: 2px 0 10px;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+}
+
+.training-basic-page--activist {
+  padding: 22px 36px 40px;
+}
+
+.training-basic-table--activist .training-basic-table__col--label {
+  width: 17%;
+}
+
+.training-basic-table--activist .training-basic-table__col--value {
+  width: 16.333%;
+}
+
+.training-basic-table--activist td {
+  padding: 0 8px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.training-basic-table--activist .training-basic-table__label,
+.training-basic-table--activist .training-basic-table__section-label,
+.training-basic-table--activist .training-basic-table__subheader {
+  font-weight: 400;
+  text-align: center;
+}
+
+.training-basic-table--activist .training-basic-table__label {
+  letter-spacing: 0.08em;
+}
+
+.training-basic-table--activist .training-basic-table__label--wide {
+  letter-spacing: 0.04em;
+}
+
+.training-basic-table--activist .training-basic-table__value {
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+
+.training-basic-table--activist tr:nth-child(1) td {
+  height: 38px;
+}
+
+.training-basic-table--activist tr:nth-child(2) td,
+.training-basic-table--activist tr:nth-child(3) td,
+.training-basic-table--activist tr:nth-child(4) td {
+  height: 40px;
+}
+
+.training-basic-table--activist tr:nth-child(5) td {
+  height: 64px;
+}
+
+.training-basic-table--activist .training-basic-table__section-label {
+  width: 136px;
+  padding: 10px 8px;
+  line-height: 1.5;
+}
+
+.training-basic-table--activist .training-basic-table__section-label--tall {
+  height: 188px;
+}
+
+.training-basic-table--activist .training-basic-table__section-label--contacts {
+  height: 150px;
+}
+
+.training-basic-table--activist .training-basic-table__value--tall {
+  padding: 10px 12px 0;
+  vertical-align: top;
+}
+
+.training-basic-table__record--activist {
+  min-height: 178px;
+}
+
+.training-basic-table--activist .training-field-anchor--opinion {
+  line-height: 1.85;
+}
+
+.training-stamp-row--activist-basic {
+  margin-top: auto;
+  padding-top: 10px;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.training-basic-table--activist .training-basic-table__subheader {
+  height: 34px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.training-basic-table__contact-dates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.training-basic-table__contact-dates .training-field-anchor {
+  min-width: 86px;
+}
+
+.training-basic-table--activist .training-field-anchor--note {
+  min-height: 48px;
+}
+
+.training-basic-table--activist .training-field-anchor--cell-fill {
+  position: absolute;
+  inset: 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  text-align: center;
+}
+
+.training-field-anchor--section-inline-fill {
+  position: static;
+  flex: 1;
+  min-width: 0;
+  min-height: 26px;
+  justify-content: flex-start;
+  padding: 0 6px;
+  text-align: left;
+}
+
+.training-quarter-table td,
+.training-quarter-inner-table td {
+  padding: 0;
+}
+
+.training-quarter-block-cell {
+  padding: 0 !important;
+}
+
+.training-blank-page {
+  height: 100%;
+  background: #fff;
+}
+
+.training-section-inline-fill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.training-field-anchor--inline-plain {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0 4px 1px;
+  border-bottom: 1px solid #000;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.training-inline-signature__break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.training-opinion-layout--mass {
+  padding-bottom: 10px;
+}
+
+.training-mass-signoff {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.training-inline-signature--mass {
+  margin-top: 0;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.training-quarter-page--activist {
+  padding: 12px 22px 18px;
+}
+
+.training-quarter-table--activist .training-vertical-cell {
+  width: 88px;
+}
+
+.training-quarter-table--activist .training-quarter-title-cell {
+  padding: 10px 12px !important;
+}
+
+.training-quarter-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.training-quarter-opinion-layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.training-quarter-opinion-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.training-field-anchor--quarter-body {
+  position: absolute;
+  inset: 4px 2px 8px;
+  display: block;
+  white-space: pre-wrap;
+  line-height: 1.9;
+  text-align: left;
+}
+
+.training-quarter-table--activist .training-quarter-opinion-cell {
+  height: 344px;
+  padding: 10px 12px !important;
+  vertical-align: top;
+}
+
+.training-quarter-signoff {
+  width: max-content;
+  min-width: 0;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.training-quarter-signoff__row {
+  width: max-content;
+  margin-left: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.training-quarter-signoff__label {
+  white-space: nowrap;
+}
+
+.training-split-section--deputy {
+  min-height: 484px;
+}
+
+.training-split-section--record {
+  min-height: 372px;
+}
+
+.training-split-signoff {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.training-split-signoff--deputy {
+  padding-right: 8px;
+}
+
+.training-inline-signature--split {
+  flex-wrap: nowrap;
+}
+
+.training-split-record-signoff {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.training-split-record-signoff__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.training-inline-signature--record-date {
+  justify-content: flex-start;
+  padding-left: 300px;
+}
+
+.training-stamp-placeholder {
+  display: inline-block;
+  width: 150px;
+  min-height: 24px;
+}
+
+.training-section-page--activist-review {
+  padding-top: 0;
+}
+
+.training-activist-review-table {
+  margin-top: 34px;
+}
+
+.training-activist-review-table .training-section-title-cell,
+.training-activist-review-table__title {
+  width: 118px;
+  padding: 14px 10px !important;
+  font-size: 17px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.training-activist-review-table__head {
+  padding: 9px 8px !important;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.training-activist-review-table__head--light {
+  font-weight: 400;
+}
+
+.training-activist-review-table__value {
+  padding: 8px !important;
+}
+
+.training-field-anchor--review-cell {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.training-vertical-cell--activist-report {
+  width: 118px;
+}
+
+.training-vertical-cell--method {
+  width: 62px;
+  padding: 0 !important;
+}
+
+.training-vertical-text--method {
+  font-size: 15px;
+  font-weight: 500;
+  gap: 1px;
+}
+
+.training-activist-review-table__method-label,
+.training-activist-review-table__check {
+  padding: 8px 6px !important;
+  font-size: 15px;
+  text-align: center;
+}
+
+.training-activist-review-table__check {
+  height: 38px;
+}
+
+.training-activist-review-table__body {
+  padding: 14px 18px 12px !important;
+  vertical-align: top;
+}
+
+.training-political-body {
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+}
+
+.training-political-copy {
+  margin-top: 2px;
+}
+
+.training-fixed-paragraph--political {
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.training-political-copy__line {
+  margin: 6px 0 0 58px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.training-political-body__spacer {
+  flex: 1;
+  min-height: 190px;
+}
+
+.training-political-signoff {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.training-inline-signature--political {
+  flex-wrap: nowrap;
+}
+
+.training-public-notice-option {
+  margin: 0 0 0 32px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.training-section-page--activist-notice {
+  padding-top: 4px;
+}
+
+.training-section-table--activist-notice .training-section-body-cell--notice {
+  padding: 12px 18px 10px !important;
+}
+
+.training-section-with-footer--branch-review {
+  min-height: 238px;
+}
+
+.training-section-with-footer--pre-review {
+  min-height: 238px;
+}
+
+.training-section-signoff {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.training-section-signoff__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 15px;
+}
+
+.training-section-signoff__row--date {
+  padding-left: 310px;
+}

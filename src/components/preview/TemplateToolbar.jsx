@@ -3,14 +3,16 @@ import {
   QuestionCircleOutlined,
   ReloadOutlined,
 } from '@ant-design/icons'
+import clsx from 'clsx'
 import { Button, Popover, Select, Slider, Typography } from 'antd'
 import { TEMPLATE_OPTIONS } from '../../data/templates'
 import useFormStore from '../../store/useFormStore'
+import styles from './TemplateToolbar.module.css'
 
 const helpContent = (
-  <div className="template-help-popover__content">
-    <div className="template-help-popover__title">辅助说明</div>
-    <ul className="template-help-popover__list">
+  <div className={styles['template-help-popover__content']}>
+    <div className={styles['template-help-popover__title']}>辅助说明</div>
+    <ul className={styles['template-help-popover__list']}>
       <li>拖动中间分隔条可以调整左右区域宽度。</li>
       <li>左侧可搜索字段、展开分组并直接填写内容。</li>
       <li>右侧点击字段会联动定位到左侧对应表单项。</li>
@@ -27,20 +29,20 @@ function TemplateToolbar({ onValidate, onReset }) {
   const setZoom = useFormStore((state) => state.setZoom)
 
   return (
-    <div className="template-toolbar">
-      <div className="template-toolbar__info">
-        <div className="template-toolbar__field">
-          <Typography.Text className="template-toolbar__field-label">
+    <div className={styles['template-toolbar']}>
+      <div className={styles['template-toolbar__info']}>
+        <div className={styles['template-toolbar__field']}>
+          <Typography.Text className={styles['template-toolbar__field-label']}>
             模板切换
           </Typography.Text>
           <Select
-            className="template-toolbar__select"
+            className={styles['template-toolbar__select']}
             onChange={setActiveTemplateId}
             options={TEMPLATE_OPTIONS.map((template) => ({
               label: template.displayLabel,
               value: template.id,
             }))}
-            popupClassName="template-toolbar__select-popup"
+            popupClassName={styles['template-toolbar__select-popup']}
             size="large"
             value={activeTemplateId}
             variant="filled"
@@ -48,14 +50,19 @@ function TemplateToolbar({ onValidate, onReset }) {
         </div>
       </div>
 
-      <div className="template-toolbar__controls">
-        <div className="template-toolbar__field template-toolbar__field--zoom">
-          <Typography.Text className="template-toolbar__field-label">
+      <div className={styles['template-toolbar__controls']}>
+        <div
+          className={clsx(
+            styles['template-toolbar__field'],
+            styles['template-toolbar__field--zoom'],
+          )}
+        >
+          <Typography.Text className={styles['template-toolbar__field-label']}>
             缩放
           </Typography.Text>
-          <div className="template-toolbar__zoom-group">
+          <div className={styles['template-toolbar__zoom-group']}>
             <Slider
-              className="template-toolbar__zoom-slider"
+              className={styles['template-toolbar__zoom-slider']}
               max={150}
               min={50}
               onChange={setZoom}
@@ -64,7 +71,7 @@ function TemplateToolbar({ onValidate, onReset }) {
               value={zoom}
             />
             <Typography.Text
-              className="template-toolbar__zoom-value"
+              className={styles['template-toolbar__zoom-value']}
               type="secondary"
             >
               {zoom}%
@@ -86,12 +93,12 @@ function TemplateToolbar({ onValidate, onReset }) {
           content={helpContent}
           mouseEnterDelay={0.08}
           mouseLeaveDelay={0.06}
-          overlayClassName="template-help-popover"
+          overlayClassName={styles['template-help-popover']}
           placement="bottomRight"
           trigger="hover"
         >
           <Button
-            className="template-toolbar__help"
+            className={styles['template-toolbar__help']}
             icon={<QuestionCircleOutlined />}
           >
             辅助说明
