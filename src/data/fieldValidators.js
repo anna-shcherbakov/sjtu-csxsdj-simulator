@@ -1,3 +1,9 @@
+import {
+  parseChineseDateInput,
+  parseChineseYearMonthInput,
+  parseIsoDateInput,
+} from './dateRuleUtils'
+
 const isEmptyValue = (value) =>
   value === undefined ||
   value === null ||
@@ -16,62 +22,15 @@ export const createRegexValidator =
   (value) =>
     pattern.test(String(value ?? '').trim())
 
-const isValidDateParts = (year, month, day) => {
-  const date = new Date(year, month - 1, day)
+export const validateDateInput = allowEmpty((value) => parseIsoDateInput(value) !== null)
 
-  if (Number.isNaN(date.getTime())) {
-    return false
-  }
+export const validateChineseDateInput = allowEmpty((value) =>
+  parseChineseDateInput(value) !== null,
+)
 
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() + 1 === month &&
-    date.getDate() === day
-  )
-}
-
-export const validateDateInput = allowEmpty((value) => {
-  const normalized = String(value).trim().replaceAll('/', '-').replaceAll('.', '-')
-
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
-    return false
-  }
-
-  const [year, month, day] = normalized.split('-').map(Number)
-
-  return isValidDateParts(year, month, day)
-})
-
-export const validateChineseDateInput = allowEmpty((value) => {
-  const normalized = String(value).trim()
-  const match = normalized.match(/^(\d{4})年(\d{1,2})月(\d{1,2})日$/)
-
-  if (!match) {
-    return false
-  }
-
-  const [, yearText, monthText, dayText] = match
-  const year = Number(yearText)
-  const month = Number(monthText)
-  const day = Number(dayText)
-
-  return isValidDateParts(year, month, day)
-})
-
-export const validateChineseYearMonthInput = allowEmpty((value) => {
-  const normalized = String(value).trim()
-  const match = normalized.match(/^(\d{4})年(\d{1,2})月$/)
-
-  if (!match) {
-    return false
-  }
-
-  const [, yearText, monthText] = match
-  const year = Number(yearText)
-  const month = Number(monthText)
-
-  return isValidDateParts(year, month, 1)
-})
+export const validateChineseYearMonthInput = allowEmpty((value) =>
+  parseChineseYearMonthInput(value) !== null,
+)
 
 export const validatePhoneNumberInput = allowEmpty((value) =>
   /^1\d{10}$/.test(String(value).trim()),
