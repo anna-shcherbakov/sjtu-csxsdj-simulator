@@ -7,6 +7,8 @@ import sharedStyles from './templates.module.css'
 const c = (...names) =>
   clsx(names.map((name) => styles[name] ?? sharedStyles[name]).filter(Boolean))
 
+const NARROW_VERTICAL_COL_WIDTH = '84px'
+
 const ACTIVIST_INSTRUCTION_SECTIONS = [
   {
     marker: '一、',
@@ -158,6 +160,10 @@ function BranchOpinionPage({
       zoom={zoom}
     >
       <table className={c('training-large-opinion-table')}>
+        <colgroup>
+          <col style={{ width: NARROW_VERTICAL_COL_WIDTH }} />
+          <col />
+        </colgroup>
         <tbody>
           <tr>
             <td className={c('training-vertical-cell')}>
@@ -216,9 +222,9 @@ function Page1Cover({ formData, zoom }) {
       </h2>
 
       <div className={c('training-cover-page__info', 'training-cover-page__info--activist')}>
-        <div className={c('training-cover-line')}>
+        <div className={c('training-cover-line', 'training-cover-line--activist')}>
           <div className={c('training-cover-line__label', 'training-cover-line__label--activist')}>
-            姓名
+            姓 名
           </div>
           <LineField
             className={c('training-cover-line__content', 'training-cover-line__content--activist')}
@@ -226,9 +232,9 @@ function Page1Cover({ formData, zoom }) {
             value={formData['basic.姓名']}
           />
         </div>
-        <div className={c('training-cover-line')}>
+        <div className={c('training-cover-line', 'training-cover-line--activist')}>
           <div className={c('training-cover-line__label', 'training-cover-line__label--activist')}>
-            所在单位
+            所 在 单 位
           </div>
           <LineField
             className={c('training-cover-line__content', 'training-cover-line__content--activist')}
@@ -236,7 +242,7 @@ function Page1Cover({ formData, zoom }) {
             value={formData['basic.班级']}
           />
         </div>
-        <div className={c('training-cover-line')}>
+        <div className={c('training-cover-line', 'training-cover-line--activist')}>
           <div className={c('training-cover-line__label', 'training-cover-line__label--activist', 'training-cover-line__label--compact')}>
             党委(党工委)
           </div>
@@ -244,9 +250,9 @@ function Page1Cover({ formData, zoom }) {
             计算机学院党委
           </div>
         </div>
-        <div className={c('training-cover-line')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--activist', 'training-cover-line__label--compact')}>
-            所在党支部
+        <div className={c('training-cover-line', 'training-cover-line--activist')}>
+          <div className={c('training-cover-line__label', 'training-cover-line__label--activist')}>
+            所 在 党 支 部
           </div>
           <LineField
             className={c('training-cover-line__content', 'training-cover-line__content--activist')}
@@ -713,6 +719,10 @@ function Page9MassOpinion({ formData, zoom }) {
       zoom={zoom}
     >
       <table className={c('training-large-opinion-table')}>
+        <colgroup>
+          <col style={{ width: NARROW_VERTICAL_COL_WIDTH }} />
+          <col />
+        </colgroup>
         <tbody>
           <tr>
             <td className={c('training-vertical-cell')}>
@@ -767,6 +777,10 @@ function Page11DeputySecretaryAndCommitteeRecord({ formData, zoom }) {
       zoom={zoom}
     >
       <table className={c('training-split-table')}>
+        <colgroup>
+          <col style={{ width: NARROW_VERTICAL_COL_WIDTH }} />
+          <col />
+        </colgroup>
         <tbody>
           <tr>
             <td className={c('training-vertical-cell')}>
@@ -972,6 +986,10 @@ function Page13PublicityAndBranchReview({ formData, zoom }) {
       zoom={zoom}
     >
       <table style={{marginTop: 96}} className={c('training-section-table', 'training-section-table--activist-notice')}>
+        <colgroup>
+          <col style={{ width: NARROW_VERTICAL_COL_WIDTH }} />
+          <col />
+        </colgroup>
         <tbody>
           <tr>
             <td className={c('training-vertical-cell')}>

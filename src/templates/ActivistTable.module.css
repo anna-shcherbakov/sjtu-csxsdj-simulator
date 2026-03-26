@@ -3,32 +3,30 @@
 }
 
 .training-cover-page__title--activist {
-  margin: 246px 0 0;
+  margin: 182px 0 0;
   text-align: center;
-  font-size: 62px;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
+  font-size: 46px;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
 }
 
 .training-cover-page__info--activist {
-  width: 100%;
-  margin-top: 176px;
-  padding-left: 48px;
-  padding-right: 24px;
-  gap: 8px;
+  width: 520px;
+  margin: 224px auto 0;
+  gap: 14px;
 }
 
-.training-cover-page--activist .training-cover-line {
-  gap: 10px;
+.training-cover-line--activist {
+  gap: 12px;
 }
 
 .training-cover-line__label--activist {
-  flex: 0 0 198px;
+  flex: 0 0 158px;
   font-size: 25px;
   line-height: 1.3;
   font-weight: 700;
-  letter-spacing: 0.28em;
-  text-indent: 0.28em;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
   white-space: nowrap;
 }
 
@@ -38,7 +36,7 @@
 }
 
 .training-cover-line__content--activist {
-  min-height: 42px;
+  min-height: 40px;
   font-size: 24px;
   line-height: 1.25;
   padding: 0 8px 4px;
@@ -54,9 +52,9 @@
 }
 
 .training-cover-page__imprint--activist {
-  margin-bottom: 78px;
+  margin-bottom: 88px;
   text-align: center;
-  font-size: 26px;
+  font-size: 25px;
   letter-spacing: 0.06em;
 }
 
