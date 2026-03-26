@@ -19,19 +19,19 @@
 }
 
 .field-anchor-text:hover {
-  background: rgba(198, 40, 40, 0.08);
-  border-color: rgba(198, 40, 40, 0.26);
+  background: rgba(166, 30, 34, 0.06);
+  border-color: rgba(166, 30, 34, 0.22);
 }
 
 .field-anchor-text--empty {
-  color: #94a3b8;
+  color: #8b7b73;
   font-weight: 400;
-  background: rgba(148, 163, 184, 0.08);
-  border-color: rgba(148, 163, 184, 0.18);
+  background: rgba(199, 184, 166, 0.18);
+  border-color: rgba(199, 184, 166, 0.38);
 }
 
 .field-anchor-text--selected {
-  background: var(--accent-100);
-  border-color: rgba(198, 40, 40, 0.48);
-  box-shadow: 0 0 0 1px rgba(198, 40, 40, 0.12);
+  background: rgba(243, 216, 209, 0.72);
+  border-color: rgba(166, 30, 34, 0.42);
+  box-shadow: 0 0 0 1px rgba(166, 30, 34, 0.1);
 }

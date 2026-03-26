@@ -45,6 +45,17 @@
 
 .template-toolbar__select :global(.ant-select-selector) {
   border-radius: 12px !important;
+  border-color: rgba(199, 184, 166, 0.8) !important;
+  background: linear-gradient(180deg, #fffdf9 0%, #f7f1e8 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.template-toolbar__select :global(.ant-select-arrow) {
+  color: var(--text-muted);
+}
+
+.template-toolbar__select :global(.ant-select-selection-item) {
+  color: var(--text-strong);
 }
 
 .template-toolbar__zoom-group {
@@ -60,15 +71,15 @@
 }
 
 .template-toolbar__zoom-slider :global(.ant-slider-rail) {
-  background: rgba(148, 163, 184, 0.24);
+  background: rgba(199, 184, 166, 0.46);
 }
 
 .template-toolbar__zoom-slider :global(.ant-slider-track) {
-  background: linear-gradient(90deg, #efa0a0 0%, #c62828 100%);
+  background: var(--accent-500);
 }
 
 .template-toolbar__zoom-slider :global(.ant-slider-handle::after) {
-  box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.2);
+  box-shadow: 0 0 0 2px rgba(166, 30, 34, 0.18);
 }
 
 .template-toolbar__zoom-value:global(.ant-typography) {
@@ -88,14 +99,16 @@
 }
 
 .template-toolbar__select-popup :global(.ant-select-item-option-active) {
-  background: rgba(198, 40, 40, 0.08);
+  background: rgba(166, 30, 34, 0.06);
 }
 
 .template-help-popover :global(.ant-popover-inner) {
   border-radius: 14px;
+  border: 1px solid var(--line-soft);
+  background: #fffdf9;
   box-shadow:
-    0 18px 42px rgba(15, 23, 42, 0.14),
-    0 6px 16px rgba(15, 23, 42, 0.08);
+    0 18px 40px rgba(63, 45, 31, 0.14),
+    0 6px 16px rgba(63, 45, 31, 0.08);
 }
 
 .template-help-popover__content {
@@ -118,6 +131,30 @@
   color: var(--text-normal);
   font-size: 13px;
   line-height: 1.6;
+}
+
+.template-toolbar__action--primary:global(.ant-btn-primary) {
+  border-color: var(--accent-500);
+  background: var(--accent-500);
+  box-shadow: 0 8px 18px rgba(166, 30, 34, 0.14);
+}
+
+.template-toolbar__action--primary:global(.ant-btn-primary:hover) {
+  border-color: var(--accent-700);
+  background: var(--accent-700);
+}
+
+.template-toolbar__action--secondary:global(.ant-btn) {
+  border-color: rgba(199, 184, 166, 0.88);
+  background: #fffdf9;
+  color: var(--accent-700);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.template-toolbar__action--secondary:global(.ant-btn:hover) {
+  border-color: rgba(166, 30, 34, 0.34);
+  background: var(--accent-050);
+  color: var(--accent-800);
 }
 
 @media (max-width: 900px) {

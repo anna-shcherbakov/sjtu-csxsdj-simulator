@@ -5,12 +5,12 @@
 
 .a4-page {
   background: #fff;
-  border: 1px solid #e7d8d8;
+  border: 1px solid #e4d8c7;
   border-radius: 6px;
   overflow: hidden;
   box-shadow:
-    0 30px 60px rgba(15, 23, 42, 0.18),
-    0 8px 18px rgba(15, 23, 42, 0.1);
+    0 24px 48px rgba(68, 50, 33, 0.14),
+    0 6px 16px rgba(68, 50, 33, 0.08);
 }
 
 .a4-page__content {

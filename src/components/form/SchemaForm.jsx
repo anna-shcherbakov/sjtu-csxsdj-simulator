@@ -141,7 +141,7 @@ function SchemaForm() {
         <Typography.Title className={styles['schema-form__title']} level={4}>
           字段表单
         </Typography.Title>
-        <Tag>
+        <Tag className={styles['schema-form__count-tag']}>
           {visibleFields.length} / {allFields.length}
         </Tag>
       </div>
@@ -168,7 +168,9 @@ function SchemaForm() {
                 label: (
                   <div className={styles['schema-form__group-header']}>
                     <span>{group.label}</span>
-                    <Tag>{group.fields.length}</Tag>
+                    <Tag className={styles['schema-form__count-tag']}>
+                      {group.fields.length}
+                    </Tag>
                   </div>
                 ),
                 children: (

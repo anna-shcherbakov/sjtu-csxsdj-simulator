@@ -288,10 +288,16 @@ function App() {
       locale={zhCN}
       theme={{
         token: {
-          colorPrimary: '#c62828',
-          colorInfo: '#c62828',
-          borderRadius: 12,
-          colorBgLayout: '#f6eeee',
+          colorPrimary: '#A61E22',
+          colorInfo: '#A61E22',
+          colorBgLayout: '#F3EEE5',
+          colorBgContainer: '#FFFDF9',
+          colorBorder: '#D9CCBE',
+          colorBorderSecondary: '#E7DDD2',
+          controlOutline: 'rgba(166, 30, 34, 0.18)',
+          colorText: '#4A3D38',
+          colorTextHeading: '#2A1F1B',
+          borderRadius: 10,
           motionDurationMid: '0.14s',
           motionDurationSlow: '0.18s',
           motionEaseInOut: 'cubic-bezier(0.2, 0, 0, 1)',

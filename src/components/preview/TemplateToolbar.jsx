@@ -80,13 +80,18 @@ function TemplateToolbar({ onValidate, onReset }) {
         </div>
 
         <Button
+          className={styles['template-toolbar__action--primary']}
           icon={<CheckCircleOutlined />}
           onClick={onValidate}
           type="primary"
         >
           校验
         </Button>
-        <Button icon={<ReloadOutlined />} onClick={onReset}>
+        <Button
+          className={styles['template-toolbar__action--secondary']}
+          icon={<ReloadOutlined />}
+          onClick={onReset}
+        >
           重置
         </Button>
         <Popover
@@ -98,7 +103,10 @@ function TemplateToolbar({ onValidate, onReset }) {
           trigger="hover"
         >
           <Button
-            className={styles['template-toolbar__help']}
+            className={clsx(
+              styles['template-toolbar__help'],
+              styles['template-toolbar__action--secondary'],
+            )}
             icon={<QuestionCircleOutlined />}
           >
             辅助说明
