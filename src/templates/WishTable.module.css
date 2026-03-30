@@ -5,6 +5,13 @@
   border-radius: 2px;
 }
 
+.wish-page {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 58px 72px 64px;
+  color: #000;
+}
+
 .wish-field-anchor {
   min-width: 0;
   min-height: 0;
@@ -31,385 +38,682 @@
   border-color: transparent;
 }
 
-.wish-cover-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.wish-cover-page__emblem {
-  margin-top: 110px;
-  width: 94px;
-  height: 94px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #ffd659, #c1121f 70%);
-  color: #ffd659;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 42px;
-  box-shadow: 0 10px 20px rgba(193, 18, 31, 0.18);
-}
-
-.wish-cover-page__title-block {
-  margin-top: 72px;
-  text-align: center;
-}
-
-.wish-cover-page__title-small {
-  font-size: 28px;
-  line-height: 1.5;
-  letter-spacing: 0.18em;
-}
-
-.wish-cover-page__title-large {
-  margin-top: 20px;
-  font-size: 44px;
-  line-height: 1.35;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-}
-
-.wish-cover-page__lines {
-  width: 100%;
-  margin-top: 180px;
-  display: flex;
-  flex-direction: column;
-  gap: 44px;
-}
-
-.wish-cover-line {
-  display: flex;
+.wish-line-field {
+  display: inline-flex;
   align-items: flex-end;
-  gap: 24px;
-}
-
-.wish-cover-line__label {
-  flex: 0 0 180px;
-  font-size: 22px;
-  line-height: 1.2;
-  letter-spacing: 0.16em;
-  white-space: nowrap;
-}
-
-.wish-cover-line__value {
-  flex: 1;
+  min-height: 24px;
   min-width: 0;
-}
-
-.wish-cover-page__footer {
-  margin-top: auto;
-  margin-bottom: 96px;
-  font-size: 24px;
-  line-height: 1.4;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-}
-
-.wish-simple-page,
-.wish-table-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.wish-page-title {
-  margin: 0 0 18px;
-  text-align: center;
-  font-size: 24px;
-  line-height: 1.4;
-  font-weight: 700;
-}
-
-.wish-paragraph-stack {
-  display: grid;
-  gap: 18px;
-  margin-top: 8px;
-}
-
-.wish-paragraph {
-  margin: 0;
-  font-size: 17px;
-  line-height: 1.95;
-  text-indent: 2em;
-}
-
-.wish-page-note {
-  margin-top: auto;
-  padding-top: 24px;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-.wish-oath-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.wish-oath-page__body {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 16px 84px;
-}
-
-.wish-oath-page__text {
-  margin: 0;
-  max-width: 540px;
-  font-size: 24px;
-  line-height: 2;
-  text-align: center;
-}
-
-.wish-basic-table,
-.wish-grid-table,
-.wish-vertical-page__table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.wish-basic-table td,
-.wish-grid-table th,
-.wish-grid-table td,
-.wish-vertical-page__table td {
-  border: 1px solid #000;
-  color: #000;
-}
-
-.wish-basic-table td {
-  padding: 8px 7px;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.wish-table__label {
-  width: 15%;
-  text-align: center;
-  font-weight: 700;
-}
-
-.wish-table__value {
-  text-align: left;
-}
-
-.wish-large-section {
-  margin-top: 18px;
-  border: 1px solid #000;
-  display: flex;
-  flex-direction: column;
-  min-height: 520px;
-}
-
-.wish-large-section--compact {
-  margin-top: 0;
-  min-height: 210px;
-}
-
-.wish-large-section--remark {
-  min-height: 116px;
-}
-
-.wish-large-section__title {
-  padding: 10px 12px;
+  padding: 0 2px 2px;
   border-bottom: 1px solid #000;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 700;
 }
 
 .wish-field-anchor--line {
   display: block;
   width: 100%;
-  min-height: 22px;
+  min-height: 18px;
 }
 
 .wish-field-anchor--block {
   display: block;
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+}
+
+.wish-field-anchor--inline-plain {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 22px;
+  padding: 0 4px 1px;
+  border-bottom: 1px solid #000;
+  text-align: center;
 }
 
 .wish-field-anchor--essay {
-  flex: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
   min-height: 0;
-  padding: 12px 14px 10px;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  line-height: 1.8;
   white-space: pre-wrap;
-  line-height: 1.9;
+  word-break: break-word;
 }
 
-.wish-field-anchor--section {
+.wish-field-anchor--cell-block {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 98px;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.wish-field-anchor--short-essay {
+  min-height: 228px;
+}
+
+.wish-field-anchor--approval-body {
   min-height: 160px;
 }
 
-.wish-field-anchor--approval {
-  min-height: 120px;
+.wish-blank-line {
+  display: inline-block;
+  min-height: 22px;
+  border-bottom: 1px solid #000;
 }
 
-.wish-field-anchor--remark {
-  min-height: 74px;
+.wish-name-line {
+  width: 164px;
 }
 
-.wish-field-anchor--issue {
-  min-height: 770px;
+.wish-name-line--long {
+  width: 300px;
 }
 
-.wish-resume-spacer {
-  min-height: 180px;
+.wish-sign-line {
+  width: 138px;
 }
 
-.wish-grid-table th,
-.wish-grid-table td {
-  padding: 8px 6px;
-  font-size: 13px;
-  line-height: 1.55;
-  text-align: center;
-  vertical-align: top;
+.wish-sign-line--medium {
+  width: 110px;
 }
 
-.wish-grid-table th {
-  font-weight: 700;
+.wish-date-line {
+  width: 120px;
 }
 
-.wish-grid-table tbody td {
-  height: 58px;
-  text-align: left;
-}
-
-.wish-section-stack {
-  display: grid;
-  gap: 16px;
-  flex: 1;
-  min-height: 0;
-}
-
-.wish-section-stack--dense {
-  gap: 12px;
-}
-
-.wish-family-spacer {
-  flex: 1;
-  min-height: 220px;
-}
-
-.wish-vertical-page {
-  height: 100%;
-  display: flex;
-}
-
-.wish-vertical-page__table {
-  height: 100%;
-}
-
-.wish-vertical-page__rail {
-  width: 84px;
-  padding: 0;
-}
-
-.wish-vertical-page__body {
-  padding: 18px 18px 14px;
-  display: flex;
-  flex-direction: column;
+.wish-stamp-gap {
+  display: inline-block;
+  width: 110px;
+  min-height: 24px;
 }
 
 .wish-vertical-text {
-  height: 100%;
   display: flex;
+  height: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
   font-size: 16px;
   line-height: 1.1;
-  font-weight: 700;
 }
 
-.wish-signature-row {
+.wish-cover-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wish-cover-page__emblem-wrap {
+  margin-top: 112px;
+}
+
+.wish-cover-page__emblem {
+  width: 122px;
+  height: 122px;
+  object-fit: contain;
+}
+
+.wish-cover-page__title-small {
+  margin-top: 62px;
+  font-size: 33px;
+  line-height: 1.35;
+  letter-spacing: 0.35em;
+  text-indent: 0.35em;
+}
+
+.wish-cover-page__title-large {
+  margin-top: 56px;
+  font-size: 56px;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+}
+
+.wish-cover-page__name-row {
+  margin-top: 238px;
+  display: flex;
+  width: 420px;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.wish-cover-page__name-label {
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.wish-cover-page__name-line {
+  flex: 1;
+}
+
+.wish-cover-page__footer {
+  margin-top: auto;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.wish-text-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.wish-spaced-title {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 32px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+}
+
+.wish-text-stack {
+  width: 86%;
+  margin: 74px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.wish-text-paragraph {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.9;
+  text-indent: 0;
+}
+
+.wish-oath-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.wish-oath-page__body {
+  margin-top: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.wish-oath-page__line {
+  margin: 0;
+  font-size: 31px;
+  line-height: 1.5;
+}
+
+.wish-form-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.wish-basic-info-table,
+.wish-resume-table,
+.wish-league-table,
+.wish-history-table,
+.wish-spouse-table,
+.wish-family-table,
+.wish-issue-table,
+.wish-introducer-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.wish-basic-info-table td,
+.wish-basic-info-table th,
+.wish-resume-table td,
+.wish-resume-table th,
+.wish-league-table td,
+.wish-history-table td,
+.wish-spouse-table td,
+.wish-family-table td,
+.wish-family-table th,
+.wish-issue-table td,
+.wish-introducer-table td {
+  border: 1px solid #000;
+  color: #000;
+  vertical-align: middle;
+}
+
+.wish-basic-info-table__label-col {
+  width: 8%;
+}
+
+.wish-basic-info-table__value-col {
+  width: 14%;
+}
+
+.wish-basic-info-table__photo-col {
+  width: 18%;
+}
+
+.wish-table__label {
+  padding: 8px 6px;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.wish-table__value {
+  padding: 0;
+  font-size: 16px;
+}
+
+.wish-table__value > .wish-field-anchor {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  align-items: center;
+  padding: 8px 10px;
+  box-sizing: border-box;
+}
+
+.wish-photo-cell {
+  padding: 0;
+}
+
+.wish-photo-cell__content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 14px;
+  font-size: 16px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.wish-basic-info-table__title-cell {
+  padding: 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+}
+
+.wish-basic-info-table__essay-cell {
+  padding: 0;
+  height: 446px;
+  vertical-align: top;
+}
+
+.wish-basic-info-table__essay-cell > .wish-field-anchor {
+  height: 100%;
+}
+
+.wish-continued-essay-box {
+  height: 274px;
+  border: 1px solid #000;
+}
+
+.wish-resume-table {
+  margin-top: 16px;
+}
+
+.wish-resume-table th,
+.wish-resume-table td {
+  padding: 8px 6px;
+  font-size: 15px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.wish-resume-table__title {
+  padding: 10px 0 !important;
+  font-size: 18px !important;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-indent: 0.25em;
+}
+
+.wish-resume-table__cell {
+  padding: 0 !important;
+}
+
+.wish-league-table {
+  margin-top: 18px;
+}
+
+.wish-league-table__label {
+  width: 31%;
+  padding: 14px 10px;
+  font-size: 16px;
+  line-height: 1.65;
+  text-align: left;
+}
+
+.wish-league-table__value {
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1.7;
+  vertical-align: top;
+}
+
+.wish-inline-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.wish-history-table td {
+  font-size: 15px;
+}
+
+.wish-history-table__label {
+  width: 24%;
+  padding: 12px 10px;
+  line-height: 1.65;
+  text-align: left;
+}
+
+.wish-history-table__value {
+  padding: 8px 12px;
+  min-height: 92px;
+  line-height: 1.7;
+  vertical-align: top;
+}
+
+.wish-history-table__value > .wish-field-anchor {
+  height: 100%;
+  padding: 8px 12px;
+}
+
+.wish-spouse-table {
+  margin-top: 18px;
+}
+
+.wish-spouse-table--continued {
+  margin-top: 0;
+}
+
+.wish-spouse-table__title-col {
+  width: 12%;
+}
+
+.wish-spouse-table__role-col {
+  width: 8%;
+}
+
+.wish-spouse-table__label-col {
+  width: 12%;
+}
+
+.wish-spouse-table__value-col {
+  width: 18%;
+}
+
+.wish-spouse-table__vertical,
+.wish-family-table__vertical,
+.wish-issue-table__vertical,
+.wish-introducer-table__vertical {
+  padding: 0;
+}
+
+.wish-spouse-table__label {
+  padding: 10px 8px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.wish-spouse-table__value {
+  padding: 0;
+  min-height: 70px;
+  vertical-align: top;
+}
+
+.wish-spouse-table__value > .wish-field-anchor {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  align-items: center;
+  padding: 8px 10px;
+  box-sizing: border-box;
+}
+
+.wish-family-table {
+  margin-top: 16px;
+}
+
+.wish-family-table__title-col {
+  width: 12%;
+}
+
+.wish-family-table__label-col {
+  width: 18%;
+}
+
+.wish-family-table__value-col {
+  width: 15%;
+}
+
+.wish-family-table__value-col-wide {
+  width: 25%;
+}
+
+.wish-family-table__header {
+  padding: 8px 6px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.wish-family-table__value {
+  padding: 0;
+  min-height: 96px;
+  vertical-align: top;
+}
+
+.wish-family-table__value > .wish-field-anchor {
+  height: 100%;
+}
+
+.wish-family-table__blank {
+  height: 40px;
+}
+
+.wish-family-table__issue-cell {
+  padding: 10px 12px;
+  height: 116px;
+  font-size: 18px;
+  vertical-align: top;
+}
+
+.wish-issue-table {
+  height: 100%;
+}
+
+.wish-issue-table__vertical {
+  width: 13%;
+  padding: 0;
+}
+
+.wish-issue-table__body {
+  height: 702px;
+}
+
+.wish-issue-table__footer {
+  padding: 12px 18px 10px;
+}
+
+.wish-issue-table__footer-inner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.wish-issue-table__signature {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  flex-wrap: wrap;
-  font-size: 14px;
 }
 
-.wish-signature-row--bottom {
+.wish-issue-table__date {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+}
+
+.wish-introducer-table__vertical {
+  width: 11%;
+  padding: 0;
+}
+
+.wish-introducer-table__section-cell {
+  padding: 0;
+}
+
+.wish-introducer-section {
+  min-height: 424px;
+  display: flex;
+  flex-direction: column;
+}
+
+.wish-introducer-section > .wish-field-anchor {
+  flex: 1;
+  min-height: 0;
+}
+
+.wish-introducer-section__footer {
   margin-top: auto;
-  justify-content: flex-end;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.wish-signature-placeholder,
-.wish-signature-line {
-  display: inline-block;
-  min-height: 24px;
-  border-bottom: 1px solid #000;
+.wish-introducer-section__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
 }
 
-.wish-signature-placeholder {
-  width: 150px;
+.wish-introducer-section__row--spread {
+  justify-content: space-between;
 }
 
-.wish-signature-line--date {
-  width: 156px;
+.wish-approval-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-.wish-section-card {
+.wish-approval-page--triple {
+  gap: 14px;
+}
+
+.wish-approval-page--remark {
+  gap: 12px;
+}
+
+.wish-section-box {
   border: 1px solid #000;
   display: flex;
   flex-direction: column;
 }
 
-.wish-section-card__title {
-  padding: 8px 12px;
+.wish-section-box__title {
+  padding: 9px 12px 8px;
   border-bottom: 1px solid #000;
-  font-size: 16px;
-  line-height: 1.5;
-  font-weight: 700;
   text-align: center;
+  font-size: 17px;
+  font-weight: 700;
 }
 
-.wish-section-card__body {
-  flex: 1;
+.wish-section-box__body {
+  padding: 0;
   display: flex;
+  flex-direction: column;
+}
+
+.wish-section-box__body > .wish-field-anchor {
+  flex: 1;
   min-height: 0;
 }
 
-.wish-approval-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+.wish-section-box__body--medium {
+  min-height: 228px;
+}
+
+.wish-section-box__body--compact {
+  min-height: 162px;
+}
+
+.wish-section-box__body--remark {
+  min-height: 92px;
+}
+
+.wish-section-box__footer {
+  margin-top: auto;
+  padding: 10px 12px 12px;
+}
+
+.wish-empty-body {
+  flex: 1;
+  min-height: 0;
+}
+
+.wish-box-signoff {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wish-box-signoff__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  font-size: 15px;
+  flex-wrap: wrap;
+}
+
+.wish-box-signoff__row--spread {
+  justify-content: space-between;
+}
+
+.wish-box-signoff__item {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.wish-box-signoff__date-row {
+  margin-left: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  font-size: 15px;
 }
 
 .wish-back-cover {
-  height: 100%;
   display: flex;
+  justify-content: flex-end;
+  padding-bottom: 88px;
+}
+
+.wish-back-cover__content {
+  margin-top: auto;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   align-items: center;
-  justify-content: center;
 }
 
-.wish-back-cover__center {
-  max-width: 420px;
-  text-align: center;
-  display: grid;
-  gap: 22px;
-}
-
-.wish-back-cover__title {
-  font-size: 28px;
+.wish-back-cover__line {
+  font-size: 18px;
   line-height: 1.4;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-}
-
-.wish-back-cover__year {
-  font-size: 22px;
-  line-height: 1.4;
-  letter-spacing: 0.12em;
-}
-
-.wish-back-cover__note {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.9;
+  letter-spacing: 0.08em;
 }

@@ -5,23 +5,88 @@ import styles from './WishTable.module.css'
 
 const c = (...names) => clsx(names.map((name) => styles[name]).filter(Boolean))
 
-const RESUME_ROW_COUNT = 6
-const FAMILY_ROW_COUNT = 6
+const FIELD_IDS = {
+  name: 'basic.姓名',
+  gender: 'basic.性别',
+  ethnicity: 'basic.民族',
+  birthYearMonth: 'basic.出生年月',
+  nativePlace: 'basic.籍贯',
+  birthPlace: 'basic.出生地',
+  idNumber: 'basic.身份证号',
+  leagueJoinYearMonth: 'basic.入团年月',
+  education: 'wish.学历',
+  degree: 'wish.学位或职称',
+  unitPosition: 'wish.单位、职务或职业',
+  residence: 'wish.现居住地',
+  specialty: 'wish.有何专长',
+  wishContent: 'wish.志愿书电子版内容',
+  resume: 'wish.本人经历',
+  leagueSchool: 'wish.加入共青团时所在学校',
+  rewardInfo: 'wish.何时何地何原因受过何种奖励',
+  spouseFlag: 'wish.是否有配偶',
+  spouseName: 'wish.配偶姓名',
+  spouseEthnicity: 'wish.配偶民族',
+  spouseBirthYearMonth: 'wish.配偶出生年月',
+  spouseNativePlace: 'wish.配偶籍贯',
+  spouseEducation: 'wish.配偶学历',
+  spouseWorkStart: 'wish.配偶参加工作时间',
+  spousePoliticalStatus: 'wish.配偶政治面貌',
+  spouseUnitPosition: 'wish.配偶单位、职务或职业',
+  familyMembers: 'wish.家庭其他成员',
+  introducerOpinion1: 'wish.入党介绍人1意见',
+  introducerOpinion2: 'wish.入党介绍人2意见',
+  introducerDate: 'wish.入党介绍人意见落款日期',
+  branchResolution: 'wish.支部大会通过接收申请人为预备党员的决议',
+  branchResolutionDate: 'wish.支部大会通过预备的日期',
+  committeeApprovalDate: 'wish.党委审批日期',
+  formalResolution:
+    'formal.支部大会通过预备党员能否转为正式党员的决议（回到入党志愿书）',
+  formalResolutionDate: 'formal.支部大会通过预备党员能否转为正式党员的决议落款日期',
+  formalCommitteeDate: 'formal.基层党委审批意见落款日期',
+}
 
 const INSTRUCTION_PARAGRAPHS = [
-  '填写《入党志愿书》必须严肃认真，字迹工整清楚，内容真实准确，不得涂改、挖补或随意增删项目。',
-  '志愿书中无占位符的位置，均视为固定印制文字或手写补充区域，本系统仅对明确字段位置做结构化绑定。',
-  '有关决议、审批和日期应与线下组织材料保持一致，提交前请逐项复核后再归档。',
+  '一、申请人填写入党志愿书要严肃、认真、忠实。填写前，党支部负责人或入党介绍人应将表内项目向申请人解释清楚。',
+  '二、填写入党志愿书应使用钢笔、签字笔或毛笔，并使用黑色或蓝黑色墨水。字迹要清晰、工整。表内的年、月、日一律用公历和阿拉伯数字。表内栏目没有内容填写时，应注明“无”。个别栏目填写不下时，可加附页。',
+  '三、在上级党组织批准预备党员转为正式党员后，应及时将入党志愿书存入本人档案，没有档案的，由基层党委保存。',
 ]
 
-const OATH_TEXT =
-  '我志愿加入中国共产党，拥护党的纲领，遵守党的章程，履行党员义务，执行党的决定，严守党的纪律，保守党的秘密，对党忠诚，积极工作，为共产主义奋斗终身，随时准备为党和人民牺牲一切，永不叛党。'
-
-const COVER_LINES = [
-  { label: '申请人姓名', fieldId: 'applicantName' },
+const OATH_LINES = [
+  '我志愿加入中国共产党，拥护党的纲领，',
+  '遵守党的章程，履行党员义务，执行党的决',
+  '定，严守党的纪律，保守党的秘密，对党忠',
+  '诚，积极工作，为共产主义奋斗终身，随时',
+  '准备为党和人民牺牲一切，永不叛党。',
 ]
 
-function InlineField({ fieldId, value, className }) {
+const getValue = (formData, fieldId) => formData[fieldId]
+
+const getListRows = (formData, fieldId) =>
+  Array.isArray(formData[fieldId]) ? formData[fieldId] : []
+
+const joinListColumnValues = (rows, columnId) =>
+  rows
+    .map((row) => row?.[columnId] ?? '')
+    .map((value) => String(value).trim())
+    .filter(Boolean)
+    .join('\n')
+
+const hasSpouse = (formData) => getValue(formData, FIELD_IDS.spouseFlag) === '有'
+
+function TemplatePage({ children, contentClassName = '', zoom }) {
+  return (
+    <A4Page
+      className={c('wish-template-page')}
+      contentClassName={clsx(c('wish-page'), contentClassName)}
+      padded={false}
+      zoom={zoom}
+    >
+      {children}
+    </A4Page>
+  )
+}
+
+function InlineField({ className, fieldId, value }) {
   return (
     <FieldAnchorText
       className={clsx(c('wish-field-anchor'), className)}
@@ -33,9 +98,9 @@ function InlineField({ fieldId, value, className }) {
   )
 }
 
-function LineField({ fieldId, value, className }) {
+function LineField({ className, fieldId, value }) {
   return (
-    <span className={className}>
+    <span className={clsx(c('wish-line-field'), className)}>
       <InlineField
         className={c('wish-field-anchor--line')}
         fieldId={fieldId}
@@ -45,7 +110,7 @@ function LineField({ fieldId, value, className }) {
   )
 }
 
-function BlockField({ fieldId, value, className }) {
+function BlockField({ className, fieldId, value }) {
   return (
     <InlineField
       className={clsx(c('wish-field-anchor--block'), className)}
@@ -55,9 +120,23 @@ function BlockField({ fieldId, value, className }) {
   )
 }
 
-function VerticalText({ text }) {
+function InlinePlainField({ className, fieldId, value }) {
   return (
-    <div className={c('wish-vertical-text')}>
+    <InlineField
+      className={clsx(c('wish-field-anchor--inline-plain'), className)}
+      fieldId={fieldId}
+      value={value}
+    />
+  )
+}
+
+function BlankLine({ className }) {
+  return <span className={clsx(c('wish-blank-line'), className)} />
+}
+
+function VerticalText({ className, text }) {
+  return (
+    <div className={clsx(c('wish-vertical-text'), className)}>
       {Array.from(text).map((char, index) => (
         <span key={`${char}-${index}`}>{char === ' ' ? '\u00A0' : char}</span>
       ))}
@@ -65,18 +144,46 @@ function VerticalText({ text }) {
   )
 }
 
-function PageTitle({ children }) {
-  return <h2 className={c('wish-page-title')}>{children}</h2>
+function SectionBox({ bodyClassName, children, className, footer, title }) {
+  return (
+    <section className={clsx(c('wish-section-box'), className)}>
+      <div className={c('wish-section-box__title')}>{title}</div>
+      <div className={clsx(c('wish-section-box__body'), bodyClassName)}>{children}</div>
+      {footer ? <div className={c('wish-section-box__footer')}>{footer}</div> : null}
+    </section>
+  )
 }
 
-function SignatureLine({ dateFieldId, dateValue, signatureLabel }) {
+function ResumeColumnField({ className, formData, label }) {
+  const rows = getListRows(formData, FIELD_IDS.resume)
+
   return (
-    <div className={c('wish-signature-row')}>
-      <span>{signatureLabel}</span>
-      <span className={c('wish-signature-placeholder')} />
+    <BlockField
+      className={clsx(c('wish-field-anchor--cell-block'), className)}
+      fieldId={FIELD_IDS.resume}
+      value={joinListColumnValues(rows, label)}
+    />
+  )
+}
+
+function FamilyColumnField({ className, formData, label }) {
+  const rows = getListRows(formData, FIELD_IDS.familyMembers)
+
+  return (
+    <BlockField
+      className={clsx(c('wish-field-anchor--cell-block'), className)}
+      fieldId={FIELD_IDS.familyMembers}
+      value={joinListColumnValues(rows, label)}
+    />
+  )
+}
+
+function BoundDateRow({ dateFieldId, dateValue }) {
+  return (
+    <div className={c('wish-box-signoff__date-row')}>
       <span>日期：</span>
       <LineField
-        className={c('wish-signature-line', 'wish-signature-line--date')}
+        className={c('wish-date-line')}
         fieldId={dateFieldId}
         value={dateValue}
       />
@@ -84,557 +191,852 @@ function SignatureLine({ dateFieldId, dateValue, signatureLabel }) {
   )
 }
 
-function StaticSignatureRow({ signatureLabel, showDate = false }) {
+function BlankDateRow() {
   return (
-    <div className={c('wish-signature-row')}>
-      <span>{signatureLabel}</span>
-      <span className={c('wish-signature-placeholder')} />
-      {showDate ? (
-        <>
-          <span>日期：</span>
-          <span className={c('wish-signature-line', 'wish-signature-line--date')} />
-        </>
-      ) : null}
+    <div className={c('wish-box-signoff__date-row')}>
+      <span>日期：</span>
+      <BlankLine className={c('wish-date-line')} />
     </div>
   )
 }
 
-function SectionCard({
-  bodyClassName,
-  children,
-  dateFieldId,
-  dateValue,
-  signatureLabel,
-  title,
-}) {
+function BranchFooter({ dateFieldId = null, dateValue = '' }) {
   return (
-    <section className={c('wish-section-card')}>
-      <div className={c('wish-section-card__title')}>{title}</div>
-      <div className={clsx(c('wish-section-card__body'), bodyClassName)}>
-        {children}
+    <div className={c('wish-box-signoff')}>
+      <div className={c('wish-box-signoff__row', 'wish-box-signoff__row--spread')}>
+        <div className={c('wish-box-signoff__item')}>
+          <span>支部名称：</span>
+          <BlankLine className={c('wish-name-line')} />
+        </div>
+        <div className={c('wish-box-signoff__item')}>
+          <span>支部书记签名或盖章</span>
+          <BlankLine className={c('wish-sign-line')} />
+        </div>
       </div>
       {dateFieldId ? (
-        <SignatureLine
-          dateFieldId={dateFieldId}
-          dateValue={dateValue}
-          signatureLabel={signatureLabel}
-        />
+        <BoundDateRow dateFieldId={dateFieldId} dateValue={dateValue} />
       ) : (
-        <StaticSignatureRow signatureLabel={signatureLabel} />
+        <BlankDateRow />
       )}
-    </section>
+    </div>
+  )
+}
+
+function ConversationFooter() {
+  return (
+    <div className={c('wish-box-signoff')}>
+      <div className={c('wish-box-signoff__row')}>
+        <span>谈话人单位、职务或职业</span>
+        <BlankLine className={c('wish-name-line', 'wish-name-line--long')} />
+      </div>
+      <div className={c('wish-box-signoff__row', 'wish-box-signoff__row--spread')}>
+        <div className={c('wish-box-signoff__item')}>
+          <span>签名或盖章</span>
+          <BlankLine className={c('wish-sign-line', 'wish-sign-line--medium')} />
+        </div>
+        <div className={c('wish-box-signoff__date-row')}>
+          <span>年</span>
+          <span>月</span>
+          <span>日</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function GeneralBranchFooter({ dateFieldId = null, dateValue = '' }) {
+  return (
+    <div className={c('wish-box-signoff')}>
+      <div className={c('wish-box-signoff__row', 'wish-box-signoff__row--spread')}>
+        <div className={c('wish-box-signoff__item')}>
+          <span>总支部名称</span>
+          <BlankLine className={c('wish-name-line')} />
+        </div>
+        <div className={c('wish-box-signoff__item')}>
+          <span>总支部书记签名或盖章</span>
+          <BlankLine className={c('wish-sign-line')} />
+        </div>
+      </div>
+      {dateFieldId ? (
+        <BoundDateRow dateFieldId={dateFieldId} dateValue={dateValue} />
+      ) : (
+        <BlankDateRow />
+      )}
+    </div>
+  )
+}
+
+function CommitteeFooter({ dateFieldId = null, dateValue = '' }) {
+  return (
+    <div className={c('wish-box-signoff')}>
+      <div className={c('wish-box-signoff__row', 'wish-box-signoff__row--spread')}>
+        <div className={c('wish-box-signoff__item')}>
+          <span>基层党委盖章</span>
+          <span className={c('wish-stamp-gap')} />
+        </div>
+        <div className={c('wish-box-signoff__item')}>
+          <span>党委书记签名或盖章</span>
+          <BlankLine className={c('wish-sign-line')} />
+        </div>
+      </div>
+      {dateFieldId ? (
+        <BoundDateRow dateFieldId={dateFieldId} dateValue={dateValue} />
+      ) : (
+        <BlankDateRow />
+      )}
+    </div>
   )
 }
 
 function CoverPage({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-cover-page')}
-      zoom={zoom}
-    >
-      <div className={c('wish-cover-page__emblem')} aria-hidden="true">
-        <span>★</span>
+    <TemplatePage contentClassName={c('wish-cover-page')} zoom={zoom}>
+      <div className={c('wish-cover-page__emblem-wrap')}>
+        <img alt="" aria-hidden="true" className={c('wish-cover-page__emblem')} src="/danghui.jpg" />
       </div>
 
-      <div className={c('wish-cover-page__title-block')}>
-        <div className={c('wish-cover-page__title-small')}>中国共产党</div>
-        <div className={c('wish-cover-page__title-large')}>入党志愿书</div>
-      </div>
+      <div className={c('wish-cover-page__title-small')}>中 国 共 产 党</div>
+      <div className={c('wish-cover-page__title-large')}>入 党 志 愿 书</div>
 
-      <div className={c('wish-cover-page__lines')}>
-        {COVER_LINES.map((item) => (
-          <div className={c('wish-cover-line')} key={item.fieldId}>
-            <div className={c('wish-cover-line__label')}>{item.label}</div>
-            <LineField
-              className={c('wish-cover-line__value')}
-              fieldId={item.fieldId}
-              value={formData[item.fieldId]}
-            />
-          </div>
-        ))}
+      <div className={c('wish-cover-page__name-row')}>
+        <span className={c('wish-cover-page__name-label')}>申请人姓名</span>
+        <LineField
+          className={c('wish-cover-page__name-line')}
+          fieldId={FIELD_IDS.name}
+          value={getValue(formData, FIELD_IDS.name)}
+        />
       </div>
 
       <div className={c('wish-cover-page__footer')}>中共中央组织部印制</div>
-    </A4Page>
+    </TemplatePage>
   )
 }
 
 function InstructionsPage({ zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-simple-page')}
-      zoom={zoom}
-    >
-      <PageTitle>填写说明</PageTitle>
+    <TemplatePage contentClassName={c('wish-text-page')} zoom={zoom}>
+      <h2 className={c('wish-spaced-title')}>说 明</h2>
 
-      <div className={c('wish-paragraph-stack')}>
-        {INSTRUCTION_PARAGRAPHS.map((item) => (
-          <p className={c('wish-paragraph')} key={item}>
-            {item}
+      <div className={c('wish-text-stack')}>
+        {INSTRUCTION_PARAGRAPHS.map((paragraph) => (
+          <p className={c('wish-text-paragraph')} key={paragraph}>
+            {paragraph}
           </p>
         ))}
       </div>
-
-      <div className={c('wish-page-note')}>
-        注：本页为固定说明页，审核《入党志愿书》或同类材料时请一并核对。
-      </div>
-    </A4Page>
+    </TemplatePage>
   )
 }
 
 function OathPage({ zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-oath-page')}
-      zoom={zoom}
-    >
-      <PageTitle>入党誓词</PageTitle>
+    <TemplatePage contentClassName={c('wish-oath-page')} zoom={zoom}>
+      <h2 className={c('wish-spaced-title')}>誓 词</h2>
       <div className={c('wish-oath-page__body')}>
-        <p className={c('wish-oath-page__text')}>{OATH_TEXT}</p>
+        {OATH_LINES.map((line) => (
+          <p className={c('wish-oath-page__line')} key={line}>
+            {line}
+          </p>
+        ))}
       </div>
-    </A4Page>
+    </TemplatePage>
   )
 }
 
 function BasicInfoAndWishPage({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-table-page')}
-      zoom={zoom}
-    >
-      <PageTitle>基本信息及入党志愿</PageTitle>
-
-      <table className={c('wish-basic-table')}>
+    <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
+      <table className={c('wish-basic-info-table')}>
+        <colgroup>
+          <col className={c('wish-basic-info-table__label-col')} />
+          <col className={c('wish-basic-info-table__value-col')} />
+          <col className={c('wish-basic-info-table__label-col')} />
+          <col className={c('wish-basic-info-table__value-col')} />
+          <col className={c('wish-basic-info-table__label-col')} />
+          <col className={c('wish-basic-info-table__value-col')} />
+          <col className={c('wish-basic-info-table__photo-col')} />
+        </colgroup>
         <tbody>
           <tr>
-            <td className={c('wish-table__label')}>姓名</td>
+            <td className={c('wish-table__label')}>姓 名</td>
             <td className={c('wish-table__value')}>
-              <InlineField fieldId="applicantName" value={formData.applicantName} />
+              <InlineField fieldId={FIELD_IDS.name} value={getValue(formData, FIELD_IDS.name)} />
             </td>
-            <td className={c('wish-table__label')}>性别</td>
+            <td className={c('wish-table__label')}>性 别</td>
             <td className={c('wish-table__value')}>
-              <InlineField fieldId="gender" value={formData.gender} />
-            </td>
-            <td className={c('wish-table__label')}>民族</td>
-            <td className={c('wish-table__value')}>
-              <InlineField fieldId="ethnicity" value={formData.ethnicity} />
-            </td>
-          </tr>
-          <tr>
-            <td className={c('wish-table__label')}>出生日期</td>
-            <td className={c('wish-table__value')}>
-              <InlineField fieldId="birthDate" value={formData.birthDate} />
-            </td>
-            <td className={c('wish-table__label')}>籍贯</td>
-            <td className={c('wish-table__value')}>
-              <InlineField fieldId="nativePlace" value={formData.nativePlace} />
-            </td>
-            <td className={c('wish-table__label')}>文化程度</td>
-            <td className={c('wish-table__value')}>
-              <InlineField fieldId="education" value={formData.education} />
-            </td>
-          </tr>
-          <tr>
-            <td className={c('wish-table__label')}>学位</td>
-            <td className={c('wish-table__value')}>
-              <InlineField fieldId="degree" value={formData.degree} />
-            </td>
-            <td className={c('wish-table__label')}>现所在单位</td>
-            <td className={c('wish-table__value')} colSpan={3}>
-              <InlineField fieldId="currentUnit" value={formData.currentUnit} />
-            </td>
-          </tr>
-          <tr>
-            <td className={c('wish-table__label')}>现任职务</td>
-            <td className={c('wish-table__value')} colSpan={3}>
-              <InlineField fieldId="position" value={formData.position} />
-            </td>
-            <td className={c('wish-table__label')}>身份证号</td>
-            <td className={c('wish-table__value')}>
-              <InlineField fieldId="idNumber" value={formData.idNumber} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <section className={c('wish-large-section')}>
-        <div className={c('wish-large-section__title')}>入党志愿</div>
-        <BlockField
-          className={c('wish-field-anchor--essay')}
-          fieldId="partyApplicationContent"
-          value={formData.partyApplicationContent}
-        />
-      </section>
-    </A4Page>
-  )
-}
-
-function ResumePage({ formData, zoom }) {
-  const rows = Array.from({ length: RESUME_ROW_COUNT }, (_, index) => index + 1)
-
-  return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-table-page')}
-      zoom={zoom}
-    >
-      <PageTitle>本人经历</PageTitle>
-
-      <div className={c('wish-resume-spacer')} />
-
-      <table className={c('wish-grid-table')}>
-        <thead>
-          <tr>
-            <th>起始日期</th>
-            <th>结束日期</th>
-            <th>在何地、何部门</th>
-            <th>任何职务</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row}>
-              <td>
-                <InlineField
-                  fieldId={`resumeStartDateList${row}`}
-                  value={formData[`resumeStartDateList${row}`]}
-                />
-              </td>
-              <td>
-                <InlineField
-                  fieldId={`resumeEndDateList${row}`}
-                  value={formData[`resumeEndDateList${row}`]}
-                />
-              </td>
-              <td>
-                <InlineField
-                  fieldId={`resumeOrganizationList${row}`}
-                  value={formData[`resumeOrganizationList${row}`]}
-                />
-              </td>
-              <td>
-                <InlineField
-                  fieldId={`resumePositionList${row}`}
-                  value={formData[`resumePositionList${row}`]}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </A4Page>
-  )
-}
-
-function PoliticalReviewPage({ formData, zoom }) {
-  return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-table-page')}
-      zoom={zoom}
-    >
-      <PageTitle>政治审查及现实表现</PageTitle>
-
-      <div className={c('wish-section-stack')}>
-        <section className={c('wish-large-section', 'wish-large-section--compact')}>
-          <div className={c('wish-large-section__title')}>政治审查结论</div>
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId="politicalReviewConclusion"
-            value={formData.politicalReviewConclusion}
-          />
-        </section>
-
-        <section className={c('wish-large-section', 'wish-large-section--compact')}>
-          <div className={c('wish-large-section__title')}>奖惩情况</div>
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId="rewardPunishmentInfo"
-            value={formData.rewardPunishmentInfo}
-          />
-        </section>
-
-        <section className={c('wish-large-section', 'wish-large-section--compact')}>
-          <div className={c('wish-large-section__title')}>主要现实表现</div>
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId="majorPerformance"
-            value={formData.majorPerformance}
-          />
-        </section>
-      </div>
-    </A4Page>
-  )
-}
-
-function FamilyPage({ formData, zoom }) {
-  const rows = Array.from({ length: FAMILY_ROW_COUNT }, (_, index) => index + 1)
-
-  return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-table-page')}
-      zoom={zoom}
-    >
-      <PageTitle>家庭主要成员及主要社会关系</PageTitle>
-
-      <table className={c('wish-grid-table')}>
-        <thead>
-          <tr>
-            <th>姓名</th>
-            <th>称谓/关系</th>
-            <th>政治面貌</th>
-            <th>工作单位及职务</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row}>
-              <td>
-                <InlineField
-                  fieldId={`familyMemberNameList${row}`}
-                  value={formData[`familyMemberNameList${row}`]}
-                />
-              </td>
-              <td>
-                <InlineField
-                  fieldId={`familyMemberRelationList${row}`}
-                  value={formData[`familyMemberRelationList${row}`]}
-                />
-              </td>
-              <td>
-                <InlineField
-                  fieldId={`familyMemberPoliticalStatusList${row}`}
-                  value={formData[`familyMemberPoliticalStatusList${row}`]}
-                />
-              </td>
-              <td>
-                <InlineField
-                  fieldId={`familyMemberWorkUnitList${row}`}
-                  value={formData[`familyMemberWorkUnitList${row}`]}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div className={c('wish-family-spacer')} />
-    </A4Page>
-  )
-}
-
-function VerticalIssuePage({ formData, zoom }) {
-  return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-vertical-page')}
-      zoom={zoom}
-    >
-      <table className={c('wish-vertical-page__table')}>
-        <tbody>
-          <tr>
-            <td className={c('wish-vertical-page__rail')}>
-              <VerticalText text="需要向党组织说明的问题" />
-            </td>
-            <td className={c('wish-vertical-page__body')}>
-              <BlockField
-                className={c('wish-field-anchor--essay', 'wish-field-anchor--issue')}
-                fieldId="selfStatementIssues"
-                value={formData.selfStatementIssues}
+              <InlineField
+                fieldId={FIELD_IDS.gender}
+                value={getValue(formData, FIELD_IDS.gender)}
               />
+            </td>
+            <td className={c('wish-table__label')}>民 族</td>
+            <td className={c('wish-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.ethnicity}
+                value={getValue(formData, FIELD_IDS.ethnicity)}
+              />
+            </td>
+            <td className={c('wish-photo-cell')} rowSpan={4}>
+              <div className={c('wish-photo-cell__content')}>正面免冠照片（2寸）</div>
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-table__label')}>籍 贯</td>
+            <td className={c('wish-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.nativePlace}
+                value={getValue(formData, FIELD_IDS.nativePlace)}
+              />
+            </td>
+            <td className={c('wish-table__label')}>出生年月</td>
+            <td className={c('wish-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.birthYearMonth}
+                value={getValue(formData, FIELD_IDS.birthYearMonth)}
+              />
+            </td>
+            <td className={c('wish-table__label')}>出生地</td>
+            <td className={c('wish-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.birthPlace}
+                value={getValue(formData, FIELD_IDS.birthPlace)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-table__label')}>学 历</td>
+            <td className={c('wish-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.education}
+                value={getValue(formData, FIELD_IDS.education)}
+              />
+            </td>
+            <td className={c('wish-table__label')} colSpan={2}>
+              学位或职称
+            </td>
+            <td className={c('wish-table__value')} colSpan={2}>
+              <InlineField fieldId={FIELD_IDS.degree} value={getValue(formData, FIELD_IDS.degree)} />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-table__label')} colSpan={2}>
+              单位、职务或职业
+            </td>
+            <td className={c('wish-table__value')} colSpan={4}>
+              <InlineField
+                fieldId={FIELD_IDS.unitPosition}
+                value={getValue(formData, FIELD_IDS.unitPosition)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-table__label')} colSpan={2}>
+              现居住地
+            </td>
+            <td className={c('wish-table__value')} colSpan={5}>
+              <InlineField
+                fieldId={FIELD_IDS.residence}
+                value={getValue(formData, FIELD_IDS.residence)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-table__label')} colSpan={2}>
+              居民身份证号码
+            </td>
+            <td className={c('wish-table__value')} colSpan={5}>
+              <InlineField
+                fieldId={FIELD_IDS.idNumber}
+                value={getValue(formData, FIELD_IDS.idNumber)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-table__label')} colSpan={2}>
+              有 何 专 长
+            </td>
+            <td className={c('wish-table__value')} colSpan={5}>
+              <InlineField
+                fieldId={FIELD_IDS.specialty}
+                value={getValue(formData, FIELD_IDS.specialty)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-basic-info-table__title-cell')} colSpan={7}>
+              入 党 志 愿
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-basic-info-table__essay-cell')} colSpan={7}>
+              <BlockField
+                className={c('wish-field-anchor--essay')}
+                fieldId={FIELD_IDS.wishContent}
+                value={getValue(formData, FIELD_IDS.wishContent)}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </TemplatePage>
+  )
+}
 
-              <div className={c('wish-signature-row', 'wish-signature-row--bottom')}>
-                <span>本人签名：</span>
-                <span className={c('wish-signature-placeholder')} />
-                <span>日期：</span>
-                <span className={c('wish-signature-line', 'wish-signature-line--date')} />
+function ResumeAndLeaguePage({ formData, zoom }) {
+  return (
+    <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
+      <div className={c('wish-continued-essay-box')} />
+
+      <table className={c('wish-resume-table')}>
+        <thead>
+          <tr>
+            <th className={c('wish-resume-table__title')} colSpan={4}>
+              本 人 经 历（包括学历）
+            </th>
+          </tr>
+          <tr>
+            <th>自何年何月</th>
+            <th>至何年何月</th>
+            <th>在 何 地、何 单 位、任 何 职</th>
+            <th>证明人</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className={c('wish-resume-table__cell')}>
+              <ResumeColumnField formData={formData} label="开始年月" />
+            </td>
+            <td className={c('wish-resume-table__cell')}>
+              <ResumeColumnField formData={formData} label="结束年月" />
+            </td>
+            <td className={c('wish-resume-table__cell')}>
+              <ResumeColumnField formData={formData} label="地点单位职务" />
+            </td>
+            <td className={c('wish-resume-table__cell')}>
+              <ResumeColumnField formData={formData} label="证明人" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table className={c('wish-league-table')}>
+        <tbody>
+          <tr>
+            <td className={c('wish-league-table__label')}>何时何地加入中国共产主义青年团</td>
+            <td className={c('wish-league-table__value')}>
+              <div className={c('wish-inline-sentence')}>
+                <InlinePlainField
+                  fieldId={FIELD_IDS.leagueJoinYearMonth}
+                  value={getValue(formData, FIELD_IDS.leagueJoinYearMonth)}
+                />
+                <span>于</span>
+                <InlinePlainField
+                  fieldId={FIELD_IDS.leagueSchool}
+                  value={getValue(formData, FIELD_IDS.leagueSchool)}
+                />
+                <span>加入中国共产主义青年团</span>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
-    </A4Page>
+    </TemplatePage>
+  )
+}
+
+function AwardsPoliticsSpousePage({ formData, zoom }) {
+  const spouseVisible = hasSpouse(formData)
+
+  return (
+    <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
+      <table className={c('wish-history-table')}>
+        <tbody>
+          <tr>
+            <td className={c('wish-history-table__label')}>
+              何时何地参加过何种民主党派或工商联，任何职务
+            </td>
+            <td className={c('wish-history-table__value')}>无</td>
+          </tr>
+          <tr>
+            <td className={c('wish-history-table__label')}>
+              何时何地参加过何种反动组织或封建迷信组织，任何职务，有何活动，以及有何其他政治历史问题，结论如何
+            </td>
+            <td className={c('wish-history-table__value')}>无</td>
+          </tr>
+          <tr>
+            <td className={c('wish-history-table__label')}>
+              何时何地何原因受过何种奖励
+            </td>
+            <td className={c('wish-history-table__value')}>
+              <BlockField
+                className={c('wish-field-anchor--cell-block')}
+                fieldId={FIELD_IDS.rewardInfo}
+                value={getValue(formData, FIELD_IDS.rewardInfo)}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-history-table__label')}>
+              何时何地何原因受过何种处分
+            </td>
+            <td className={c('wish-history-table__value')}>无</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table className={c('wish-spouse-table')}>
+        <colgroup>
+          <col className={c('wish-spouse-table__title-col')} />
+          <col className={c('wish-spouse-table__role-col')} />
+          <col className={c('wish-spouse-table__label-col')} />
+          <col className={c('wish-spouse-table__value-col')} />
+          <col className={c('wish-spouse-table__label-col')} />
+          <col className={c('wish-spouse-table__value-col')} />
+          <col className={c('wish-spouse-table__label-col')} />
+          <col className={c('wish-spouse-table__value-col')} />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td className={c('wish-spouse-table__vertical')} rowSpan={2}>
+              <VerticalText text="家庭主要成员情况" />
+            </td>
+            <td className={c('wish-spouse-table__vertical')} rowSpan={2}>
+              <VerticalText text="配偶" />
+            </td>
+            <td className={c('wish-spouse-table__label')}>姓名</td>
+            <td className={c('wish-spouse-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.spouseName}
+                value={spouseVisible ? getValue(formData, FIELD_IDS.spouseName) : ''}
+              />
+            </td>
+            <td className={c('wish-spouse-table__label')}>民族</td>
+            <td className={c('wish-spouse-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.spouseEthnicity}
+                value={spouseVisible ? getValue(formData, FIELD_IDS.spouseEthnicity) : ''}
+              />
+            </td>
+            <td className={c('wish-spouse-table__label')}>出生年月</td>
+            <td className={c('wish-spouse-table__value')}>
+              <InlineField
+                fieldId={FIELD_IDS.spouseBirthYearMonth}
+                value={
+                  spouseVisible ? getValue(formData, FIELD_IDS.spouseBirthYearMonth) : ''
+                }
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-spouse-table__label')}>籍贯</td>
+            <td className={c('wish-spouse-table__value')} colSpan={3}>
+              <InlineField
+                fieldId={FIELD_IDS.spouseNativePlace}
+                value={spouseVisible ? getValue(formData, FIELD_IDS.spouseNativePlace) : ''}
+              />
+            </td>
+            <td className={c('wish-spouse-table__label')}>学历</td>
+            <td className={c('wish-spouse-table__value')} colSpan={2}>
+              <InlineField
+                fieldId={FIELD_IDS.spouseEducation}
+                value={spouseVisible ? getValue(formData, FIELD_IDS.spouseEducation) : ''}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </TemplatePage>
+  )
+}
+
+function FamilyAndIssuePage({ formData, zoom }) {
+  const spouseVisible = hasSpouse(formData)
+
+  return (
+    <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
+      <table className={c('wish-spouse-table', 'wish-spouse-table--continued')}>
+        <colgroup>
+          <col className={c('wish-spouse-table__title-col')} />
+          <col className={c('wish-spouse-table__role-col')} />
+          <col className={c('wish-spouse-table__label-col')} />
+          <col className={c('wish-spouse-table__value-col')} />
+          <col className={c('wish-spouse-table__label-col')} />
+          <col className={c('wish-spouse-table__value-col')} />
+          <col className={c('wish-spouse-table__label-col')} />
+          <col className={c('wish-spouse-table__value-col')} />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td className={c('wish-spouse-table__vertical')} rowSpan={2}>
+              <VerticalText text="家庭主要成员情况" />
+            </td>
+            <td className={c('wish-spouse-table__vertical')} rowSpan={2}>
+              <VerticalText text="配偶" />
+            </td>
+            <td className={c('wish-spouse-table__label')}>参加工作时间</td>
+            <td className={c('wish-spouse-table__value')} colSpan={2}>
+              <InlineField
+                fieldId={FIELD_IDS.spouseWorkStart}
+                value={spouseVisible ? getValue(formData, FIELD_IDS.spouseWorkStart) : ''}
+              />
+            </td>
+            <td className={c('wish-spouse-table__label')}>政治面貌</td>
+            <td className={c('wish-spouse-table__value')} colSpan={2}>
+              <InlineField
+                fieldId={FIELD_IDS.spousePoliticalStatus}
+                value={
+                  spouseVisible ? getValue(formData, FIELD_IDS.spousePoliticalStatus) : ''
+                }
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-spouse-table__label')}>单位、职务或职业</td>
+            <td className={c('wish-spouse-table__value')} colSpan={5}>
+              <InlineField
+                fieldId={FIELD_IDS.spouseUnitPosition}
+                value={spouseVisible ? getValue(formData, FIELD_IDS.spouseUnitPosition) : ''}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table className={c('wish-family-table')}>
+        <colgroup>
+          <col className={c('wish-family-table__title-col')} />
+          <col className={c('wish-family-table__label-col')} />
+          <col className={c('wish-family-table__value-col')} />
+          <col className={c('wish-family-table__value-col')} />
+          <col className={c('wish-family-table__value-col')} />
+          <col className={c('wish-family-table__value-col-wide')} />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td className={c('wish-family-table__vertical')} rowSpan={2}>
+              <VerticalText text="其他成员" />
+            </td>
+            <td className={c('wish-family-table__header')}>关系</td>
+            <td className={c('wish-family-table__header')}>姓名</td>
+            <td className={c('wish-family-table__header')}>出生年月</td>
+            <td className={c('wish-family-table__header')}>政治面貌</td>
+            <td className={c('wish-family-table__header')}>单位、职务或职业</td>
+          </tr>
+          <tr>
+            <td className={c('wish-family-table__value')}>
+              <FamilyColumnField formData={formData} label="关系" />
+            </td>
+            <td className={c('wish-family-table__value')}>
+              <FamilyColumnField formData={formData} label="姓名" />
+            </td>
+            <td className={c('wish-family-table__value')}>
+              <FamilyColumnField formData={formData} label="出生年月" />
+            </td>
+            <td className={c('wish-family-table__value')}>
+              <FamilyColumnField formData={formData} label="政治面貌" />
+            </td>
+            <td className={c('wish-family-table__value')}>
+              <FamilyColumnField formData={formData} label="单位职务或职业" />
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-family-table__vertical')} rowSpan={5}>
+              <VerticalText text="主要社会关系情况" />
+            </td>
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+          </tr>
+          <tr>
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+          </tr>
+          <tr>
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+          </tr>
+          <tr>
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+          </tr>
+          <tr>
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+            <td className={c('wish-family-table__blank')} />
+          </tr>
+          <tr>
+            <td className={c('wish-family-table__vertical')} rowSpan={1}>
+              <VerticalText text="需要向党组织说明的问题" />
+            </td>
+            <td className={c('wish-family-table__issue-cell')} colSpan={5}>
+              无
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </TemplatePage>
+  )
+}
+
+function IssueContinuationPage({ zoom }) {
+  return (
+    <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
+      <table className={c('wish-issue-table')}>
+        <tbody>
+          <tr>
+            <td className={c('wish-issue-table__vertical')}>
+              <VerticalText text="党组织说明的问题" />
+            </td>
+            <td className={c('wish-issue-table__body')} />
+          </tr>
+          <tr>
+            <td className={c('wish-issue-table__footer')} colSpan={2}>
+              <div className={c('wish-issue-table__footer-inner')}>
+                <div className={c('wish-issue-table__signature')}>
+                  <span>本人签名或盖章</span>
+                  <BlankLine className={c('wish-sign-line')} />
+                </div>
+                <div className={c('wish-issue-table__date')}>
+                  <span>年</span>
+                  <span>月</span>
+                  <span>日</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </TemplatePage>
   )
 }
 
 function IntroducerOpinionsPage({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-simple-page')}
-      zoom={zoom}
-    >
-      <PageTitle>入党介绍人意见</PageTitle>
-
-      <div className={c('wish-section-stack')}>
-        <SectionCard
-          dateFieldId="introducer1Date"
-          dateValue={formData.introducer1Date}
-          signatureLabel="介绍人签名："
-          title="介绍人一意见"
-        >
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId="introducer1Opinion"
-            value={formData.introducer1Opinion}
-          />
-        </SectionCard>
-
-        <SectionCard
-          dateFieldId="introducer2Date"
-          dateValue={formData.introducer2Date}
-          signatureLabel="介绍人签名："
-          title="介绍人二意见"
-        >
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId="introducer2Opinion"
-            value={formData.introducer2Opinion}
-          />
-        </SectionCard>
-      </div>
-    </A4Page>
+    <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
+      <table className={c('wish-introducer-table')}>
+        <tbody>
+          <tr>
+            <td className={c('wish-introducer-table__vertical')} rowSpan={2}>
+              <VerticalText text="入党介绍人意见" />
+            </td>
+            <td className={c('wish-introducer-table__section-cell')}>
+              <div className={c('wish-introducer-section')}>
+                <BlockField
+                  className={c('wish-field-anchor--essay', 'wish-field-anchor--short-essay')}
+                  fieldId={FIELD_IDS.introducerOpinion1}
+                  value={getValue(formData, FIELD_IDS.introducerOpinion1)}
+                />
+                <div className={c('wish-introducer-section__footer')}>
+                  <div className={c('wish-introducer-section__row')}>
+                    <span>介绍人单位、职务或职业</span>
+                    <BlankLine className={c('wish-name-line', 'wish-name-line--long')} />
+                  </div>
+                  <div className={c('wish-introducer-section__row', 'wish-introducer-section__row--spread')}>
+                    <div className={c('wish-box-signoff__item')}>
+                      <span>签名或盖章</span>
+                      <BlankLine className={c('wish-sign-line', 'wish-sign-line--medium')} />
+                    </div>
+                    <BoundDateRow
+                      dateFieldId={FIELD_IDS.introducerDate}
+                      dateValue={getValue(formData, FIELD_IDS.introducerDate)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td className={c('wish-introducer-table__section-cell')}>
+              <div className={c('wish-introducer-section')}>
+                <BlockField
+                  className={c('wish-field-anchor--essay', 'wish-field-anchor--short-essay')}
+                  fieldId={FIELD_IDS.introducerOpinion2}
+                  value={getValue(formData, FIELD_IDS.introducerOpinion2)}
+                />
+                <div className={c('wish-introducer-section__footer')}>
+                  <div className={c('wish-introducer-section__row')}>
+                    <span>介绍人单位、职务或职业</span>
+                    <BlankLine className={c('wish-name-line', 'wish-name-line--long')} />
+                  </div>
+                  <div className={c('wish-introducer-section__row', 'wish-introducer-section__row--spread')}>
+                    <div className={c('wish-box-signoff__item')}>
+                      <span>签名或盖章</span>
+                      <BlankLine className={c('wish-sign-line', 'wish-sign-line--medium')} />
+                    </div>
+                    <BoundDateRow
+                      dateFieldId={FIELD_IDS.introducerDate}
+                      dateValue={getValue(formData, FIELD_IDS.introducerDate)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </TemplatePage>
   )
 }
 
-function TwoDecisionPage({
-  bottomDateFieldId,
-  bottomDateValue,
-  bottomFieldId,
-  bottomTitle,
-  formData,
-  topDateFieldId,
-  topDateValue,
-  topFieldId,
-  topTitle,
-  zoom,
-}) {
+function BranchResolutionAndUpperOrgPage({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-simple-page')}
-      zoom={zoom}
-    >
-      <div className={c('wish-section-stack')}>
-        <SectionCard
-          dateFieldId={topDateFieldId}
-          dateValue={topDateValue}
-          signatureLabel="签章："
-          title={topTitle}
-        >
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId={topFieldId}
-            value={formData[topFieldId]}
+    <TemplatePage contentClassName={c('wish-approval-page')} zoom={zoom}>
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--medium')}
+        footer={
+          <BranchFooter
+            dateFieldId={FIELD_IDS.branchResolutionDate}
+            dateValue={getValue(formData, FIELD_IDS.branchResolutionDate)}
           />
-        </SectionCard>
+        }
+        title="支部大会通过接收申请人为预备党员的决议"
+      >
+        <BlockField
+          className={c('wish-field-anchor--essay', 'wish-field-anchor--approval-body')}
+          fieldId={FIELD_IDS.branchResolution}
+          value={getValue(formData, FIELD_IDS.branchResolution)}
+        />
+      </SectionBox>
 
-        <SectionCard
-          dateFieldId={bottomDateFieldId}
-          dateValue={bottomDateValue}
-          signatureLabel="签章："
-          title={bottomTitle}
-        >
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId={bottomFieldId}
-            value={formData[bottomFieldId]}
-          />
-        </SectionCard>
-      </div>
-    </A4Page>
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--medium')}
+        footer={<ConversationFooter />}
+        title="上级党组织指派专人进行谈话情况和对申请入党的意见"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
+    </TemplatePage>
   )
 }
 
-function ConversionApprovalPage({ formData, remarkFieldId, title, zoom }) {
+function GeneralBranchAndCommitteeApprovalPage({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-simple-page')}
-      zoom={zoom}
-    >
-      <PageTitle>{title}</PageTitle>
+    <TemplatePage contentClassName={c('wish-approval-page')} zoom={zoom}>
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--medium')}
+        footer={<GeneralBranchFooter />}
+        title="总支部审查（审批）意见"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
 
-      <div className={c('wish-section-stack', 'wish-section-stack--dense')}>
-        <SectionCard
-          dateFieldId="conversionResolutionDate"
-          dateValue={formData.conversionResolutionDate}
-          signatureLabel="签章："
-          title="转正相关决议"
-        >
-          <BlockField
-            className={c('wish-field-anchor--essay', 'wish-field-anchor--section')}
-            fieldId="conversionResolution"
-            value={formData.conversionResolution}
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--medium')}
+        footer={
+          <CommitteeFooter
+            dateFieldId={FIELD_IDS.committeeApprovalDate}
+            dateValue={getValue(formData, FIELD_IDS.committeeApprovalDate)}
           />
-        </SectionCard>
+        }
+        title="基层党委审批意见"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
+    </TemplatePage>
+  )
+}
 
-        <div className={c('wish-approval-grid')}>
-          <SectionCard
-            dateFieldId="generalBranchDate"
-            dateValue={formData.generalBranchDate}
-            signatureLabel="签章："
-            title="总支审查意见"
-          >
-            <BlockField
-              className={c('wish-field-anchor--essay', 'wish-field-anchor--approval')}
-              fieldId="generalBranchOpinion"
-              value={formData.generalBranchOpinion}
-            />
-          </SectionCard>
+function FormalConversionDecisionPage({ formData, zoom }) {
+  return (
+    <TemplatePage contentClassName={c('wish-approval-page', 'wish-approval-page--triple')} zoom={zoom}>
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--compact')}
+        footer={
+          <BranchFooter
+            dateFieldId={FIELD_IDS.formalResolutionDate}
+            dateValue={getValue(formData, FIELD_IDS.formalResolutionDate)}
+          />
+        }
+        title="支部大会通过预备党员能否转为正式党员的决议"
+      >
+        <BlockField
+          className={c('wish-field-anchor--essay', 'wish-field-anchor--approval-body')}
+          fieldId={FIELD_IDS.formalResolution}
+          value={getValue(formData, FIELD_IDS.formalResolution)}
+        />
+      </SectionBox>
 
-          <SectionCard
-            dateFieldId="committeeApprovalDate"
-            dateValue={formData.committeeApprovalDate}
-            signatureLabel="签章："
-            title="基层党委审批意见"
-          >
-            <BlockField
-              className={c('wish-field-anchor--essay', 'wish-field-anchor--approval')}
-              fieldId="committeeApprovalOpinion"
-              value={formData.committeeApprovalOpinion}
-            />
-          </SectionCard>
-        </div>
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--compact')}
+        footer={<GeneralBranchFooter />}
+        title="总支部审查（审批）意见"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
 
-        {remarkFieldId ? (
-          <section className={c('wish-large-section', 'wish-large-section--remark')}>
-            <div className={c('wish-large-section__title')}>备注</div>
-            <BlockField
-              className={c('wish-field-anchor--essay', 'wish-field-anchor--remark')}
-              fieldId={remarkFieldId}
-              value={formData[remarkFieldId]}
-            />
-          </section>
-        ) : null}
-      </div>
-    </A4Page>
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--compact')}
+        footer={
+          <CommitteeFooter
+            dateFieldId={FIELD_IDS.formalCommitteeDate}
+            dateValue={getValue(formData, FIELD_IDS.formalCommitteeDate)}
+          />
+        }
+        title="基层党委审批意见"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
+    </TemplatePage>
+  )
+}
+
+function ExtendedConversionDecisionPage({ zoom }) {
+  return (
+    <TemplatePage contentClassName={c('wish-approval-page', 'wish-approval-page--remark')} zoom={zoom}>
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--compact')}
+        footer={<BranchFooter />}
+        title="支部大会通过延长预备期的党员能否转为正式党员的决议"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
+
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--compact')}
+        footer={<GeneralBranchFooter />}
+        title="总支部审查（审批）意见"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
+
+      <SectionBox
+        bodyClassName={c('wish-section-box__body--compact')}
+        footer={<CommitteeFooter />}
+        title="基层党委审批意见"
+      >
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
+
+      <SectionBox bodyClassName={c('wish-section-box__body--remark')} title="备注">
+        <div className={c('wish-empty-body')} />
+      </SectionBox>
+    </TemplatePage>
   )
 }
 
 function BackCoverPage({ zoom }) {
   return (
-    <A4Page
-      className={c('wish-template-page')}
-      contentClassName={c('wish-back-cover')}
-      zoom={zoom}
-    >
-      <div className={c('wish-back-cover__center')}>
-        <div className={c('wish-back-cover__title')}>中共中央组织部</div>
-        <div className={c('wish-back-cover__year')}>二〇二六年制</div>
-        <p className={c('wish-back-cover__note')}>
-          本册为固定印制材料，供党组织填写、审批和归档使用。
-        </p>
-        <p className={c('wish-back-cover__note')}>
-          印刷说明页为固定文字，不纳入结构化字段录入范围。
-        </p>
+    <TemplatePage contentClassName={c('wish-back-cover')} zoom={zoom}>
+      <div className={c('wish-back-cover__content')}>
+        <div className={c('wish-back-cover__line')}>中 共 中 央 组 织 部</div>
+        <div className={c('wish-back-cover__line')}>2 0 0 4 年 制</div>
+        <div className={c('wish-back-cover__line')}>中共上海市委组织部翻印</div>
+        <div className={c('wish-back-cover__line')}>沪 20XXXXXXXX</div>
       </div>
-    </A4Page>
+    </TemplatePage>
   )
 }
 
@@ -645,46 +1047,15 @@ function WishTable({ formData, zoom }) {
       <InstructionsPage zoom={zoom} />
       <OathPage zoom={zoom} />
       <BasicInfoAndWishPage formData={formData} zoom={zoom} />
-      <ResumePage formData={formData} zoom={zoom} />
-      <PoliticalReviewPage formData={formData} zoom={zoom} />
-      <FamilyPage formData={formData} zoom={zoom} />
-      <VerticalIssuePage formData={formData} zoom={zoom} />
+      <ResumeAndLeaguePage formData={formData} zoom={zoom} />
+      <AwardsPoliticsSpousePage formData={formData} zoom={zoom} />
+      <FamilyAndIssuePage formData={formData} zoom={zoom} />
+      <IssueContinuationPage zoom={zoom} />
       <IntroducerOpinionsPage formData={formData} zoom={zoom} />
-      <TwoDecisionPage
-        bottomDateFieldId="upperOrgDate"
-        bottomDateValue={formData.upperOrgDate}
-        bottomFieldId="upperOrgOpinion"
-        bottomTitle="上级党组织意见"
-        formData={formData}
-        topDateFieldId="branchResolutionDate"
-        topDateValue={formData.branchResolutionDate}
-        topFieldId="branchResolution"
-        topTitle="支部大会接收预备党员决议"
-        zoom={zoom}
-      />
-      <TwoDecisionPage
-        bottomDateFieldId="committeeApprovalDate"
-        bottomDateValue={formData.committeeApprovalDate}
-        bottomFieldId="committeeApprovalOpinion"
-        bottomTitle="基层党委审批意见"
-        formData={formData}
-        topDateFieldId="generalBranchDate"
-        topDateValue={formData.generalBranchDate}
-        topFieldId="generalBranchOpinion"
-        topTitle="总支审查意见"
-        zoom={zoom}
-      />
-      <ConversionApprovalPage
-        formData={formData}
-        title="转正相关审批（一次）"
-        zoom={zoom}
-      />
-      <ConversionApprovalPage
-        formData={formData}
-        remarkFieldId="remark"
-        title="转正相关审批（再次/延长）"
-        zoom={zoom}
-      />
+      <BranchResolutionAndUpperOrgPage formData={formData} zoom={zoom} />
+      <GeneralBranchAndCommitteeApprovalPage formData={formData} zoom={zoom} />
+      <FormalConversionDecisionPage formData={formData} zoom={zoom} />
+      <ExtendedConversionDecisionPage zoom={zoom} />
       <BackCoverPage zoom={zoom} />
     </>
   )
