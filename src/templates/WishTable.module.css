@@ -28,14 +28,14 @@
 }
 
 .wish-field-anchor--selected {
-  background: rgba(198, 40, 40, 0.12);
-  border-color: transparent;
-  box-shadow: none;
+  background: rgba(196, 32, 38, 0.18);
+  border-color: rgba(196, 32, 38, 0.5);
+  box-shadow: 0 0 0 1px rgba(196, 32, 38, 0.08);
 }
 
 .wish-field-anchor:hover {
-  background: rgba(198, 40, 40, 0.08);
-  border-color: transparent;
+  background: rgba(196, 32, 38, 0.1);
+  border-color: rgba(196, 32, 38, 0.28);
 }
 
 .wish-line-field {

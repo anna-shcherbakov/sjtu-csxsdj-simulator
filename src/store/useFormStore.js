@@ -18,30 +18,87 @@ const removeFieldError = (errors, fieldId) => {
   return nextErrors
 }
 
-const validateRules = (schema, formData) => {
-  if (!schema.rules?.length) {
-    return {}
+const assignFieldError = (errors, fieldId, message) => {
+  if (!fieldId || !message) {
+    return errors
   }
 
-  const errors = {}
+  return {
+    ...errors,
+    [fieldId]: message,
+  }
+}
 
-  schema.rules.forEach((rule) => {
-    if (rule.type !== 'required') {
+const getFieldValidationError = (schema, formData, fieldId) => {
+  const field = findFormFieldById(schema, fieldId)
+
+  if (!field) {
+    return null
+  }
+
+  return validateField(field, formData)
+}
+
+const validateRules = (schema, formData) => {
+  if (!schema.rules?.length) {
+    return []
+  }
+
+  const failures = []
+  const assignRuleError = (fieldId, message) => {
+    if (!fieldId || !message) {
       return
     }
 
-    const value = formData[rule.field]
-    const isEmpty =
-      value === undefined ||
-      value === null ||
-      (typeof value === 'string' ? value.trim() === '' : value === '')
+    failures.push({
+      fieldId,
+      message,
+    })
+  }
 
-    if (isEmpty) {
-      errors[rule.field] = rule.message
+  schema.rules.forEach((rule) => {
+    if (rule.type === 'required') {
+      const value = formData[rule.field]
+      const isEmpty =
+        value === undefined ||
+        value === null ||
+        (typeof value === 'string' ? value.trim() === '' : value === '')
+
+      if (isEmpty) {
+        assignRuleError(rule.field, rule.message)
+      }
+
+      return
+    }
+
+    if (typeof rule.validate !== 'function') {
+      return
+    }
+
+    const result = rule.validate(formData, rule, schema)
+
+    if (result === true || result === undefined || result === null) {
+      return
+    }
+
+    if (typeof result === 'string') {
+      assignRuleError(rule.field, result || rule.message)
+      return
+    }
+
+    if (result === false) {
+      assignRuleError(rule.field, rule.message)
+      return
+    }
+
+    if (typeof result === 'object') {
+      Object.entries(result).forEach(([fieldId, message]) => {
+        assignRuleError(fieldId, message || rule.message)
+      })
     }
   })
 
-  return errors
+  return failures
 }
 
 const getDefaultValidationErrorMessage = (field) =>
@@ -92,15 +149,35 @@ const useFormStore = create((set, get) => ({
   zoom: DEFAULT_ZOOM,
 
   setFieldValue: (fieldId, value) =>
-    set((state) => ({
-      formData: {
+    set((state) => {
+      const nextFormData = {
         ...state.formData,
         [fieldId]: value,
-      },
-      selectedFieldId: fieldId,
-      selectedFieldSource: 'form',
-      validationErrors: removeFieldError(state.validationErrors, fieldId),
-    })),
+      }
+
+      return {
+        formData: nextFormData,
+        selectedFieldId: fieldId,
+        selectedFieldSource: 'form',
+        validationErrors: removeFieldError(state.validationErrors, fieldId),
+      }
+    }),
+
+  validateFieldValue: (fieldId) =>
+    set((state) => {
+      const error = getFieldValidationError(state.formSchema, state.formData, fieldId)
+      const nextErrors = error
+        ? assignFieldError(
+            removeFieldError(state.validationErrors, fieldId),
+            fieldId,
+            error,
+          )
+        : removeFieldError(state.validationErrors, fieldId)
+
+      return {
+        validationErrors: nextErrors,
+      }
+    }),
 
   setListFieldValue: (fieldId, rowIndex, columnId, value) =>
     set((state) => {
@@ -176,16 +253,24 @@ const useFormStore = create((set, get) => ({
 
   validateForm: () => {
     const fieldErrors = validateFields(get().formSchema, get().formData)
-    const ruleErrors = validateRules(get().formSchema, get().formData)
-    const errors = {
-      ...fieldErrors,
-      ...ruleErrors,
+    set({ validationErrors: fieldErrors })
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return {
+        isValid: false,
+        failedStage: 'validation',
+        validationErrors: fieldErrors,
+        ruleFailures: [],
+      }
     }
-    set({ validationErrors: errors })
+
+    const ruleFailures = validateRules(get().formSchema, get().formData)
 
     return {
-      isValid: Object.keys(errors).length === 0,
-      errors,
+      isValid: ruleFailures.length === 0,
+      failedStage: ruleFailures.length > 0 ? 'rules' : null,
+      validationErrors: fieldErrors,
+      ruleFailures,
     }
   },
 

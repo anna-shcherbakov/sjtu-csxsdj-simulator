@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
-import { ConfigProvider, message } from 'antd'
+import { ConfigProvider, Modal, message } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import SchemaForm from './components/form/SchemaForm'
 import TemplatePreview from './components/preview/TemplatePreview'
@@ -51,6 +51,7 @@ const applySidebarWidth = (node, width) => {
 
 function App() {
   const [messageApi, contextHolder] = message.useMessage()
+  const [modalApi, modalContextHolder] = Modal.useModal()
   const contentRef = useRef(null)
   const dragStateRef = useRef(null)
   const dragFrameRef = useRef(0)
@@ -262,16 +263,44 @@ function App() {
   const handleValidate = () => {
     const result = validateForm()
 
-    if (!result.isValid) {
+    if (result.failedStage === 'validation') {
       const firstErrorFieldId = flattenFormFields(formSchema).find(
-        (field) => result.errors[field.id],
+        (field) => result.validationErrors[field.id],
       )?.id
 
       if (firstErrorFieldId) {
         setSelectedFieldId(firstErrorFieldId, 'system')
       }
 
-      messageApi.error(`发现 ${Object.keys(result.errors).length} 个未通过校验的字段`)
+      messageApi.error(
+        `请先修正 ${Object.keys(result.validationErrors).length} 个格式不正确的字段`,
+      )
+      return
+    }
+
+    if (result.failedStage === 'rules') {
+      const firstRuleFieldId = result.ruleFailures[0]?.fieldId
+
+      if (firstRuleFieldId) {
+        setSelectedFieldId(firstRuleFieldId, 'system')
+      }
+
+      modalApi.error({
+        title: `发现 ${result.ruleFailures.length} 条跨字段规则未通过`,
+        okText: '知道了',
+        width: 760,
+        content: (
+          <div style={{ maxHeight: 420, overflowY: 'auto', paddingRight: 8 }}>
+            <ol style={{ margin: 0, paddingInlineStart: 20 }}>
+              {result.ruleFailures.map((failure, index) => (
+                <li key={`${failure.fieldId}-${index}`} style={{ marginBottom: 8 }}>
+                  {failure.message}
+                </li>
+              ))}
+            </ol>
+          </div>
+        ),
+      })
       return
     }
 
@@ -288,16 +317,16 @@ function App() {
       locale={zhCN}
       theme={{
         token: {
-          colorPrimary: '#A61E22',
-          colorInfo: '#A61E22',
-          colorBgLayout: '#F3EEE5',
-          colorBgContainer: '#FFFDF9',
-          colorBorder: '#D9CCBE',
-          colorBorderSecondary: '#E7DDD2',
-          controlOutline: 'rgba(166, 30, 34, 0.18)',
-          colorText: '#4A3D38',
-          colorTextHeading: '#2A1F1B',
-          borderRadius: 10,
+          colorPrimary: '#C42026',
+          colorInfo: '#C42026',
+          colorBgLayout: '#F2F4F7',
+          colorBgContainer: '#FCFCFB',
+          colorBorder: '#D5DAE0',
+          colorBorderSecondary: '#E4E7EC',
+          controlOutline: 'rgba(196, 32, 38, 0.16)',
+          colorText: '#3B4046',
+          colorTextHeading: '#1F2329',
+          borderRadius: 8,
           motionDurationMid: '0.14s',
           motionDurationSlow: '0.18s',
           motionEaseInOut: 'cubic-bezier(0.2, 0, 0, 1)',
@@ -305,6 +334,7 @@ function App() {
       }}
     >
       {contextHolder}
+      {modalContextHolder}
       <div className={styles['app-shell']}>
         <header className={styles['app-toolbar']}>
           <h1 className={styles['app-toolbar__title']}>党建材料模板工作台</h1>

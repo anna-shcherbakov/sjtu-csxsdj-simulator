@@ -30,7 +30,7 @@ function FieldHelpLabel({ label, description }) {
   )
 }
 
-function renderScalarControl({ field, onChange, onFocus, value }) {
+function renderScalarControl({ field, onChange, onComplete, onFocus, value }) {
   const fieldType = field.fieldType ?? 'input'
 
   if (fieldType === 'textarea') {
@@ -39,6 +39,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
         autoSize={{ minRows: 4, maxRows: 10 }}
         className={styles['schema-form__textarea']}
         onChange={(event) => onChange(event.target.value)}
+        onBlur={onComplete}
         onFocus={onFocus}
         placeholder={field.placeholder}
         value={value}
@@ -51,7 +52,10 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
       <Select
         allowClear
         className={styles['schema-form__select']}
-        onChange={(nextValue) => onChange(nextValue ?? '')}
+        onChange={(nextValue) => {
+          onChange(nextValue ?? '')
+          onComplete?.()
+        }}
         onFocus={onFocus}
         options={normalizeOptions(field.options)}
         placeholder={field.placeholder}
@@ -64,7 +68,10 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
     return (
       <Radio.Group
         className={styles['schema-form__radio-group']}
-        onChange={(event) => onChange(event.target.value ?? '')}
+        onChange={(event) => {
+          onChange(event.target.value ?? '')
+          onComplete?.()
+        }}
         onFocus={onFocus}
         options={normalizeOptions(field.options)}
         value={value || undefined}
@@ -76,6 +83,7 @@ function renderScalarControl({ field, onChange, onFocus, value }) {
     <Input
       className={styles['schema-form__input']}
       onChange={(event) => onChange(event.target.value)}
+      onBlur={onComplete}
       onFocus={onFocus}
       placeholder={field.placeholder}
       value={value}
@@ -94,6 +102,7 @@ function FormFieldRenderer({ field, domId }) {
     (state) => state.selectedFieldId === field.id,
   )
   const setFieldValue = useFormStore((state) => state.setFieldValue)
+  const validateFieldValue = useFormStore((state) => state.validateFieldValue)
   const setListFieldValue = useFormStore((state) => state.setListFieldValue)
   const appendListRow = useFormStore((state) => state.appendListRow)
   const removeListRow = useFormStore((state) => state.removeListRow)
@@ -154,6 +163,7 @@ function FormFieldRenderer({ field, domId }) {
                               column.id,
                               nextValue,
                             ),
+                          onComplete: undefined,
                           onFocus: handleSelectField,
                           value: row?.[column.id] ?? '',
                         })}
@@ -200,6 +210,7 @@ function FormFieldRenderer({ field, domId }) {
       : renderScalarControl({
           field,
           onChange: (nextValue) => setFieldValue(field.id, nextValue),
+          onComplete: () => validateFieldValue(field.id),
           onFocus: handleSelectField,
           value,
         })

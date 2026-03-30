@@ -42,9 +42,9 @@
   margin-inline-end: 0;
   padding: 2px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(184, 138, 45, 0.34);
-  background: var(--gold-100);
-  color: #6e5318;
+  border: 1px solid #d7dde4;
+  background: #eef0f3;
+  color: #4d535b;
   font-size: 12px;
   font-weight: 700;
   line-height: 1.6;
@@ -56,27 +56,17 @@
 
 .schema-form__collapse :global(.ant-collapse-item) {
   margin-bottom: 14px;
-  border: 1px solid rgba(166, 30, 34, 0.1);
-  border-radius: 16px !important;
+  border: 1px solid rgba(31, 35, 41, 0.08);
+  border-radius: 8px !important;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 253, 249, 0.98),
-    rgba(247, 241, 232, 0.95)
-  );
-  box-shadow:
-    0 8px 20px rgba(63, 45, 31, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.74);
+  background: #fcfcfb;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
 }
 
 .schema-form__collapse :global(.ant-collapse-header) {
   align-items: center !important;
-  background: linear-gradient(
-    180deg,
-    rgba(249, 244, 235, 0.98),
-    rgba(243, 236, 224, 0.96)
-  );
-  border-radius: 16px !important;
+  background: #f5f7fa;
+  border-radius: 8px !important;
 }
 
 .schema-form__collapse :global(.ant-collapse-content-box) {
@@ -104,21 +94,19 @@
 
 .schema-form__search :global(.ant-input-affix-wrapper) {
   padding-inline: 12px;
-  border-radius: 10px !important;
-  border-color: rgba(199, 184, 166, 0.8);
-  background: linear-gradient(180deg, #fffdf9 0%, #f7f1e8 100%);
-  box-shadow:
-    0 4px 14px rgba(63, 45, 31, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-radius: 8px !important;
+  border-color: #d5dae0;
+  background: #fff;
+  box-shadow: none;
 }
 
 .schema-form__search :global(.ant-input-affix-wrapper:hover) {
-  border-color: rgba(166, 30, 34, 0.28);
+  border-color: rgba(159, 29, 34, 0.24);
 }
 
 .schema-form__search :global(.ant-input-affix-wrapper-focused) {
-  border-color: rgba(166, 30, 34, 0.54);
-  box-shadow: 0 0 0 3px rgba(166, 30, 34, 0.08);
+  border-color: rgba(159, 29, 34, 0.48);
+  box-shadow: 0 0 0 3px rgba(159, 29, 34, 0.06);
 }
 
 .schema-form__search :global(.ant-input-prefix) {

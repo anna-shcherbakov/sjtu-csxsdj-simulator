@@ -1,4 +1,5 @@
 import { validateChineseDateInput, validateChineseYearMonthInput, validateDateInput, validateEmailInput, validateIdCardNumberInput, validatePhoneNumberInput } from './fieldValidators'
+import { FIRST_PHASE_RULES } from './formSchemaRules'
 
 export const formSchema = {
     fields: {
@@ -2143,7 +2144,7 @@ export const formSchema = {
             }
         ]
     },
-    rules: [],
+    rules: FIRST_PHASE_RULES,
 }
 
 export const flattenFormFields = (schema) =>

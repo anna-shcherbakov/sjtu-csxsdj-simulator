@@ -1,18 +1,12 @@
 .form-field-card {
   width: 100%;
   min-width: 0;
-  border: 1px solid rgba(166, 30, 34, 0.12);
-  border-left: 4px solid rgba(166, 30, 34, 0.16);
-  border-radius: 14px;
+  border: 1px solid rgba(31, 35, 41, 0.08);
+  border-left: 3px solid rgba(107, 114, 128, 0.24);
+  border-radius: 8px;
   padding: 14px 14px 4px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 253, 249, 0.98),
-    rgba(245, 239, 229, 0.96)
-  );
-  box-shadow:
-    0 6px 18px rgba(63, 45, 31, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.03);
   transition:
     border-color 0.14s ease,
     box-shadow 0.14s ease,
@@ -22,26 +16,23 @@
 }
 
 .form-field-card:hover {
-  border-color: rgba(166, 30, 34, 0.28);
-  border-left-color: rgba(166, 30, 34, 0.28);
-  box-shadow:
-    0 10px 24px rgba(63, 45, 31, 0.07),
-    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  border-color: rgba(196, 32, 38, 0.22);
+  border-left-color: rgba(196, 32, 38, 0.32);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
 }
 
 .form-field-card.is-selected {
-  border-color: rgba(166, 30, 34, 0.36);
+  border-color: rgba(196, 32, 38, 0.34);
   border-left-color: var(--accent-500);
-  background: linear-gradient(
-    180deg,
-    rgba(250, 237, 234, 0.9),
-    rgba(255, 251, 245, 0.96)
-  );
-  box-shadow: 0 12px 28px rgba(73, 43, 31, 0.1);
+  background: rgba(196, 32, 38, 0.05);
+  box-shadow:
+    0 8px 18px rgba(15, 23, 42, 0.06),
+    inset 0 0 0 1px rgba(196, 32, 38, 0.08);
 }
 
 .form-field-card.has-error {
   border-color: var(--danger-300);
+  border-left-color: var(--danger-300);
   background: var(--danger-050);
 }
 
@@ -90,24 +81,24 @@
 .schema-form__item :global(.ant-input-textarea textarea),
 .schema-form__item :global(.ant-input-affix-wrapper),
 .schema-form__item :global(.ant-select-selector) {
-  border-color: rgba(199, 184, 166, 0.72) !important;
-  background: linear-gradient(180deg, #fffdf9 0%, #f8f2e9 100%) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  border-color: #d5dae0 !important;
+  background: #fff !important;
+  box-shadow: none;
 }
 
 .schema-form__item :global(.ant-input:hover),
 .schema-form__item :global(.ant-input-textarea:hover textarea),
 .schema-form__item :global(.ant-input-affix-wrapper:hover),
 .schema-form__item :global(.ant-select:hover .ant-select-selector) {
-  border-color: rgba(166, 30, 34, 0.3) !important;
+  border-color: rgba(196, 32, 38, 0.28) !important;
 }
 
 .schema-form__item :global(.ant-input:focus),
 .schema-form__item :global(.ant-input-textarea textarea:focus),
 .schema-form__item :global(.ant-input-affix-wrapper-focused),
 .schema-form__item :global(.ant-select-focused .ant-select-selector) {
-  border-color: rgba(166, 30, 34, 0.56) !important;
-  box-shadow: 0 0 0 3px rgba(166, 30, 34, 0.08) !important;
+  border-color: rgba(196, 32, 38, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(196, 32, 38, 0.08) !important;
 }
 
 .schema-form__item :global(.ant-form-item-control),
@@ -159,22 +150,22 @@
 }
 
 .list-field__toolbar :global(.ant-btn-dashed) {
-  border-color: rgba(166, 30, 34, 0.24);
-  background: #fffdf9;
+  border-color: #d5dae0;
+  background: #fff;
   color: var(--accent-700);
 }
 
 .list-field__toolbar :global(.ant-btn-dashed:hover) {
-  border-color: rgba(166, 30, 34, 0.42);
+  border-color: rgba(196, 32, 38, 0.34);
   background: var(--accent-050);
   color: var(--accent-800);
 }
 
 .list-field__table-wrap {
   overflow: auto;
-  border: 1px solid rgba(199, 184, 166, 0.72);
-  border-radius: 12px;
-  background: #fffdf9;
+  border: 1px solid #d5dae0;
+  border-radius: 8px;
+  background: #fff;
   max-width: 100%;
 }
 
@@ -189,14 +180,14 @@
 .list-field__table td {
   min-width: 144px;
   padding: 8px;
-  border-right: 1px solid rgba(199, 184, 166, 0.44);
-  border-bottom: 1px solid rgba(199, 184, 166, 0.44);
+  border-right: 1px solid #e4e7ec;
+  border-bottom: 1px solid #e4e7ec;
   vertical-align: top;
-  background: #fffdf9;
+  background: #fff;
 }
 
 .list-field__table th {
-  background: #f5efe6;
+  background: #f5f7fa;
   color: var(--text-strong);
   font-weight: 600;
 }

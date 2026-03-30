@@ -44,10 +44,10 @@
 }
 
 .template-toolbar__select :global(.ant-select-selector) {
-  border-radius: 12px !important;
-  border-color: rgba(199, 184, 166, 0.8) !important;
-  background: linear-gradient(180deg, #fffdf9 0%, #f7f1e8 100%) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-radius: 8px !important;
+  border-color: #d5dae0 !important;
+  background: #fff !important;
+  box-shadow: none;
 }
 
 .template-toolbar__select :global(.ant-select-arrow) {
@@ -71,7 +71,7 @@
 }
 
 .template-toolbar__zoom-slider :global(.ant-slider-rail) {
-  background: rgba(199, 184, 166, 0.46);
+  background: #d7dde4;
 }
 
 .template-toolbar__zoom-slider :global(.ant-slider-track) {
@@ -79,7 +79,7 @@
 }
 
 .template-toolbar__zoom-slider :global(.ant-slider-handle::after) {
-  box-shadow: 0 0 0 2px rgba(166, 30, 34, 0.18);
+  box-shadow: 0 0 0 2px rgba(159, 29, 34, 0.14);
 }
 
 .template-toolbar__zoom-value:global(.ant-typography) {
@@ -99,16 +99,16 @@
 }
 
 .template-toolbar__select-popup :global(.ant-select-item-option-active) {
-  background: rgba(166, 30, 34, 0.06);
+  background: rgba(159, 29, 34, 0.04);
 }
 
 .template-help-popover :global(.ant-popover-inner) {
-  border-radius: 14px;
+  border-radius: 8px;
   border: 1px solid var(--line-soft);
-  background: #fffdf9;
+  background: #fff;
   box-shadow:
-    0 18px 40px rgba(63, 45, 31, 0.14),
-    0 6px 16px rgba(63, 45, 31, 0.08);
+    0 14px 28px rgba(15, 23, 42, 0.12),
+    0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
 .template-help-popover__content {
@@ -136,7 +136,7 @@
 .template-toolbar__action--primary:global(.ant-btn-primary) {
   border-color: var(--accent-500);
   background: var(--accent-500);
-  box-shadow: 0 8px 18px rgba(166, 30, 34, 0.14);
+  box-shadow: 0 4px 12px rgba(159, 29, 34, 0.16);
 }
 
 .template-toolbar__action--primary:global(.ant-btn-primary:hover) {
@@ -145,15 +145,15 @@
 }
 
 .template-toolbar__action--secondary:global(.ant-btn) {
-  border-color: rgba(199, 184, 166, 0.88);
-  background: #fffdf9;
+  border-color: #d5dae0;
+  background: #fff;
   color: var(--accent-700);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  box-shadow: none;
 }
 
 .template-toolbar__action--secondary:global(.ant-btn:hover) {
-  border-color: rgba(166, 30, 34, 0.34);
-  background: var(--accent-050);
+  border-color: rgba(159, 29, 34, 0.28);
+  background: rgba(159, 29, 34, 0.04);
   color: var(--accent-800);
 }
 
