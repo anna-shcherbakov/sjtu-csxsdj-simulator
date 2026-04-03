@@ -13,6 +13,16 @@ const FIELD_IDS = {
   liaison1FormalDate: 'activist.入党联系人1转正时间',
   liaison2ProbationaryDate: 'activist.入党联系人2入党时间（预备时间）',
   liaison2FormalDate: 'activist.入党联系人2转正时间',
+  candidateConsultationDate: 'candidate.发展对象群众座谈会日期',
+  candidateCommitteeDate: 'candidate.支委会日期',
+  candidateViceSecretaryDate: 'candidate.学工副书记（负责人）意见日期',
+  candidateArchiveDate: 'candidate.党委备案日期（确定发展对象日期）',
+  candidateTrainingCompletionDate: 'candidate.教育培训情况-结业日期',
+  candidatePoliticalReviewDate: 'candidate.政治审查报告日期',
+  candidatePublicNoticeStartDate: 'candidate.发展对象公示起始日期',
+  candidatePublicNoticeEndDate: 'candidate.发展对象公示结束日期',
+  candidateBranchReviewDate: 'candidate.党支部审查意见日期',
+  candidatePreReviewDate: 'candidate.党委预审意见日期',
 }
 
 const ACTIVIST_QUARTERS = [
@@ -109,6 +119,25 @@ const BRANCH_OPINION_RULES = [
   },
 ]
 
+const CANDIDATE_PREVIOUS_BRANCH_OPINION_OPTIONS = [
+  {
+    field: 'season1_two_year.党支部意见（两年）落款日期',
+    label: '党支部意见（两年）落款日期',
+  },
+  {
+    field: 'season1_annual_and_half.党支部意见（一年半）落款日期',
+    label: '党支部意见（一年半）落款日期',
+  },
+  {
+    field: 'season1_annual.党支部意见（一年）落款日期',
+    label: '党支部意见（一年）落款日期',
+  },
+  {
+    field: 'season1_half.党支部意见（半年）落款日期',
+    label: '党支部意见（半年）落款日期',
+  },
+]
+
 const isEmptyValue = (value) =>
   value === undefined ||
   value === null ||
@@ -145,6 +174,39 @@ const addCalendarMonthsToDayParts = (parts, months) => {
 
 const toChineseDateText = ({ year, month, day }) => `${year}年${month}月${day}日`
 const toChineseYearMonthText = ({ year, month }) => `${year}年${month}月`
+
+const countBusinessDaysInclusive = (startValue, endValue, validatorName) => {
+  const startParsed = ensureParsedDateValue(startValue, { validatorName })
+  const endParsed = ensureParsedDateValue(endValue, { validatorName })
+
+  if (!startParsed || !endParsed) {
+    return null
+  }
+
+  if (endParsed.startTimestamp < startParsed.startTimestamp) {
+    return -1
+  }
+
+  let count = 0
+  const cursor = buildUTCDate(startParsed.year, startParsed.month, startParsed.day)
+  const endDate = buildUTCDate(endParsed.year, endParsed.month, endParsed.day)
+
+  while (cursor.getTime() <= endDate.getTime()) {
+    const weekDay = cursor.getUTCDay()
+
+    if (weekDay >= 1 && weekDay <= 5) {
+      count += 1
+    }
+
+    cursor.setUTCDate(cursor.getUTCDate() + 1)
+  }
+
+  return count
+}
+
+const getLatestCandidatePreviousBranchOpinion = (formData) =>
+  CANDIDATE_PREVIOUS_BRANCH_OPINION_OPTIONS.find(({ field }) => !isEmptyValue(formData[field])) ??
+  null
 
 const isSameDate = (left, right, options = {}) =>
   compareDateValues(left, right, options) === 0
@@ -201,6 +263,32 @@ const createCustomRule = (field, message, validate) => ({
   message,
   validate,
 })
+
+const createSameOrAfterRule = ({
+  earlierField,
+  earlierLabel,
+  laterField,
+  laterLabel,
+}) =>
+  createCustomRule(
+    laterField,
+    `${laterLabel}应晚于或等于${earlierLabel}`,
+    (formData) => {
+      const earlierValue = formData[earlierField]
+      const laterValue = formData[laterField]
+
+      if (isEmptyValue(earlierValue) || isEmptyValue(laterValue)) {
+        return true
+      }
+
+      const isValid = isSameOrAfter(laterValue, earlierValue, {
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightValidatorName: CHINESE_DATE_VALIDATOR,
+      })
+
+      return isValid === true ? true : `${laterLabel}应晚于或等于${earlierLabel}`
+    },
+  )
 
 const createQuarterRules = ({
   electronicDateField,
@@ -535,6 +623,107 @@ const firstPhaseRules = [
       },
     ),
   ),
+  createCustomRule(
+    FIELD_IDS.candidateConsultationDate,
+    '发展对象群众座谈会日期应晚于积极分子培养过程最后一个半年对应的党支部意见落款日期',
+    (formData) => {
+      const candidateConsultationDate = formData[FIELD_IDS.candidateConsultationDate]
+
+      if (isEmptyValue(candidateConsultationDate)) {
+        return true
+      }
+
+      const latestOpinion = getLatestCandidatePreviousBranchOpinion(formData)
+
+      if (!latestOpinion) {
+        return true
+      }
+
+      const latestOpinionValue = formData[latestOpinion.field]
+      const isValid = isStrictlyAfter(candidateConsultationDate, latestOpinionValue, {
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightValidatorName: CHINESE_DATE_VALIDATOR,
+      })
+
+      return isValid === true
+        ? true
+        : `发展对象群众座谈会日期应晚于${latestOpinion.label}`
+    },
+  ),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidateConsultationDate,
+    earlierLabel: '发展对象群众座谈会日期',
+    laterField: FIELD_IDS.candidateCommitteeDate,
+    laterLabel: '支委会日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidateCommitteeDate,
+    earlierLabel: '支委会日期',
+    laterField: FIELD_IDS.candidateViceSecretaryDate,
+    laterLabel: '学工副书记（负责人）意见日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidateViceSecretaryDate,
+    earlierLabel: '学工副书记（负责人）意见日期',
+    laterField: FIELD_IDS.candidateArchiveDate,
+    laterLabel: '党委备案日期（确定发展对象日期）',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidateArchiveDate,
+    earlierLabel: '党委备案日期（确定发展对象日期）',
+    laterField: FIELD_IDS.candidateTrainingCompletionDate,
+    laterLabel: '教育培训情况-结业日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidateArchiveDate,
+    earlierLabel: '党委备案日期（确定发展对象日期）',
+    laterField: FIELD_IDS.candidatePoliticalReviewDate,
+    laterLabel: '政治审查报告日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidatePoliticalReviewDate,
+    earlierLabel: '政治审查报告日期',
+    laterField: FIELD_IDS.candidatePublicNoticeStartDate,
+    laterLabel: '发展对象公示起始日期',
+  }),
+  createCustomRule(
+    FIELD_IDS.candidatePublicNoticeEndDate,
+    '发展对象公示起始日期至结束日期应至少覆盖5个工作日',
+    (formData) => {
+      const startDate = formData[FIELD_IDS.candidatePublicNoticeStartDate]
+      const endDate = formData[FIELD_IDS.candidatePublicNoticeEndDate]
+
+      if (isEmptyValue(startDate) || isEmptyValue(endDate)) {
+        return true
+      }
+
+      const businessDays = countBusinessDaysInclusive(
+        startDate,
+        endDate,
+        CHINESE_DATE_VALIDATOR,
+      )
+
+      if (businessDays === null) {
+        return true
+      }
+
+      return businessDays >= 5
+        ? true
+        : '发展对象公示起始日期至结束日期应至少覆盖5个工作日（周一至周五）'
+    },
+  ),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidatePublicNoticeEndDate,
+    earlierLabel: '发展对象公示结束日期',
+    laterField: FIELD_IDS.candidateBranchReviewDate,
+    laterLabel: '党支部审查意见日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidateBranchReviewDate,
+    earlierLabel: '党支部审查意见日期',
+    laterField: FIELD_IDS.candidatePreReviewDate,
+    laterLabel: '党委预审意见日期',
+  }),
 ]
 
 export const FIRST_PHASE_RULES = firstPhaseRules
