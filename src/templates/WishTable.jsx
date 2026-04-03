@@ -64,13 +64,6 @@ const getValue = (formData, fieldId) => formData[fieldId]
 const getListRows = (formData, fieldId) =>
   Array.isArray(formData[fieldId]) ? formData[fieldId] : []
 
-const joinListColumnValues = (rows, columnId) =>
-  rows
-    .map((row) => row?.[columnId] ?? '')
-    .map((value) => String(value).trim())
-    .filter(Boolean)
-    .join('\n')
-
 const hasSpouse = (formData) => getValue(formData, FIELD_IDS.spouseFlag) === '有'
 
 function TemplatePage({ children, contentClassName = '', zoom }) {
@@ -154,26 +147,12 @@ function SectionBox({ bodyClassName, children, className, footer, title }) {
   )
 }
 
-function ResumeColumnField({ className, formData, label }) {
-  const rows = getListRows(formData, FIELD_IDS.resume)
-
+function ListRowField({ className, fieldId, value }) {
   return (
     <BlockField
-      className={clsx(c('wish-field-anchor--cell-block'), className)}
-      fieldId={FIELD_IDS.resume}
-      value={joinListColumnValues(rows, label)}
-    />
-  )
-}
-
-function FamilyColumnField({ className, formData, label }) {
-  const rows = getListRows(formData, FIELD_IDS.familyMembers)
-
-  return (
-    <BlockField
-      className={clsx(c('wish-field-anchor--cell-block'), className)}
-      fieldId={FIELD_IDS.familyMembers}
-      value={joinListColumnValues(rows, label)}
+      className={clsx(c('wish-field-anchor--list-row-cell'), className)}
+      fieldId={fieldId}
+      value={value}
     />
   )
 }
@@ -483,6 +462,10 @@ function BasicInfoAndWishPage({ formData, zoom }) {
 }
 
 function ResumeAndLeaguePage({ formData, zoom }) {
+  const resumeRows = getListRows(formData, FIELD_IDS.resume)
+  const visibleResumeRows =
+    resumeRows.length > 0 ? resumeRows : [{ 开始年月: '', 结束年月: '', 地点单位职务: '', 证明人: '' }]
+
   return (
     <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
       <div className={c('wish-continued-essay-box')} />
@@ -502,20 +485,22 @@ function ResumeAndLeaguePage({ formData, zoom }) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className={c('wish-resume-table__cell')}>
-              <ResumeColumnField formData={formData} label="开始年月" />
-            </td>
-            <td className={c('wish-resume-table__cell')}>
-              <ResumeColumnField formData={formData} label="结束年月" />
-            </td>
-            <td className={c('wish-resume-table__cell')}>
-              <ResumeColumnField formData={formData} label="地点单位职务" />
-            </td>
-            <td className={c('wish-resume-table__cell')}>
-              <ResumeColumnField formData={formData} label="证明人" />
-            </td>
-          </tr>
+          {visibleResumeRows.map((row, index) => (
+            <tr key={`resume-row-${index}`}>
+              <td className={c('wish-resume-table__cell')}>
+                <ListRowField fieldId={FIELD_IDS.resume} value={row?.开始年月 ?? ''} />
+              </td>
+              <td className={c('wish-resume-table__cell')}>
+                <ListRowField fieldId={FIELD_IDS.resume} value={row?.结束年月 ?? ''} />
+              </td>
+              <td className={c('wish-resume-table__cell')}>
+                <ListRowField fieldId={FIELD_IDS.resume} value={row?.地点单位职务 ?? ''} />
+              </td>
+              <td className={c('wish-resume-table__cell')}>
+                <ListRowField fieldId={FIELD_IDS.resume} value={row?.证明人 ?? ''} />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
@@ -651,6 +636,12 @@ function AwardsPoliticsSpousePage({ formData, zoom }) {
 
 function FamilyAndIssuePage({ formData, zoom }) {
   const spouseVisible = hasSpouse(formData)
+  const familyRows = getListRows(formData, FIELD_IDS.familyMembers)
+  const visibleFamilyRows =
+    familyRows.length > 0
+      ? familyRows
+      : [{ 关系: '', 姓名: '', 出生年月: '', 政治面貌: '', 单位职务或职业: '' }]
+  const familyVerticalRowSpan = visibleFamilyRows.length + 1
 
   return (
     <TemplatePage contentClassName={c('wish-form-page')} zoom={zoom}>
@@ -713,7 +704,7 @@ function FamilyAndIssuePage({ formData, zoom }) {
         </colgroup>
         <tbody>
           <tr>
-            <td className={c('wish-family-table__vertical')} rowSpan={2}>
+            <td className={c('wish-family-table__vertical')} rowSpan={familyVerticalRowSpan}>
               <VerticalText text="其他成员" />
             </td>
             <td className={c('wish-family-table__header')}>关系</td>
@@ -722,23 +713,28 @@ function FamilyAndIssuePage({ formData, zoom }) {
             <td className={c('wish-family-table__header')}>政治面貌</td>
             <td className={c('wish-family-table__header')}>单位、职务或职业</td>
           </tr>
-          <tr>
-            <td className={c('wish-family-table__value')}>
-              <FamilyColumnField formData={formData} label="关系" />
-            </td>
-            <td className={c('wish-family-table__value')}>
-              <FamilyColumnField formData={formData} label="姓名" />
-            </td>
-            <td className={c('wish-family-table__value')}>
-              <FamilyColumnField formData={formData} label="出生年月" />
-            </td>
-            <td className={c('wish-family-table__value')}>
-              <FamilyColumnField formData={formData} label="政治面貌" />
-            </td>
-            <td className={c('wish-family-table__value')}>
-              <FamilyColumnField formData={formData} label="单位职务或职业" />
-            </td>
-          </tr>
+          {visibleFamilyRows.map((row, index) => (
+            <tr key={`family-row-${index}`}>
+              <td className={c('wish-family-table__value')}>
+                <ListRowField fieldId={FIELD_IDS.familyMembers} value={row?.关系 ?? ''} />
+              </td>
+              <td className={c('wish-family-table__value')}>
+                <ListRowField fieldId={FIELD_IDS.familyMembers} value={row?.姓名 ?? ''} />
+              </td>
+              <td className={c('wish-family-table__value')}>
+                <ListRowField fieldId={FIELD_IDS.familyMembers} value={row?.出生年月 ?? ''} />
+              </td>
+              <td className={c('wish-family-table__value')}>
+                <ListRowField fieldId={FIELD_IDS.familyMembers} value={row?.政治面貌 ?? ''} />
+              </td>
+              <td className={c('wish-family-table__value')}>
+                <ListRowField
+                  fieldId={FIELD_IDS.familyMembers}
+                  value={row?.单位职务或职业 ?? ''}
+                />
+              </td>
+            </tr>
+          ))}
           <tr>
             <td className={c('wish-family-table__vertical')} rowSpan={5}>
               <VerticalText text="主要社会关系情况" />

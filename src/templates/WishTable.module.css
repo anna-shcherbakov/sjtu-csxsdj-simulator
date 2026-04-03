@@ -96,6 +96,20 @@
   word-break: break-word;
 }
 
+.wish-field-anchor--list-row-cell {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  line-height: 1.55;
+  text-align: center;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .wish-field-anchor--short-essay {
   min-height: 228px;
 }
@@ -511,7 +525,7 @@
 
 .wish-family-table__value {
   padding: 0;
-  min-height: 96px;
+  min-height: 0;
   vertical-align: top;
 }
 

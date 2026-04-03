@@ -31,6 +31,7 @@ function SchemaForm() {
   const selectedFieldId = useFormStore((state) => state.selectedFieldId)
   const selectedFieldSource = useFormStore((state) => state.selectedFieldSource)
   const selectedFieldToken = useFormStore((state) => state.selectedFieldToken)
+  const setSelectedFieldId = useFormStore((state) => state.setSelectedFieldId)
   const [searchText, setSearchText] = useState('')
   const deferredSearchText = useDeferredValue(searchText)
   const pendingScrollFieldIdRef = useRef(null)
@@ -61,7 +62,7 @@ function SchemaForm() {
   )
 
   useEffect(() => {
-    if (!selectedField || selectedFieldSource === 'form') {
+    if (!selectedField || selectedFieldSource !== 'preview') {
       pendingScrollFieldIdRef.current = null
       return undefined
     }
@@ -87,7 +88,11 @@ function SchemaForm() {
   }, [selectedField, selectedFieldSource, selectedFieldToken])
 
   useEffect(() => {
-    if (!selectedField || pendingScrollFieldIdRef.current !== selectedField.id) {
+    if (
+      !selectedField ||
+      selectedFieldSource !== 'preview' ||
+      pendingScrollFieldIdRef.current !== selectedField.id
+    ) {
       return undefined
     }
 
@@ -112,7 +117,7 @@ function SchemaForm() {
     return () => {
       window.cancelAnimationFrame(frameId)
     }
-  }, [activeKeys, selectedField, selectedFieldToken])
+  }, [activeKeys, selectedField, selectedFieldSource, selectedFieldToken])
 
   const handleSearchChange = (value) => {
     setSearchText(value)
@@ -133,6 +138,20 @@ function SchemaForm() {
     })
 
     setOpenKeys(nextOpenKeys.length ? nextOpenKeys : allGroupKeys)
+  }
+
+  const handleCollapseChange = (nextKeys) => {
+    const normalizedNextKeys = Array.isArray(nextKeys) ? nextKeys : [nextKeys]
+
+    if (
+      selectedField &&
+      activeKeys.includes(selectedField.groupLabel) &&
+      !normalizedNextKeys.includes(selectedField.groupLabel)
+    ) {
+      setSelectedFieldId(null, 'system')
+    }
+
+    setOpenKeys(normalizedNextKeys)
   }
 
   return (
@@ -185,9 +204,7 @@ function SchemaForm() {
                   </div>
                 ),
               }))}
-              onChange={(nextKeys) =>
-                setOpenKeys(Array.isArray(nextKeys) ? nextKeys : [nextKeys])
-              }
+              onChange={handleCollapseChange}
             />
           </Form>
         ) : (
