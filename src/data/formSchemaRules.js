@@ -23,6 +23,18 @@ const FIELD_IDS = {
   candidatePublicNoticeEndDate: 'candidate.发展对象公示结束日期',
   candidateBranchReviewDate: 'candidate.党支部审查意见日期',
   candidatePreReviewDate: 'candidate.党委预审意见日期',
+  wishSignatureDate: 'wish.本人签名时间（按拿到志愿书的时间即可）',
+  wishIntroducerOpinionDate: 'wish.入党介绍人意见落款日期',
+  wishProbationaryApprovalDate: 'wish.支部大会通过预备的日期',
+  wishProbationaryEndDate: 'wish.预备党员考察期截止日期',
+  wishCommitteeApprovalDate: 'wish.党委审批日期',
+  formalApplicationDate: 'formal.转正申请书日期',
+  formalConsultationDate: 'formal.群众座谈会日期',
+  formalPublicNoticeStartDate: 'formal.预备党员转正公示起始日期',
+  formalPublicNoticeEndDate: 'formal.预备党员转正公示结束日期',
+  formalBranchReviewDate: 'formal.预备党员转正前党支部审查意见落款日期',
+  formalResolutionDate: 'formal.支部大会通过预备党员能否转为正式党员的决议落款日期',
+  formalCommitteeApprovalDate: 'formal.基层党委审批意见落款日期',
 }
 
 const ACTIVIST_QUARTERS = [
@@ -138,6 +150,41 @@ const CANDIDATE_PREVIOUS_BRANCH_OPINION_OPTIONS = [
   },
 ]
 
+const PROBATIONARY_QUARTERS = [
+  {
+    index: 1,
+    label: '第一季度',
+    electronicDateField: 'season2_1.电子版（一）落款日期',
+    startMonthField: 'season2_1.电子版（一）所在季度起始月份',
+    endMonthField: 'season2_1.电子版（一）所在季度截止月份',
+    opinionDateField: 'season2_1.考察人意见（一）落款日期',
+  },
+  {
+    index: 2,
+    label: '第二季度',
+    electronicDateField: 'season2_2.电子版（二）落款日期',
+    startMonthField: 'season2_2.电子版（二）所在季度起始月份',
+    endMonthField: 'season2_2.电子版（二）所在季度截止月份',
+    opinionDateField: 'season2_2.考察人意见（二）落款日期',
+  },
+  {
+    index: 3,
+    label: '第三季度',
+    electronicDateField: 'season2_3.电子版（三）落款日期',
+    startMonthField: 'season2_3.电子版（三）所在季度起始月份',
+    endMonthField: 'season2_3.电子版（三）所在季度截止月份',
+    opinionDateField: 'season2_3.考察人意见（三）落款日期',
+  },
+  {
+    index: 4,
+    label: '第四季度',
+    electronicDateField: 'season2_4.电子版（四）落款日期',
+    startMonthField: 'season2_4.电子版（四）所在季度起始月份',
+    endMonthField: 'season2_4.电子版（四）所在季度截止月份',
+    opinionDateField: 'season2_4.考察人意见（四）落款日期',
+  },
+]
+
 const isEmptyValue = (value) =>
   value === undefined ||
   value === null ||
@@ -145,6 +192,12 @@ const isEmptyValue = (value) =>
 
 const buildUTCDate = (year, month, day) =>
   new Date(Date.UTC(year, month - 1, day))
+
+const getUTCDateParts = (date) => ({
+  year: date.getUTCFullYear(),
+  month: date.getUTCMonth() + 1,
+  day: date.getUTCDate(),
+})
 
 const getDaysInMonth = (year, month) =>
   buildUTCDate(year, month + 1, 0).getUTCDate()
@@ -171,6 +224,16 @@ const addCalendarMonthsToDayParts = (parts, months) => {
 
   return { year, month, day }
 }
+
+const addCalendarDaysToDayParts = (parts, days) => {
+  const date = buildUTCDate(parts.year, parts.month, parts.day)
+  date.setUTCDate(date.getUTCDate() + days)
+
+  return getUTCDateParts(date)
+}
+
+const addCalendarYearsToDayParts = (parts, years) =>
+  addCalendarMonthsToDayParts(parts, years * 12)
 
 const toChineseDateText = ({ year, month, day }) => `${year}年${month}月${day}日`
 const toChineseYearMonthText = ({ year, month }) => `${year}年${month}月`
@@ -244,10 +307,14 @@ const getQuarterWindow = (formData, quarterIndex) => {
     return null
   }
 
+  return getQuarterWindowFromAnchor(determineDateParts, quarterIndex)
+}
+
+const getQuarterWindowFromAnchor = (anchorParts, quarterIndex) => {
   const startOffset = 1 + (quarterIndex - 1) * 3
   const endOffset = 4 + (quarterIndex - 1) * 3
-  const start = addCalendarMonthsToDayParts(determineDateParts, startOffset)
-  const end = addCalendarMonthsToDayParts(determineDateParts, endOffset)
+  const start = addCalendarMonthsToDayParts(anchorParts, startOffset)
+  const end = addCalendarMonthsToDayParts(anchorParts, endOffset)
 
   return {
     startDateText: toChineseDateText(start),
@@ -255,6 +322,19 @@ const getQuarterWindow = (formData, quarterIndex) => {
     startMonthText: toChineseYearMonthText(start),
     endMonthText: toChineseYearMonthText(end),
   }
+}
+
+const getProbationaryQuarterWindow = (formData, quarterIndex) => {
+  const probationaryDateParts = resolveDayParts(
+    formData[FIELD_IDS.wishProbationaryApprovalDate],
+    CHINESE_DATE_VALIDATOR,
+  )
+
+  if (!probationaryDateParts) {
+    return null
+  }
+
+  return getQuarterWindowFromAnchor(probationaryDateParts, quarterIndex)
 }
 
 const createCustomRule = (field, message, validate) => ({
@@ -290,9 +370,36 @@ const createSameOrAfterRule = ({
     },
   )
 
+const createStrictlyAfterRule = ({
+  earlierField,
+  earlierLabel,
+  laterField,
+  laterLabel,
+}) =>
+  createCustomRule(
+    laterField,
+    `${laterLabel}应晚于${earlierLabel}`,
+    (formData) => {
+      const earlierValue = formData[earlierField]
+      const laterValue = formData[laterField]
+
+      if (isEmptyValue(earlierValue) || isEmptyValue(laterValue)) {
+        return true
+      }
+
+      const isValid = isStrictlyAfter(laterValue, earlierValue, {
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightValidatorName: CHINESE_DATE_VALIDATOR,
+      })
+
+      return isValid === true ? true : `${laterLabel}应晚于${earlierLabel}`
+    },
+  )
+
 const createQuarterRules = ({
   electronicDateField,
   endMonthField,
+  getQuarterWindowForFormData = getQuarterWindow,
   index,
   label,
   opinionDateField,
@@ -308,7 +415,7 @@ const createQuarterRules = ({
         return true
       }
 
-      const quarterWindow = getQuarterWindow(formData, index)
+      const quarterWindow = getQuarterWindowForFormData(formData, index)
 
       if (!quarterWindow) {
         return true
@@ -329,7 +436,7 @@ const createQuarterRules = ({
         return true
       }
 
-      const quarterWindow = getQuarterWindow(formData, index)
+      const quarterWindow = getQuarterWindowForFormData(formData, index)
 
       if (!quarterWindow) {
         return true
@@ -350,7 +457,7 @@ const createQuarterRules = ({
         return true
       }
 
-      const quarterWindow = getQuarterWindow(formData, index)
+      const quarterWindow = getQuarterWindowForFormData(formData, index)
 
       if (!quarterWindow) {
         return true
@@ -383,7 +490,7 @@ const createQuarterRules = ({
         return true
       }
 
-      const quarterWindow = getQuarterWindow(formData, index)
+      const quarterWindow = getQuarterWindowForFormData(formData, index)
 
       if (!quarterWindow) {
         return true
@@ -723,6 +830,158 @@ const firstPhaseRules = [
     earlierLabel: '党支部审查意见日期',
     laterField: FIELD_IDS.candidatePreReviewDate,
     laterLabel: '党委预审意见日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.candidatePreReviewDate,
+    earlierLabel: '党委预审意见日期',
+    laterField: FIELD_IDS.wishSignatureDate,
+    laterLabel: '本人签名时间（按拿到志愿书的时间即可）',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.wishSignatureDate,
+    earlierLabel: '本人签名时间（按拿到志愿书的时间即可）',
+    laterField: FIELD_IDS.wishIntroducerOpinionDate,
+    laterLabel: '入党介绍人意见落款日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.wishIntroducerOpinionDate,
+    earlierLabel: '入党介绍人意见落款日期',
+    laterField: FIELD_IDS.wishProbationaryApprovalDate,
+    laterLabel: '支部大会通过预备的日期',
+  }),
+  createCustomRule(
+    FIELD_IDS.wishProbationaryEndDate,
+    '预备党员考察期截止日期应为支部大会通过预备的日期满一年前一日',
+    (formData) => {
+      const approvalDate = formData[FIELD_IDS.wishProbationaryApprovalDate]
+      const endDate = formData[FIELD_IDS.wishProbationaryEndDate]
+
+      if (isEmptyValue(approvalDate) || isEmptyValue(endDate)) {
+        return true
+      }
+
+      const approvalParts = resolveDayParts(approvalDate, CHINESE_DATE_VALIDATOR)
+
+      if (!approvalParts) {
+        return true
+      }
+
+      const expectedEndDate = toChineseDateText(
+        addCalendarDaysToDayParts(addCalendarYearsToDayParts(approvalParts, 1), -1),
+      )
+      const isValid = isSameDate(endDate, expectedEndDate, {
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightFormat: 'chineseDate',
+      })
+
+      return isValid === true
+        ? true
+        : `预备党员考察期截止日期应为 ${expectedEndDate}`
+    },
+  ),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.wishProbationaryApprovalDate,
+    earlierLabel: '支部大会通过预备的日期',
+    laterField: FIELD_IDS.wishCommitteeApprovalDate,
+    laterLabel: '党委审批日期',
+  }),
+  ...PROBATIONARY_QUARTERS.flatMap((quarter) =>
+    createQuarterRules({
+      ...quarter,
+      getQuarterWindowForFormData: getProbationaryQuarterWindow,
+    }),
+  ),
+  createCustomRule(
+    FIELD_IDS.formalApplicationDate,
+    '转正申请书日期应严格落在预备党员考察期截止日期前一周内',
+    (formData) => {
+      const deadlineDate = formData[FIELD_IDS.wishProbationaryEndDate]
+      const applicationDate = formData[FIELD_IDS.formalApplicationDate]
+
+      if (isEmptyValue(deadlineDate) || isEmptyValue(applicationDate)) {
+        return true
+      }
+
+      const deadlineParts = resolveDayParts(deadlineDate, CHINESE_DATE_VALIDATOR)
+
+      if (!deadlineParts) {
+        return true
+      }
+
+      const lowerBoundText = toChineseDateText(addCalendarDaysToDayParts(deadlineParts, -7))
+      const lowerComparison = compareDateValues(applicationDate, lowerBoundText, {
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightFormat: 'chineseDate',
+      })
+      const upperComparison = compareDateValues(applicationDate, deadlineDate, {
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightValidatorName: CHINESE_DATE_VALIDATOR,
+      })
+
+      if (lowerComparison === null || upperComparison === null) {
+        return true
+      }
+
+      return lowerComparison === 1 && upperComparison === -1
+        ? true
+        : `转正申请书日期应严格落在 ${lowerBoundText} 与 ${deadlineDate} 之间`
+    },
+  ),
+  createStrictlyAfterRule({
+    earlierField: FIELD_IDS.formalApplicationDate,
+    earlierLabel: '转正申请书日期',
+    laterField: FIELD_IDS.formalConsultationDate,
+    laterLabel: '群众座谈会日期',
+  }),
+  createStrictlyAfterRule({
+    earlierField: FIELD_IDS.formalApplicationDate,
+    earlierLabel: '转正申请书日期',
+    laterField: FIELD_IDS.formalPublicNoticeStartDate,
+    laterLabel: '预备党员转正公示起始日期',
+  }),
+  createCustomRule(
+    FIELD_IDS.formalPublicNoticeEndDate,
+    '预备党员转正公示起始日期至结束日期应至少覆盖5个工作日',
+    (formData) => {
+      const startDate = formData[FIELD_IDS.formalPublicNoticeStartDate]
+      const endDate = formData[FIELD_IDS.formalPublicNoticeEndDate]
+
+      if (isEmptyValue(startDate) || isEmptyValue(endDate)) {
+        return true
+      }
+
+      const businessDays = countBusinessDaysInclusive(
+        startDate,
+        endDate,
+        CHINESE_DATE_VALIDATOR,
+      )
+
+      if (businessDays === null) {
+        return true
+      }
+
+      return businessDays >= 5
+        ? true
+        : '预备党员转正公示起始日期至结束日期应至少覆盖5个工作日（周一至周五）'
+    },
+  ),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.formalPublicNoticeEndDate,
+    earlierLabel: '预备党员转正公示结束日期',
+    laterField: FIELD_IDS.formalBranchReviewDate,
+    laterLabel: '预备党员转正前党支部审查意见落款日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.formalBranchReviewDate,
+    earlierLabel: '预备党员转正前党支部审查意见落款日期',
+    laterField: FIELD_IDS.formalResolutionDate,
+    laterLabel: '支部大会通过预备党员能否转为正式党员的决议落款日期',
+  }),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.formalResolutionDate,
+    earlierLabel: '支部大会通过预备党员能否转为正式党员的决议落款日期',
+    laterField: FIELD_IDS.formalCommitteeApprovalDate,
+    laterLabel: '基层党委审批意见落款日期',
   }),
 ]
 
