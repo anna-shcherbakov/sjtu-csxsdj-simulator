@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
+import { ExclamationCircleFilled } from '@ant-design/icons'
 import { ConfigProvider, Modal, message } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import SchemaForm from './components/form/SchemaForm'
@@ -309,7 +310,11 @@ function App() {
 
   const handleReset = () => {
     resetForm()
-    messageApi.info('已恢复为 schema 默认值')
+    messageApi.open({
+      content: '已恢复为 schema 默认值',
+      icon: <ExclamationCircleFilled style={{ color: '#D89614' }} />,
+      duration: 3,
+    })
   }
 
   return (
@@ -337,7 +342,15 @@ function App() {
       {modalContextHolder}
       <div className={styles['app-shell']}>
         <header className={styles['app-toolbar']}>
-          <h1 className={styles['app-toolbar__title']}>党建材料模板工作台</h1>
+          <div className={styles['app-toolbar__brand']}>
+            <img
+              alt=""
+              aria-hidden="true"
+              className={styles['app-toolbar__logo']}
+              src="/scs-logo.svg"
+            />
+            <h1 className={styles['app-toolbar__title']}>计算机学院党建材料教程</h1>
+          </div>
           <TemplateToolbar onReset={handleReset} onValidate={handleValidate} />
         </header>
 

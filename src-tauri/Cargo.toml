@@ -1,7 +1,7 @@
 [package]
 name = "dangjian_workbench"
 version = "0.1.0"
-description = "党建材料模板工作台桌面应用"
+description = "计算机学院党建材料教程桌面应用"
 authors = ["dangjian"]
 license = ""
 repository = ""

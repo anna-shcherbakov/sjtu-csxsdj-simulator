@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "党建材料模板工作台",
+  "productName": "计算机学院党建材料教程",
   "version": "0.1.0",
   "identifier": "com.dangjian.workbench",
   "build": {
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "党建材料模板工作台",
+        "title": "计算机学院党建材料教程",
         "width": 1600,
         "height": 960,
         "minWidth": 1280,

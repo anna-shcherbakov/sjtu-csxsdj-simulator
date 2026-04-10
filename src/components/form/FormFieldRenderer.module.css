@@ -57,6 +57,13 @@
   line-height: 1.4;
 }
 
+.schema-field-label__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
 .schema-field-label__icon {
   color: var(--text-muted);
   font-size: 13px;
@@ -66,6 +73,57 @@
 
 .schema-field-label__icon:hover {
   color: var(--accent-500);
+}
+
+.template-reference-popover {
+  max-width: 280px;
+}
+
+.template-reference-popover__title {
+  margin-bottom: 10px;
+  color: var(--text-strong);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.template-reference-popover__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.template-reference-popover__empty {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.template-reference-tag {
+  margin-inline-end: 0;
+  border-radius: 8px;
+  padding-inline: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.template-reference-tag--party-applicant-document {
+  background: #e7f0ff;
+  color: #1e4d91;
+}
+
+.template-reference-tag--party-training-inspection-book {
+  background: #f5ead7;
+  color: #8b5b11;
+}
+
+.template-reference-tag--party-training-inspection-book-v2 {
+  background: #f8e2e3;
+  color: #a11d27;
+}
+
+.template-reference-tag--party-application-wish-book {
+  background: #e5f3e8;
+  color: #21693f;
 }
 
 .schema-form__item :global(.ant-input),

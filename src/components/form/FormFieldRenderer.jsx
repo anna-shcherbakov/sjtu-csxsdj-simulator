@@ -1,15 +1,28 @@
 import { memo } from 'react'
 import {
+  AppstoreOutlined,
   DeleteOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons'
-import { Button, Form, Input, Radio, Select, Tooltip } from 'antd'
+import { Button, Form, Input, Popover, Radio, Select, Tag, Tooltip } from 'antd'
 import clsx from 'clsx'
+import { getTemplateReferenceStatuses } from '../../data/templates'
 import useFormStore from '../../store/useFormStore'
 import styles from './FormFieldRenderer.module.css'
 
 const { TextArea } = Input
+
+const TEMPLATE_REFERENCE_TAG_VARIANTS = {
+  'party-applicant-document':
+    styles['template-reference-tag--party-applicant-document'],
+  'party-training-inspection-book':
+    styles['template-reference-tag--party-training-inspection-book'],
+  'party-training-inspection-book-v2':
+    styles['template-reference-tag--party-training-inspection-book-v2'],
+  'party-application-wish-book':
+    styles['template-reference-tag--party-application-wish-book'],
+}
 
 const normalizeOptions = (options = []) =>
   options.map((option) =>
@@ -17,15 +30,93 @@ const normalizeOptions = (options = []) =>
   )
 
 function FieldHelpLabel({ label, description }) {
+  const stopHelpEvent = (event) => {
+    event.stopPropagation()
+  }
+
   return (
     <span className={styles['schema-field-label']}>
       <span>{label}</span>
       <Tooltip title={description || '暂无填写说明'}>
         <QuestionCircleOutlined
           className={styles['schema-field-label__icon']}
-          onClick={(event) => event.stopPropagation()}
+          onClick={stopHelpEvent}
+          onMouseDown={stopHelpEvent}
         />
       </Tooltip>
+    </span>
+  )
+}
+
+function TemplateReferenceHelp({ fieldId }) {
+  if (!fieldId) {
+    return null
+  }
+
+  const templateStatuses = getTemplateReferenceStatuses(fieldId).filter(
+    (template) => template.referenced,
+  )
+
+  const stopHelpEvent = (event) => {
+    event.stopPropagation()
+  }
+
+  return (
+    <Popover
+      content={
+        <div className={styles['template-reference-popover']}>
+          <div className={styles['template-reference-popover__title']}>
+            已引用此字段的模板
+          </div>
+          <div className={styles['template-reference-popover__tags']}>
+            {templateStatuses.length ? (
+              templateStatuses.map((template) => (
+                <Tag
+                  bordered={false}
+                  className={clsx(
+                    styles['template-reference-tag'],
+                    TEMPLATE_REFERENCE_TAG_VARIANTS[template.id],
+                  )}
+                  key={template.id}
+                >
+                  {template.displayLabel}
+                </Tag>
+              ))
+            ) : (
+              <span className={styles['template-reference-popover__empty']}>
+                当前没有模板引用此字段
+              </span>
+            )}
+          </div>
+        </div>
+      }
+      trigger="hover"
+    >
+      <span
+        className={styles['schema-field-label__icon-button']}
+        onClick={stopHelpEvent}
+        onMouseDown={stopHelpEvent}
+      >
+        <AppstoreOutlined className={styles['schema-field-label__icon']} />
+      </span>
+    </Popover>
+  )
+}
+
+function FieldLabelWithHelp({ description, fieldId, label }) {
+  return (
+    <span className={styles['schema-field-label']}>
+      <span>{label}</span>
+      <Tooltip title={description || '暂无填写说明'}>
+        <span
+          className={styles['schema-field-label__icon-button']}
+          onClick={(event) => event.stopPropagation()}
+          onMouseDown={(event) => event.stopPropagation()}
+        >
+          <QuestionCircleOutlined className={styles['schema-field-label__icon']} />
+        </span>
+      </Tooltip>
+      <TemplateReferenceHelp fieldId={fieldId} />
     </span>
   )
 }
@@ -229,8 +320,9 @@ function FormFieldRenderer({ field, domId }) {
         className={styles['schema-form__item']}
         help={error || null}
         label={
-          <FieldHelpLabel
+          <FieldLabelWithHelp
             description={field.description}
+            fieldId={field.id}
             label={field.label}
           />
         }

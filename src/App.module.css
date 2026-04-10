@@ -77,6 +77,20 @@
   z-index: 20;
 }
 
+.app-toolbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.app-toolbar__logo {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
 .app-toolbar__title {
   margin: 0;
   color: var(--text-strong);
@@ -194,6 +208,15 @@
 @media (max-width: 900px) {
   .app-toolbar {
     padding: 18px;
+  }
+
+  .app-toolbar__brand {
+    width: 100%;
+  }
+
+  .app-toolbar__logo {
+    width: 30px;
+    height: 30px;
   }
 
   .app-toolbar__title {
