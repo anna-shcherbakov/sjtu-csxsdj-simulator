@@ -30,34 +30,34 @@ export const formSchemaTimeFieldsReference = {
       {
         id: 'submit.入党申请书落款日期',
         label: '入党申请书落款日期',
-        format: 'yyyy-mm-dd',
-        validator: 'validateDateInput',
-        note: '字段文案更像 yyyy年m月d日，但当前 validation 是 validateDateInput',
+        format: 'yyyy年m月d日',
+        validator: 'validateChineseDateInput',
+        note: null,
       }
     ],
     '谈话表格': [
       {
         id: 'talk.申请人谈话日期',
         label: '申请人谈话日期',
-        format: 'yyyy-mm-dd',
-        validator: 'validateDateInput',
-        note: '字段文案更像 yyyy年m月d日，但当前 validation 是 validateDateInput',
+        format: 'yyyy年m月d日',
+        validator: 'validateChineseDateInput',
+        note: null,
       }
     ],
     '确定积极分子表格': [
       {
         id: 'acknowledge.团推优日期',
         label: '团推优日期',
-        format: 'yyyy-mm-dd',
-        validator: 'validateDateInput',
-        note: '字段文案更像 yyyy年m月d日，但当前 validation 是 validateDateInput',
+        format: 'yyyy年m月d日',
+        validator: 'validateChineseDateInput',
+        note: null,
       },
       {
         id: 'acknowledge.确定积极分子日期',
         label: '确定积极分子日期',
-        format: 'yyyy-mm-dd',
-        validator: 'validateDateInput',
-        note: '字段文案更像 yyyy年m月d日，但当前 validation 是 validateDateInput',
+        format: 'yyyy年m月d日',
+        validator: 'validateChineseDateInput',
+        note: null,
       },
       {
         id: 'activist.入党联系人1入党时间（预备时间）',

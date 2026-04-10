@@ -20,7 +20,6 @@ export const DATE_FORMAT_EXAMPLES = {
 }
 
 export const DATE_VALIDATOR_FORMATS = {
-  validateDateInput: DATE_INPUT_FORMATS.ISO_DATE,
   validateChineseDateInput: DATE_INPUT_FORMATS.CHINESE_DATE,
   validateChineseYearMonthInput: DATE_INPUT_FORMATS.CHINESE_YEAR_MONTH,
 }

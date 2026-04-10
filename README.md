@@ -1,5 +1,9 @@
 # 计算机学院党建材料教程
 
+<p align="center">
+  <img src="./public/scs-logo.svg" alt="计算机学院党建材料教程标识" width="112" />
+</p>
+
 基于 React + Vite + Ant Design 的前端工作台，用于维护党建材料字段表单，并在右侧实时预览固定 A4 模板页面。
 
 当前版本采用“左侧单表单、右侧多模板预览”的交互模式：

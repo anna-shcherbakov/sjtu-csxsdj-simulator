@@ -85,10 +85,12 @@
 }
 
 .app-toolbar__logo {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   flex: 0 0 auto;
+  display: block;
   object-fit: contain;
+  image-rendering: auto;
 }
 
 .app-toolbar__title {
@@ -215,8 +217,8 @@
   }
 
   .app-toolbar__logo {
-    width: 30px;
-    height: 30px;
+    width: 38px;
+    height: 38px;
   }
 
   .app-toolbar__title {

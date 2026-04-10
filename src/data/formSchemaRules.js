@@ -1,6 +1,5 @@
 import { compareDateValues, ensureParsedDateValue, isAtLeastAgeOnDate } from './dateRuleUtils'
 
-const ISO_DATE_VALIDATOR = 'validateDateInput'
 const CHINESE_DATE_VALIDATOR = 'validateChineseDateInput'
 const FIELD_IDS = {
   birthDate: 'basic.出生日期',
@@ -301,7 +300,10 @@ const isWithinQuarterRange = (value, startText, endText, validatorName) => {
 }
 
 const getQuarterWindow = (formData, quarterIndex) => {
-  const determineDateParts = resolveDayParts(formData[FIELD_IDS.positiveSelectionDate], ISO_DATE_VALIDATOR)
+  const determineDateParts = resolveDayParts(
+    formData[FIELD_IDS.positiveSelectionDate],
+    CHINESE_DATE_VALIDATOR,
+  )
 
   if (!determineDateParts) {
     return null
@@ -541,7 +543,7 @@ const firstPhaseRules = [
 
       const isValid = isAtLeastAgeOnDate(birthDate, applicationDate, 18, {
         startValidatorName: CHINESE_DATE_VALIDATOR,
-        endValidatorName: ISO_DATE_VALIDATOR,
+        endValidatorName: CHINESE_DATE_VALIDATOR,
       })
 
       return isValid === true ? true : '入党申请书落款日期应满足申请入党时年满18周岁'
@@ -558,7 +560,10 @@ const firstPhaseRules = [
         return true
       }
 
-      const applicationParts = resolveDayParts(applicationDate, ISO_DATE_VALIDATOR)
+      const applicationParts = resolveDayParts(
+        applicationDate,
+        CHINESE_DATE_VALIDATOR,
+      )
 
       if (!applicationParts) {
         return true
@@ -566,11 +571,11 @@ const firstPhaseRules = [
 
       const latestTalkDateText = toChineseDateText(addCalendarMonthsToDayParts(applicationParts, 1))
       const isAfterApplicationDate = isSameOrAfter(talkDate, applicationDate, {
-        leftValidatorName: ISO_DATE_VALIDATOR,
-        rightValidatorName: ISO_DATE_VALIDATOR,
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightValidatorName: CHINESE_DATE_VALIDATOR,
       })
       const isBeforeDeadline = compareDateValues(talkDate, latestTalkDateText, {
-        leftValidatorName: ISO_DATE_VALIDATOR,
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
         rightFormat: 'chineseDate',
       })
 
@@ -594,7 +599,10 @@ const firstPhaseRules = [
         return true
       }
 
-      const applicationParts = resolveDayParts(applicationDate, ISO_DATE_VALIDATOR)
+      const applicationParts = resolveDayParts(
+        applicationDate,
+        CHINESE_DATE_VALIDATOR,
+      )
 
       if (!applicationParts) {
         return true
@@ -602,7 +610,7 @@ const firstPhaseRules = [
 
       const earliestRecommendDateText = toChineseDateText(addCalendarMonthsToDayParts(applicationParts, 1))
       const isValid = compareDateValues(recommendDate, earliestRecommendDateText, {
-        leftValidatorName: ISO_DATE_VALIDATOR,
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
         rightFormat: 'chineseDate',
       })
 
@@ -627,8 +635,8 @@ const firstPhaseRules = [
       }
 
       const isValid = isStrictlyAfter(positiveSelectionDate, recommendDate, {
-        leftValidatorName: ISO_DATE_VALIDATOR,
-        rightValidatorName: ISO_DATE_VALIDATOR,
+        leftValidatorName: CHINESE_DATE_VALIDATOR,
+        rightValidatorName: CHINESE_DATE_VALIDATOR,
       })
 
       return isValid === true ? true : '确定积极分子日期应晚于团推优日期'
@@ -702,7 +710,7 @@ const firstPhaseRules = [
 
       const isValid = isSameDate(activistArchiveDate, positiveSelectionDate, {
         leftValidatorName: CHINESE_DATE_VALIDATOR,
-        rightValidatorName: ISO_DATE_VALIDATOR,
+        rightValidatorName: CHINESE_DATE_VALIDATOR,
       })
 
       return isValid === true ? true : '积极分子党委备案日期应与确定积极分子日期一致'

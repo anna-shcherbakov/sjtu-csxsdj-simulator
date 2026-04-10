@@ -1,7 +1,6 @@
 import {
   parseChineseDateInput,
   parseChineseYearMonthInput,
-  parseIsoDateInput,
 } from './dateRuleUtils'
 
 const isEmptyValue = (value) =>
@@ -21,8 +20,6 @@ export const createRegexValidator =
   (pattern) =>
   (value) =>
     pattern.test(String(value ?? '').trim())
-
-export const validateDateInput = allowEmpty((value) => parseIsoDateInput(value) !== null)
 
 export const validateChineseDateInput = allowEmpty((value) =>
   parseChineseDateInput(value) !== null,
