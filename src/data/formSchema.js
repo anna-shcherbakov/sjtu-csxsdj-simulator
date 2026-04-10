@@ -336,7 +336,7 @@ export const formSchema = {
                 defaultValue: "",
                 placeholder: "请输入申请人谈话日期",
                 description: "请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日",
-                validation: validateDateInput,
+                validation: validateChineseDateInput,
                 errorMessage: '请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日'
             },
         ],
@@ -348,7 +348,7 @@ export const formSchema = {
                 defaultValue: "",
                 placeholder: "请输入团推优日期",
                 description: "请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日",
-                validation: validateDateInput,
+                validation: validateChineseDateInput,
                 errorMessage: '请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日'
             },
             {
@@ -366,7 +366,7 @@ export const formSchema = {
                 defaultValue: "",
                 placeholder: "请输入确定积极分子日期",
                 description: "（和支委会时间相同）请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日",
-                validation: validateDateInput,
+                validation: validateChineseDateInput,
                 errorMessage: '（和支委会时间相同）请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日'
             },
             {
