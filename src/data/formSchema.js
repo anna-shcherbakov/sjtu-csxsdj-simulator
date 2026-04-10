@@ -292,8 +292,8 @@ export const formSchema = {
                 defaultValue: "",
                 placeholder: "请输入入党申请书落款日期",
                 description: "需年满18周岁，请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日",
-                validation: validateDateInput,
-                errorMessage: "入党申请书落款日期格式不对"
+                validation: validateChineseDateInput,
+                errorMessage: "请按xxxx年x月x日填写，例：1999年4月16日、2006年12月3日"
             },
         ],
         "谈话表格": [
