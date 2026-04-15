@@ -6,7 +6,11 @@ import {
   flattenFormFields,
   formSchema,
 } from '../data/formSchema'
-import { DEFAULT_TEMPLATE_ID, DEFAULT_ZOOM } from '../data/templates'
+import {
+  DEFAULT_TEMPLATE_ID,
+  DEFAULT_ZOOM,
+  getTemplateFieldIds,
+} from '../data/templates'
 
 const removeFieldError = (errors, fieldId) => {
   if (!errors[fieldId]) {
@@ -39,6 +43,52 @@ const getFieldValidationError = (schema, formData, fieldId) => {
   return validateField(field, formData)
 }
 
+const isEmptyValue = (value) =>
+  value === undefined ||
+  value === null ||
+  (typeof value === 'string' ? value.trim() === '' : value === '')
+
+const isEmptyListRow = (row) => {
+  if (!row || typeof row !== 'object') {
+    return true
+  }
+
+  return Object.values(row).every((cellValue) => isEmptyValue(cellValue))
+}
+
+const isMissingFieldValue = (field, value) => {
+  if (field?.fieldType === 'list') {
+    if (!Array.isArray(value) || value.length === 0) {
+      return true
+    }
+
+    return value.every((row) => isEmptyListRow(row))
+  }
+
+  return isEmptyValue(value)
+}
+
+const getRuleDependentFieldIds = (rule, formData, schema) => {
+  if (typeof rule.getDependentFields === 'function') {
+    return rule.getDependentFields(formData, rule, schema) ?? []
+  }
+
+  return Array.isArray(rule.dependentFields) ? rule.dependentFields : []
+}
+
+const getRuleDependencyErrorMessage = (schema, rule, missingFieldIds) => {
+  if (typeof rule.getMissingDependencyMessage === 'function') {
+    return rule.getMissingDependencyMessage(missingFieldIds, schema, rule)
+  }
+
+  const targetLabel = findFormFieldById(schema, rule.field)?.label ?? rule.field
+  const missingLabels = [...new Set(missingFieldIds)]
+    .map((fieldId) => findFormFieldById(schema, fieldId)?.label ?? fieldId)
+    .join('、')
+
+  return `校验“${targetLabel}”前请先填写：${missingLabels}`
+}
+
 const validateRules = (schema, formData) => {
   if (!schema.rules?.length) {
     return []
@@ -59,10 +109,7 @@ const validateRules = (schema, formData) => {
   schema.rules.forEach((rule) => {
     if (rule.type === 'required') {
       const value = formData[rule.field]
-      const isEmpty =
-        value === undefined ||
-        value === null ||
-        (typeof value === 'string' ? value.trim() === '' : value === '')
+      const isEmpty = isEmptyValue(value)
 
       if (isEmpty) {
         assignRuleError(rule.field, rule.message)
@@ -72,6 +119,19 @@ const validateRules = (schema, formData) => {
     }
 
     if (typeof rule.validate !== 'function') {
+      return
+    }
+
+    const dependentFieldIds = getRuleDependentFieldIds(rule, formData, schema)
+    const missingFieldIds = dependentFieldIds.filter((fieldId) =>
+      isEmptyValue(formData[fieldId]),
+    )
+
+    if (missingFieldIds.length > 0) {
+      assignRuleError(
+        rule.field,
+        getRuleDependencyErrorMessage(schema, rule, missingFieldIds),
+      )
       return
     }
 
@@ -135,6 +195,142 @@ const validateFields = (schema, formData) =>
 
     return errors
   }, {})
+
+const validateFieldsByFieldIds = (schema, formData, fieldIds) =>
+  [...new Set(fieldIds)].reduce((errors, fieldId) => {
+    const field = findFormFieldById(schema, fieldId)
+
+    if (!field) {
+      return errors
+    }
+
+    const error = validateField(field, formData)
+
+    if (error) {
+      errors[field.id] = error
+    }
+
+    return errors
+  }, {})
+
+const getMissingFieldFailures = (schema, formData, fieldIds) =>
+  [...new Set(fieldIds)].reduce((failures, fieldId) => {
+    const field = findFormFieldById(schema, fieldId)
+
+    if (!field || !isMissingFieldValue(field, formData[field.id])) {
+      return failures
+    }
+
+    return [
+      ...failures,
+      {
+        fieldId: field.id,
+        message:
+          field.fieldType === 'list'
+            ? `请至少填写一条“${field.label}”`
+            : `请填写“${field.label}”`,
+      },
+    ]
+  }, [])
+
+const dedupeRuleFailures = (failures) => {
+  const seen = new Set()
+
+  return failures.filter((failure) => {
+    const key = `${failure.fieldId}::${failure.message}`
+
+    if (seen.has(key)) {
+      return false
+    }
+
+    seen.add(key)
+    return true
+  })
+}
+
+const validateRulesForFieldIds = (schema, formData, fieldIds) => {
+  if (!schema.rules?.length) {
+    return []
+  }
+
+  const allowedFieldIds = new Set(fieldIds)
+  const failures = []
+  const assignRuleError = (fieldId, message) => {
+    if (!fieldId || !message) {
+      return
+    }
+
+    failures.push({
+      fieldId,
+      message,
+    })
+  }
+
+  schema.rules.forEach((rule) => {
+    const dependentFieldIds = getRuleDependentFieldIds(rule, formData, schema)
+    const referencedFieldIds = [
+      ...new Set([rule.field, ...dependentFieldIds].filter(Boolean)),
+    ]
+
+    if (
+      referencedFieldIds.length === 0 ||
+      !referencedFieldIds.every((fieldId) => allowedFieldIds.has(fieldId))
+    ) {
+      return
+    }
+
+    if (rule.type === 'required') {
+      const value = formData[rule.field]
+      const isEmpty = isEmptyValue(value)
+
+      if (isEmpty) {
+        assignRuleError(rule.field, rule.message)
+      }
+
+      return
+    }
+
+    if (typeof rule.validate !== 'function') {
+      return
+    }
+
+    const missingFieldIds = dependentFieldIds.filter((fieldId) =>
+      isEmptyValue(formData[fieldId]),
+    )
+
+    if (missingFieldIds.length > 0) {
+      assignRuleError(
+        rule.field,
+        getRuleDependencyErrorMessage(schema, rule, missingFieldIds),
+      )
+      return
+    }
+
+    const result = rule.validate(formData, rule, schema)
+
+    if (result === true || result === undefined || result === null) {
+      return
+    }
+
+    if (typeof result === 'string') {
+      assignRuleError(rule.field, result || rule.message)
+      return
+    }
+
+    if (result === false) {
+      assignRuleError(rule.field, rule.message)
+      return
+    }
+
+    if (typeof result === 'object') {
+      Object.entries(result).forEach(([fieldId, message]) => {
+        assignRuleError(fieldId, message || rule.message)
+      })
+    }
+  })
+
+  return failures
+}
 
 const initialFormData = buildInitialFormData(formSchema)
 
@@ -271,6 +467,51 @@ const useFormStore = create((set, get) => ({
       failedStage: ruleFailures.length > 0 ? 'rules' : null,
       validationErrors: fieldErrors,
       ruleFailures,
+    }
+  },
+
+  validateCurrentTemplate: () => {
+    const { activeTemplateId, formData, formSchema } = get()
+    const templateFieldIds = getTemplateFieldIds(activeTemplateId).filter((fieldId) =>
+      Boolean(findFormFieldById(formSchema, fieldId)),
+    )
+    const fieldErrors = validateFieldsByFieldIds(
+      formSchema,
+      formData,
+      templateFieldIds,
+    )
+
+    set({ validationErrors: fieldErrors })
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return {
+        isValid: false,
+        failedStage: 'validation',
+        validationErrors: fieldErrors,
+        ruleFailures: [],
+      }
+    }
+
+    const missingFieldFailures = getMissingFieldFailures(
+      formSchema,
+      formData,
+      templateFieldIds,
+    )
+    const ruleFailures = validateRulesForFieldIds(
+      formSchema,
+      formData,
+      templateFieldIds,
+    )
+    const mergedRuleFailures = dedupeRuleFailures([
+      ...missingFieldFailures,
+      ...ruleFailures,
+    ])
+
+    return {
+      isValid: mergedRuleFailures.length === 0,
+      failedStage: mergedRuleFailures.length > 0 ? 'rules' : null,
+      validationErrors: fieldErrors,
+      ruleFailures: mergedRuleFailures,
     }
   },
 

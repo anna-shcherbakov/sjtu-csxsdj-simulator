@@ -339,11 +339,12 @@ const getProbationaryQuarterWindow = (formData, quarterIndex) => {
   return getQuarterWindowFromAnchor(probationaryDateParts, quarterIndex)
 }
 
-const createCustomRule = (field, message, validate) => ({
+const createCustomRule = (field, message, validate, options = {}) => ({
   type: 'custom',
   field,
   message,
   validate,
+  ...options,
 })
 
 const createSameOrAfterRule = ({
@@ -369,6 +370,9 @@ const createSameOrAfterRule = ({
       })
 
       return isValid === true ? true : `${laterLabel}应晚于或等于${earlierLabel}`
+    },
+    {
+      dependentFields: [earlierField, laterField],
     },
   )
 
@@ -396,6 +400,9 @@ const createStrictlyAfterRule = ({
 
       return isValid === true ? true : `${laterLabel}应晚于${earlierLabel}`
     },
+    {
+      dependentFields: [earlierField, laterField],
+    },
   )
 
 const createQuarterRules = ({
@@ -405,6 +412,7 @@ const createQuarterRules = ({
   index,
   label,
   opinionDateField,
+  anchorField,
   startMonthField,
 }) => [
   createCustomRule(
@@ -427,6 +435,9 @@ const createQuarterRules = ({
         ? true
         : `${label}所在季度起始月份应为 ${quarterWindow.startMonthText}`
     },
+    {
+      dependentFields: [startMonthField, anchorField],
+    },
   ),
   createCustomRule(
     endMonthField,
@@ -447,6 +458,9 @@ const createQuarterRules = ({
       return String(value).trim() === quarterWindow.endMonthText
         ? true
         : `${label}所在季度截止月份应为 ${quarterWindow.endMonthText}`
+    },
+    {
+      dependentFields: [endMonthField, anchorField],
     },
   ),
   createCustomRule(
@@ -479,6 +493,9 @@ const createQuarterRules = ({
       return isValid
         ? true
         : `${label}电子版落款日期应在 ${quarterWindow.startDateText} 至 ${quarterWindow.endDateText} 之间`
+    },
+    {
+      dependentFields: [electronicDateField, anchorField],
     },
   ),
   createCustomRule(
@@ -526,6 +543,9 @@ const createQuarterRules = ({
         ? true
         : `${label}联系人意见落款日期应晚于电子版落款日期`
     },
+    {
+      dependentFields: [opinionDateField, electronicDateField, anchorField],
+    },
   ),
 ]
 
@@ -547,6 +567,9 @@ const firstPhaseRules = [
       })
 
       return isValid === true ? true : '入党申请书落款日期应满足申请入党时年满18周岁'
+    },
+    {
+      dependentFields: [FIELD_IDS.birthDate, FIELD_IDS.applicationDate],
     },
   ),
   createCustomRule(
@@ -587,6 +610,9 @@ const firstPhaseRules = [
         ? true
         : `申请人谈话日期应在入党申请书落款日期至 ${latestTalkDateText} 之间`
     },
+    {
+      dependentFields: [FIELD_IDS.applicationDate, FIELD_IDS.talkDate],
+    },
   ),
   createCustomRule(
     FIELD_IDS.recommendDate,
@@ -622,6 +648,9 @@ const firstPhaseRules = [
         ? true
         : `团推优日期应不早于 ${earliestRecommendDateText}`
     },
+    {
+      dependentFields: [FIELD_IDS.applicationDate, FIELD_IDS.recommendDate],
+    },
   ),
   createCustomRule(
     FIELD_IDS.positiveSelectionDate,
@@ -640,6 +669,9 @@ const firstPhaseRules = [
       })
 
       return isValid === true ? true : '确定积极分子日期应晚于团推优日期'
+    },
+    {
+      dependentFields: [FIELD_IDS.recommendDate, FIELD_IDS.positiveSelectionDate],
     },
   ),
   createCustomRule(
@@ -667,6 +699,12 @@ const firstPhaseRules = [
       )
         ? true
         : '入党联系人1转正时间应与其入党时间（预备时间）刚好间隔一年'
+    },
+    {
+      dependentFields: [
+        FIELD_IDS.liaison1ProbationaryDate,
+        FIELD_IDS.liaison1FormalDate,
+      ],
     },
   ),
   // 规则 6 按规则 5 的对称关系解释为：联系人 2 的预备时间与联系人 2 的转正时间刚好间隔一年。
@@ -696,6 +734,12 @@ const firstPhaseRules = [
         ? true
         : '入党联系人2转正时间应与其入党时间（预备时间）刚好间隔一年'
     },
+    {
+      dependentFields: [
+        FIELD_IDS.liaison2ProbationaryDate,
+        FIELD_IDS.liaison2FormalDate,
+      ],
+    },
   ),
   createCustomRule(
     FIELD_IDS.activistArchiveDate,
@@ -715,8 +759,16 @@ const firstPhaseRules = [
 
       return isValid === true ? true : '积极分子党委备案日期应与确定积极分子日期一致'
     },
+    {
+      dependentFields: [FIELD_IDS.positiveSelectionDate, FIELD_IDS.activistArchiveDate],
+    },
   ),
-  ...ACTIVIST_QUARTERS.flatMap(createQuarterRules),
+  ...ACTIVIST_QUARTERS.flatMap((quarter) =>
+    createQuarterRules({
+      ...quarter,
+      anchorField: FIELD_IDS.positiveSelectionDate,
+    }),
+  ),
   ...BRANCH_OPINION_RULES.map(({ field, label, previousLabel, previousOpinionField }) =>
     createCustomRule(
       field,
@@ -736,6 +788,9 @@ const firstPhaseRules = [
 
         return isValid === true ? true : `${label}应晚于${previousLabel}`
       },
+      {
+        dependentFields: [field, previousOpinionField],
+      },
     ),
   ),
   createCustomRule(
@@ -751,7 +806,7 @@ const firstPhaseRules = [
       const latestOpinion = getLatestCandidatePreviousBranchOpinion(formData)
 
       if (!latestOpinion) {
-        return true
+        return '校验“发展对象群众座谈会日期”前请先填写积极分子阶段最后一个有效的党支部意见落款日期'
       }
 
       const latestOpinionValue = formData[latestOpinion.field]
@@ -763,6 +818,9 @@ const firstPhaseRules = [
       return isValid === true
         ? true
         : `发展对象群众座谈会日期应晚于${latestOpinion.label}`
+    },
+    {
+      dependentFields: [FIELD_IDS.candidateConsultationDate],
     },
   ),
   createSameOrAfterRule({
@@ -826,6 +884,12 @@ const firstPhaseRules = [
         ? true
         : '发展对象公示起始日期至结束日期应至少覆盖5个工作日（周一至周五）'
     },
+    {
+      dependentFields: [
+        FIELD_IDS.candidatePublicNoticeStartDate,
+        FIELD_IDS.candidatePublicNoticeEndDate,
+      ],
+    },
   ),
   createSameOrAfterRule({
     earlierField: FIELD_IDS.candidatePublicNoticeEndDate,
@@ -886,6 +950,12 @@ const firstPhaseRules = [
         ? true
         : `预备党员考察期截止日期应为 ${expectedEndDate}`
     },
+    {
+      dependentFields: [
+        FIELD_IDS.wishProbationaryApprovalDate,
+        FIELD_IDS.wishProbationaryEndDate,
+      ],
+    },
   ),
   createSameOrAfterRule({
     earlierField: FIELD_IDS.wishProbationaryApprovalDate,
@@ -896,6 +966,7 @@ const firstPhaseRules = [
   ...PROBATIONARY_QUARTERS.flatMap((quarter) =>
     createQuarterRules({
       ...quarter,
+      anchorField: FIELD_IDS.wishProbationaryApprovalDate,
       getQuarterWindowForFormData: getProbationaryQuarterWindow,
     }),
   ),
@@ -934,6 +1005,9 @@ const firstPhaseRules = [
         ? true
         : `转正申请书日期应严格落在 ${lowerBoundText} 与 ${deadlineDate} 之间`
     },
+    {
+      dependentFields: [FIELD_IDS.wishProbationaryEndDate, FIELD_IDS.formalApplicationDate],
+    },
   ),
   createStrictlyAfterRule({
     earlierField: FIELD_IDS.formalApplicationDate,
@@ -971,6 +1045,12 @@ const firstPhaseRules = [
       return businessDays >= 5
         ? true
         : '预备党员转正公示起始日期至结束日期应至少覆盖5个工作日（周一至周五）'
+    },
+    {
+      dependentFields: [
+        FIELD_IDS.formalPublicNoticeStartDate,
+        FIELD_IDS.formalPublicNoticeEndDate,
+      ],
     },
   ),
   createSameOrAfterRule({

@@ -7,6 +7,7 @@ import SchemaForm from './components/form/SchemaForm'
 import TemplatePreview from './components/preview/TemplatePreview'
 import TemplateToolbar from './components/preview/TemplateToolbar'
 import { flattenFormFields } from './data/formSchema'
+import { getTemplateById, getTemplateFieldIds } from './data/templates'
 import useFormStore from './store/useFormStore'
 import styles from './App.module.css'
 
@@ -65,7 +66,9 @@ function App() {
   const [isDragging, setIsDragging] = useState(false)
 
   const formSchema = useFormStore((state) => state.formSchema)
+  const activeTemplateId = useFormStore((state) => state.activeTemplateId)
   const validateForm = useFormStore((state) => state.validateForm)
+  const validateCurrentTemplate = useFormStore((state) => state.validateCurrentTemplate)
   const resetForm = useFormStore((state) => state.resetForm)
   const setSelectedFieldId = useFormStore((state) => state.setSelectedFieldId)
   const isSplitEnabled = viewportWidth > DESKTOP_LAYOUT_BREAKPOINT
@@ -270,7 +273,7 @@ function App() {
       )?.id
 
       if (firstErrorFieldId) {
-        setSelectedFieldId(firstErrorFieldId, 'system')
+        setSelectedFieldId(firstErrorFieldId, 'validation')
       }
 
       messageApi.error(
@@ -306,6 +309,55 @@ function App() {
     }
 
     messageApi.success('校验通过')
+  }
+
+  const handleValidateCurrentTemplate = () => {
+    const result = validateCurrentTemplate()
+    const template = getTemplateById(activeTemplateId)
+    const templateLabel = template?.displayLabel ?? '当前模板'
+
+    if (result.failedStage === 'validation') {
+      const firstErrorFieldId = getTemplateFieldIds(activeTemplateId).find(
+        (fieldId) => result.validationErrors[fieldId],
+      )
+
+      if (firstErrorFieldId) {
+        setSelectedFieldId(firstErrorFieldId, 'validation')
+      }
+
+      messageApi.error(
+        `请先修正当前模板中 ${Object.keys(result.validationErrors).length} 个格式不正确的字段`,
+      )
+      return
+    }
+
+    if (result.failedStage === 'rules') {
+      const firstRuleFieldId = result.ruleFailures[0]?.fieldId
+
+      if (firstRuleFieldId) {
+        setSelectedFieldId(firstRuleFieldId, 'system')
+      }
+
+      modalApi.error({
+        title: `${templateLabel}发现 ${result.ruleFailures.length} 条校验未通过`,
+        okText: '知道了',
+        width: 760,
+        content: (
+          <div style={{ maxHeight: 420, overflowY: 'auto', paddingRight: 8 }}>
+            <ol style={{ margin: 0, paddingInlineStart: 20 }}>
+              {result.ruleFailures.map((failure, index) => (
+                <li key={`${failure.fieldId}-${index}`} style={{ marginBottom: 8 }}>
+                  {failure.message}
+                </li>
+              ))}
+            </ol>
+          </div>
+        ),
+      })
+      return
+    }
+
+    messageApi.success(`${templateLabel}校验通过`)
   }
 
   const handleReset = () => {
@@ -351,7 +403,11 @@ function App() {
             />
             <h1 className={styles['app-toolbar__title']}>计算机学院党建材料教程</h1>
           </div>
-          <TemplateToolbar onReset={handleReset} onValidate={handleValidate} />
+          <TemplateToolbar
+            onReset={handleReset}
+            onValidate={handleValidate}
+            onValidateCurrentTemplate={handleValidateCurrentTemplate}
+          />
         </header>
 
         <main

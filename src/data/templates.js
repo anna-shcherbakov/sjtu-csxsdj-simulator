@@ -233,5 +233,11 @@ export const getTemplateReferenceStatuses = (fieldId) =>
     referenced: templateHasField(template.id, fieldId),
   }))
 
+export const getTemplateById = (templateId) =>
+  TEMPLATE_OPTIONS.find((template) => template.id === templateId) ?? null
+
+export const getTemplateFieldIds = (templateId) =>
+  getTemplateById(templateId)?.fieldIds ?? []
+
 export const DEFAULT_TEMPLATE_ID = TEMPLATE_OPTIONS[0].id
 export const DEFAULT_ZOOM = 100

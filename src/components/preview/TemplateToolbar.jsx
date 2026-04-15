@@ -22,7 +22,7 @@ const helpContent = (
   </div>
 )
 
-function TemplateToolbar({ onValidate, onReset }) {
+function TemplateToolbar({ onValidate, onValidateCurrentTemplate, onReset }) {
   const activeTemplateId = useFormStore((state) => state.activeTemplateId)
   const zoom = useFormStore((state) => state.zoom)
   const setActiveTemplateId = useFormStore((state) => state.setActiveTemplateId)
@@ -79,6 +79,13 @@ function TemplateToolbar({ onValidate, onReset }) {
           </div>
         </div>
 
+        <Button
+          className={styles['template-toolbar__action--secondary']}
+          icon={<CheckCircleOutlined />}
+          onClick={onValidateCurrentTemplate}
+        >
+          校验当前模板
+        </Button>
         <Button
           className={styles['template-toolbar__action--primary']}
           icon={<CheckCircleOutlined />}

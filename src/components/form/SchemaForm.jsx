@@ -35,6 +35,8 @@ function SchemaForm() {
   const [searchText, setSearchText] = useState('')
   const deferredSearchText = useDeferredValue(searchText)
   const pendingScrollFieldIdRef = useRef(null)
+  const shouldScrollToSelectedField =
+    selectedFieldSource === 'preview' || selectedFieldSource === 'validation'
 
   const allFields = flattenFormFields(formSchema)
   const allGroupKeys = Object.keys(formSchema.fields)
@@ -62,7 +64,7 @@ function SchemaForm() {
   )
 
   useEffect(() => {
-    if (!selectedField || selectedFieldSource !== 'preview') {
+    if (!selectedField || !shouldScrollToSelectedField) {
       pendingScrollFieldIdRef.current = null
       return undefined
     }
@@ -85,12 +87,12 @@ function SchemaForm() {
     return () => {
       cancelled = true
     }
-  }, [selectedField, selectedFieldSource, selectedFieldToken])
+  }, [selectedField, selectedFieldToken, shouldScrollToSelectedField])
 
   useEffect(() => {
     if (
       !selectedField ||
-      selectedFieldSource !== 'preview' ||
+      !shouldScrollToSelectedField ||
       pendingScrollFieldIdRef.current !== selectedField.id
     ) {
       return undefined
@@ -117,7 +119,7 @@ function SchemaForm() {
     return () => {
       window.cancelAnimationFrame(frameId)
     }
-  }, [activeKeys, selectedField, selectedFieldSource, selectedFieldToken])
+  }, [activeKeys, selectedField, selectedFieldToken, shouldScrollToSelectedField])
 
   const handleSearchChange = (value) => {
     setSearchText(value)
