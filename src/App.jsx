@@ -3,9 +3,11 @@ import clsx from 'clsx'
 import { ExclamationCircleFilled } from '@ant-design/icons'
 import { ConfigProvider, Modal, message } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
+import ImportLibraryDrawer from './components/import/ImportLibraryDrawer'
 import SchemaForm from './components/form/SchemaForm'
 import TemplatePreview from './components/preview/TemplatePreview'
 import TemplateToolbar from './components/preview/TemplateToolbar'
+import { parseExportWorkbook } from './data/excelImportParser'
 import { flattenFormFields } from './data/formSchema'
 import { getTemplateById, getTemplateFieldIds } from './data/templates'
 import useFormStore from './store/useFormStore'
@@ -16,7 +18,7 @@ const DEFAULT_SIDEBAR_WIDTH = 420
 const MIN_SIDEBAR_WIDTH = 320
 const MAX_SIDEBAR_WIDTH = 720
 const MIN_PREVIEW_WIDTH = 520
-const DESKTOP_LAYOUT_BREAKPOINT = 1280
+const MIN_SUPPORTED_VIEWPORT_WIDTH = 1180
 
 const readStoredSidebarWidth = () => {
   if (typeof window === 'undefined') {
@@ -64,14 +66,21 @@ function App() {
     typeof window === 'undefined' ? 0 : window.innerWidth,
   )
   const [isDragging, setIsDragging] = useState(false)
+  const [isImportDrawerOpen, setIsImportDrawerOpen] = useState(false)
 
   const formSchema = useFormStore((state) => state.formSchema)
   const activeTemplateId = useFormStore((state) => state.activeTemplateId)
+  const importedProfiles = useFormStore((state) => state.importedProfiles)
+  const appendImportedProfiles = useFormStore((state) => state.appendImportedProfiles)
+  const removeImportedProfile = useFormStore((state) => state.removeImportedProfile)
+  const clearImportedProfiles = useFormStore((state) => state.clearImportedProfiles)
+  const loadImportedProfileToForm = useFormStore((state) => state.loadImportedProfileToForm)
   const validateForm = useFormStore((state) => state.validateForm)
   const validateCurrentTemplate = useFormStore((state) => state.validateCurrentTemplate)
   const resetForm = useFormStore((state) => state.resetForm)
   const setSelectedFieldId = useFormStore((state) => state.setSelectedFieldId)
-  const isSplitEnabled = viewportWidth > DESKTOP_LAYOUT_BREAKPOINT
+  const isViewportTooNarrow = viewportWidth < MIN_SUPPORTED_VIEWPORT_WIDTH
+  const isSplitEnabled = viewportWidth >= MIN_SUPPORTED_VIEWPORT_WIDTH
   const maxSidebarWidth = contentWidth
     ? Math.max(
         MIN_SIDEBAR_WIDTH,
@@ -369,6 +378,82 @@ function App() {
     })
   }
 
+  const renderDiagnosticsContent = (diagnostics) => (
+    <div style={{ maxHeight: 360, overflowY: 'auto', paddingRight: 8 }}>
+      <ol style={{ margin: 0, paddingInlineStart: 20 }}>
+        {diagnostics.map((item, index) => (
+          <li key={`${item.type}-${index}`} style={{ marginBottom: 8 }}>
+            {item.message}
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+
+  const handleOpenImportDrawer = () => {
+    setIsImportDrawerOpen(true)
+  }
+
+  const handleCloseImportDrawer = () => {
+    setIsImportDrawerOpen(false)
+  }
+
+  const handleUploadImportFile = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer()
+      const result = parseExportWorkbook(arrayBuffer)
+
+      if (!result.records.length) {
+        modalApi.error({
+          title: '导入失败',
+          okText: '知道了',
+          width: 760,
+          content:
+            result.diagnostics.length > 0
+              ? renderDiagnosticsContent(result.diagnostics)
+              : '未从该 Excel 中识别出任何可导入人员。',
+        })
+        return false
+      }
+
+      appendImportedProfiles(result.records)
+
+      if (result.diagnostics.length > 0) {
+        messageApi.warning(
+          `已导入 ${result.records.length} 人，另有 ${result.diagnostics.length} 条结构提示`,
+        )
+      } else {
+        messageApi.success(`已导入 ${result.records.length} 人`)
+      }
+    } catch {
+      messageApi.error('Excel 解析失败，请确认文件格式正确')
+    }
+
+    return false
+  }
+
+  const handleRemoveImportedProfile = (profileId) => {
+    removeImportedProfile(profileId)
+    messageApi.success('已从导入数据中删除该人员')
+  }
+
+  const handleClearImportedProfiles = () => {
+    clearImportedProfiles()
+    messageApi.success('已清空导入数据')
+  }
+
+  const handleLoadImportedProfile = (profileId) => {
+    const profile = loadImportedProfileToForm(profileId)
+
+    if (!profile) {
+      messageApi.error('未找到要载入的人员数据')
+      return
+    }
+
+    setIsImportDrawerOpen(false)
+    messageApi.success(`已载入 ${profile.meta.name} 的信息`)
+  }
+
   return (
     <ConfigProvider
       locale={zhCN}
@@ -392,6 +477,26 @@ function App() {
     >
       {contextHolder}
       {modalContextHolder}
+      <ImportLibraryDrawer
+        importedProfiles={importedProfiles}
+        onClear={handleClearImportedProfiles}
+        onClose={handleCloseImportDrawer}
+        onLoad={handleLoadImportedProfile}
+        onRemove={handleRemoveImportedProfile}
+        onUpload={handleUploadImportFile}
+        open={isImportDrawerOpen}
+      />
+      <Modal
+        centered
+        closable={false}
+        footer={null}
+        keyboard={false}
+        maskClosable={false}
+        open={isViewportTooNarrow}
+        title="请在宽屏下使用"
+      >
+        当前窗口宽度不足，请放大浏览器窗口后继续使用。
+      </Modal>
       <div className={styles['app-shell']}>
         <header className={styles['app-toolbar']}>
           <div className={styles['app-toolbar__brand']}>
@@ -404,6 +509,7 @@ function App() {
             <h1 className={styles['app-toolbar__title']}>计算机学院党建材料教程</h1>
           </div>
           <TemplateToolbar
+            onOpenImportDrawer={handleOpenImportDrawer}
             onReset={handleReset}
             onValidate={handleValidate}
             onValidateCurrentTemplate={handleValidateCurrentTemplate}

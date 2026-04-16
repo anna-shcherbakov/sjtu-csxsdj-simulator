@@ -1,4 +1,4 @@
-import { compareDateValues, ensureParsedDateValue, isAtLeastAgeOnDate } from './dateRuleUtils'
+import { compareDateValues, ensureParsedDateValue, isAtLeastAgeOnDate } from './dateRuleUtils.js'
 
 const CHINESE_DATE_VALIDATOR = 'validateChineseDateInput'
 const FIELD_IDS = {
@@ -130,6 +130,87 @@ const BRANCH_OPINION_RULES = [
   },
 ]
 
+const ACTIVIST_OPTIONAL_STAGE_GROUPS = [
+  {
+    thresholdMonths: 3,
+    completionField: 'season1_5.联系人意见（五）落款日期',
+    completionLabel: '联系人意见（五）落款日期',
+    fieldIds: [
+      'season1_5.积极分子期间思想汇报电子版（五）',
+      'season1_5.电子版（五）落款日期',
+      'season1_5.电子版（五）所在季度起始月份',
+      'season1_5.电子版（五）所在季度截止月份',
+      'season1_5.联系人意见（五）',
+      'season1_5.联系人意见（五）落款日期',
+    ],
+  },
+  {
+    thresholdMonths: 6,
+    completionField: 'season1_6.联系人意见（六）落款日期',
+    completionLabel: '联系人意见（六）落款日期',
+    fieldIds: [
+      'season1_6.积极分子期间思想汇报电子版（六）',
+      'season1_6.电子版（六）落款日期',
+      'season1_6.电子版（六）所在季度起始月份',
+      'season1_6.电子版（六）所在季度截止月份',
+      'season1_6.联系人意见（六）',
+      'season1_6.联系人意见（六）落款日期',
+    ],
+  },
+  {
+    thresholdMonths: 6,
+    completionField: 'season1_annual_and_half.党支部意见（一年半）落款日期',
+    completionLabel: '党支部意见（一年半）落款日期',
+    fieldIds: [
+      'season1_annual_and_half.党支部意见（一年半）',
+      'season1_annual_and_half.党支书姓名',
+      'season1_annual_and_half.党支部意见（一年半）落款日期',
+    ],
+  },
+  {
+    thresholdMonths: 9,
+    completionField: 'season1_7.联系人意见（七）落款日期',
+    completionLabel: '联系人意见（七）落款日期',
+    fieldIds: [
+      'season1_7.积极分子期间思想汇报电子版（七）',
+      'season1_7.电子版（七）落款日期',
+      'season1_7.电子版（七）所在季度起始月份',
+      'season1_7.电子版（七）所在季度截止月份',
+      'season1_7.联系人意见（七）',
+      'season1_7.联系人意见（七）落款日期',
+    ],
+  },
+  {
+    thresholdMonths: 12,
+    completionField: 'season1_8.联系人意见（八）落款日期',
+    completionLabel: '联系人意见（八）落款日期',
+    fieldIds: [
+      'season1_8.积极分子期间思想汇报电子版（八）',
+      'season1_8.电子版（八）落款日期',
+      'season1_8.电子版（八）所在季度起始月份',
+      'season1_8.电子版（八）所在季度截止月份',
+      'season1_8.联系人意见（八）',
+      'season1_8.联系人意见（八）落款日期',
+    ],
+  },
+  {
+    thresholdMonths: 12,
+    completionField: 'season1_two_year.党支部意见（两年）落款日期',
+    completionLabel: '党支部意见（两年）落款日期',
+    fieldIds: [
+      'season1_two_year.党支部意见（两年）',
+      'season1_two_year.党支书姓名',
+      'season1_two_year.党支部意见（两年）落款日期',
+    ],
+  },
+]
+
+const ACTIVIST_OPTIONAL_GROUP_BY_FIELD = new Map(
+  ACTIVIST_OPTIONAL_STAGE_GROUPS.flatMap((group) =>
+    group.fieldIds.map((fieldId) => [fieldId, group]),
+  ),
+)
+
 const CANDIDATE_PREVIOUS_BRANCH_OPINION_OPTIONS = [
   {
     field: 'season1_two_year.党支部意见（两年）落款日期',
@@ -234,6 +315,14 @@ const addCalendarDaysToDayParts = (parts, days) => {
 const addCalendarYearsToDayParts = (parts, years) =>
   addCalendarMonthsToDayParts(parts, years * 12)
 
+const addCalendarMonthsToMonthParts = (parts, months) => {
+  const monthIndex = parts.year * 12 + (parts.month - 1) + months
+  const year = Math.floor(monthIndex / 12)
+  const month = ((monthIndex % 12) + 12) % 12 + 1
+
+  return { year, month }
+}
+
 const toChineseDateText = ({ year, month, day }) => `${year}年${month}月${day}日`
 const toChineseYearMonthText = ({ year, month }) => `${year}年${month}月`
 
@@ -266,9 +355,45 @@ const countBusinessDaysInclusive = (startValue, endValue, validatorName) => {
   return count
 }
 
-const getLatestCandidatePreviousBranchOpinion = (formData) =>
-  CANDIDATE_PREVIOUS_BRANCH_OPINION_OPTIONS.find(({ field }) => !isEmptyValue(formData[field])) ??
-  null
+const isActivistFollowUpStageRequired = (formData, thresholdMonths) => {
+  const annualOpinionDate = formData['season1_annual.党支部意见（一年）落款日期']
+  const candidateConsultationDate = formData[FIELD_IDS.candidateConsultationDate]
+
+  if (isEmptyValue(annualOpinionDate) || isEmptyValue(candidateConsultationDate)) {
+    return false
+  }
+
+  const annualOpinionParts = resolveDayParts(annualOpinionDate, CHINESE_DATE_VALIDATOR)
+
+  if (!annualOpinionParts) {
+    return false
+  }
+
+  const thresholdDateText = toChineseDateText(
+    addCalendarMonthsToDayParts(annualOpinionParts, thresholdMonths),
+  )
+  const comparison = compareDateValues(candidateConsultationDate, thresholdDateText, {
+    leftValidatorName: CHINESE_DATE_VALIDATOR,
+    rightFormat: 'chineseDate',
+  })
+
+  return comparison === 1
+}
+
+const getLatestCandidatePreviousBranchOpinion = (formData) => {
+  const activeFollowUpStage = [...ACTIVIST_OPTIONAL_STAGE_GROUPS]
+    .sort((left, right) => right.thresholdMonths - left.thresholdMonths)
+    .find((group) => isActivistFollowUpStageRequired(formData, group.thresholdMonths))
+
+  if (activeFollowUpStage) {
+    return {
+      field: activeFollowUpStage.completionField,
+      label: activeFollowUpStage.completionLabel,
+    }
+  }
+
+  return CANDIDATE_PREVIOUS_BRANCH_OPINION_OPTIONS[2] ?? null
+}
 
 const isSameDate = (left, right, options = {}) =>
   compareDateValues(left, right, options) === 0
@@ -313,16 +438,30 @@ const getQuarterWindow = (formData, quarterIndex) => {
 }
 
 const getQuarterWindowFromAnchor = (anchorParts, quarterIndex) => {
-  const startOffset = 1 + (quarterIndex - 1) * 3
-  const endOffset = 4 + (quarterIndex - 1) * 3
-  const start = addCalendarMonthsToDayParts(anchorParts, startOffset)
-  const end = addCalendarMonthsToDayParts(anchorParts, endOffset)
+  const anchorMonthParts = {
+    year: anchorParts.year,
+    month: anchorParts.month,
+  }
+  const startMonthOffset = 1 + (quarterIndex - 1) * 3
+  const endMonthOffset = startMonthOffset + 2
+  const startMonth = addCalendarMonthsToMonthParts(anchorMonthParts, startMonthOffset)
+  const endMonth = addCalendarMonthsToMonthParts(anchorMonthParts, endMonthOffset)
+  const startDate = {
+    ...startMonth,
+    day: 1,
+  }
+  const endDate = {
+    ...endMonth,
+    day: getDaysInMonth(endMonth.year, endMonth.month),
+  }
+  const endExclusiveDate = addCalendarDaysToDayParts(endDate, 1)
 
   return {
-    startDateText: toChineseDateText(start),
-    endDateText: toChineseDateText(end),
-    startMonthText: toChineseYearMonthText(start),
-    endMonthText: toChineseYearMonthText(end),
+    startDateText: toChineseDateText(startDate),
+    endDateText: toChineseDateText(endDate),
+    endExclusiveDateText: toChineseDateText(endExclusiveDate),
+    startMonthText: toChineseYearMonthText(startMonth),
+    endMonthText: toChineseYearMonthText(endMonth),
   }
 }
 
@@ -337,6 +476,16 @@ const getProbationaryQuarterWindow = (formData, quarterIndex) => {
   }
 
   return getQuarterWindowFromAnchor(probationaryDateParts, quarterIndex)
+}
+
+export const isConditionallyOptionalFieldInactive = (fieldId, formData) => {
+  const group = ACTIVIST_OPTIONAL_GROUP_BY_FIELD.get(fieldId)
+
+  if (!group) {
+    return false
+  }
+
+  return !isActivistFollowUpStageRequired(formData, group.thresholdMonths)
 }
 
 const createCustomRule = (field, message, validate, options = {}) => ({
@@ -412,6 +561,7 @@ const createQuarterRules = ({
   index,
   label,
   opinionDateField,
+  optionalGroupFields = [],
   anchorField,
   startMonthField,
 }) => [
@@ -437,6 +587,7 @@ const createQuarterRules = ({
     },
     {
       dependentFields: [startMonthField, anchorField],
+      skipIfAllFieldsEmpty: optionalGroupFields,
     },
   ),
   createCustomRule(
@@ -461,6 +612,7 @@ const createQuarterRules = ({
     },
     {
       dependentFields: [endMonthField, anchorField],
+      skipIfAllFieldsEmpty: optionalGroupFields,
     },
   ),
   createCustomRule(
@@ -482,7 +634,7 @@ const createQuarterRules = ({
       const isValid = isWithinQuarterRange(
         value,
         quarterWindow.startDateText,
-        quarterWindow.endDateText,
+        quarterWindow.endExclusiveDateText,
         CHINESE_DATE_VALIDATOR,
       )
 
@@ -496,6 +648,7 @@ const createQuarterRules = ({
     },
     {
       dependentFields: [electronicDateField, anchorField],
+      skipIfAllFieldsEmpty: optionalGroupFields,
     },
   ),
   createCustomRule(
@@ -518,7 +671,7 @@ const createQuarterRules = ({
       const isInQuarter = isWithinQuarterRange(
         opinionDate,
         quarterWindow.startDateText,
-        quarterWindow.endDateText,
+        quarterWindow.endExclusiveDateText,
         CHINESE_DATE_VALIDATOR,
       )
 
@@ -545,6 +698,7 @@ const createQuarterRules = ({
     },
     {
       dependentFields: [opinionDateField, electronicDateField, anchorField],
+      skipIfAllFieldsEmpty: optionalGroupFields,
     },
   ),
 ]
@@ -767,6 +921,7 @@ const firstPhaseRules = [
     createQuarterRules({
       ...quarter,
       anchorField: FIELD_IDS.positiveSelectionDate,
+      optionalGroupFields: ACTIVIST_OPTIONAL_GROUP_BY_FIELD.get(quarter.electronicDateField) ?? [],
     }),
   ),
   ...BRANCH_OPINION_RULES.map(({ field, label, previousLabel, previousOpinionField }) =>
@@ -790,12 +945,13 @@ const firstPhaseRules = [
       },
       {
         dependentFields: [field, previousOpinionField],
+        skipIfAllFieldsEmpty: ACTIVIST_OPTIONAL_GROUP_BY_FIELD.get(field) ?? [],
       },
     ),
   ),
   createCustomRule(
     FIELD_IDS.candidateConsultationDate,
-    '发展对象群众座谈会日期应晚于积极分子培养过程最后一个半年对应的党支部意见落款日期',
+    '发展对象群众座谈会日期应晚于积极分子培养过程当前应完成的最后一次考察落款日期',
     (formData) => {
       const candidateConsultationDate = formData[FIELD_IDS.candidateConsultationDate]
 
@@ -820,7 +976,26 @@ const firstPhaseRules = [
         : `发展对象群众座谈会日期应晚于${latestOpinion.label}`
     },
     {
-      dependentFields: [FIELD_IDS.candidateConsultationDate],
+      getDependentFields: (formData) => {
+        const latestOpinion = getLatestCandidatePreviousBranchOpinion(formData)
+        return [
+          FIELD_IDS.candidateConsultationDate,
+          ...(latestOpinion ? [latestOpinion.field] : []),
+        ]
+      },
+      getMissingDependencyMessage: (missingFieldIds, schema, rule, formData) => {
+        const latestOpinion = getLatestCandidatePreviousBranchOpinion(formData)
+
+        if (missingFieldIds.includes(FIELD_IDS.candidateConsultationDate)) {
+          return '校验“发展对象群众座谈会日期”前请先填写：发展对象群众座谈会日期'
+        }
+
+        if (latestOpinion) {
+          return `校验“发展对象群众座谈会日期”前请先填写：${latestOpinion.label}`
+        }
+
+        return '校验“发展对象群众座谈会日期”前请先填写：积极分子培养过程当前应完成的最后一次考察落款日期'
+      },
     },
   ),
   createSameOrAfterRule({
@@ -1074,3 +1249,6 @@ const firstPhaseRules = [
 ]
 
 export const FIRST_PHASE_RULES = firstPhaseRules
+export const OPTIONAL_TEMPLATE_FIELD_GROUPS = ACTIVIST_OPTIONAL_STAGE_GROUPS.map(
+  (group) => group.fieldIds,
+)

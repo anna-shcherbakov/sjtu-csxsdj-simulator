@@ -1,5 +1,11 @@
-import { validateChineseDateInput, validateChineseYearMonthInput, validateEmailInput, validateIdCardNumberInput, validatePhoneNumberInput } from './fieldValidators'
-import { FIRST_PHASE_RULES } from './formSchemaRules'
+import {
+    validateChineseDateInput,
+    validateChineseYearMonthInput,
+    validateEmailInput,
+    validateIdCardNumberInput,
+    validatePhoneNumberInput
+} from './fieldValidators.js'
+import { FIRST_PHASE_RULES } from './formSchemaRules.js'
 
 export const formSchema = {
     fields: {

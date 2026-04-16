@@ -1,7 +1,7 @@
 import {
   parseChineseDateInput,
   parseChineseYearMonthInput,
-} from './dateRuleUtils'
+} from './dateRuleUtils.js'
 
 const isEmptyValue = (value) =>
   value === undefined ||

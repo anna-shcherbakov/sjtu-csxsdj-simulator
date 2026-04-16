@@ -6,6 +6,7 @@ import {
   flattenFormFields,
   formSchema,
 } from '../data/formSchema'
+import { isConditionallyOptionalFieldInactive } from '../data/formSchemaRules.js'
 import {
   DEFAULT_TEMPLATE_ID,
   DEFAULT_ZOOM,
@@ -68,6 +69,10 @@ const isMissingFieldValue = (field, value) => {
   return isEmptyValue(value)
 }
 
+const isRuleOptionalGroupEmpty = (rule, formData) => {
+  return isConditionallyOptionalFieldInactive(rule.field, formData)
+}
+
 const getRuleDependentFieldIds = (rule, formData, schema) => {
   if (typeof rule.getDependentFields === 'function') {
     return rule.getDependentFields(formData, rule, schema) ?? []
@@ -76,9 +81,9 @@ const getRuleDependentFieldIds = (rule, formData, schema) => {
   return Array.isArray(rule.dependentFields) ? rule.dependentFields : []
 }
 
-const getRuleDependencyErrorMessage = (schema, rule, missingFieldIds) => {
+const getRuleDependencyErrorMessage = (schema, rule, missingFieldIds, formData) => {
   if (typeof rule.getMissingDependencyMessage === 'function') {
-    return rule.getMissingDependencyMessage(missingFieldIds, schema, rule)
+    return rule.getMissingDependencyMessage(missingFieldIds, schema, rule, formData)
   }
 
   const targetLabel = findFormFieldById(schema, rule.field)?.label ?? rule.field
@@ -87,6 +92,19 @@ const getRuleDependencyErrorMessage = (schema, rule, missingFieldIds) => {
     .join('、')
 
   return `校验“${targetLabel}”前请先填写：${missingLabels}`
+}
+
+const getSuppressedMissingFieldIds = (
+  schema,
+  formData,
+  fieldIds,
+) => {
+  const targetFieldIds = new Set(fieldIds)
+  return new Set(
+    [...targetFieldIds].filter((fieldId) =>
+      isConditionallyOptionalFieldInactive(fieldId, formData),
+    ),
+  )
 }
 
 const validateRules = (schema, formData) => {
@@ -107,6 +125,10 @@ const validateRules = (schema, formData) => {
   }
 
   schema.rules.forEach((rule) => {
+    if (isRuleOptionalGroupEmpty(rule, formData)) {
+      return
+    }
+
     if (rule.type === 'required') {
       const value = formData[rule.field]
       const isEmpty = isEmptyValue(value)
@@ -130,7 +152,7 @@ const validateRules = (schema, formData) => {
     if (missingFieldIds.length > 0) {
       assignRuleError(
         rule.field,
-        getRuleDependencyErrorMessage(schema, rule, missingFieldIds),
+        getRuleDependencyErrorMessage(schema, rule, missingFieldIds, formData),
       )
       return
     }
@@ -165,6 +187,10 @@ const getDefaultValidationErrorMessage = (field) =>
   field.errorMessage || `${field.label}格式不正确`
 
 const validateField = (field, formData) => {
+  if (isConditionallyOptionalFieldInactive(field.id, formData)) {
+    return null
+  }
+
   if (typeof field.validation !== 'function') {
     return null
   }
@@ -213,8 +239,18 @@ const validateFieldsByFieldIds = (schema, formData, fieldIds) =>
     return errors
   }, {})
 
-const getMissingFieldFailures = (schema, formData, fieldIds) =>
-  [...new Set(fieldIds)].reduce((failures, fieldId) => {
+const getMissingFieldFailures = (schema, formData, fieldIds) => {
+  const suppressedFieldIds = getSuppressedMissingFieldIds(
+    schema,
+    formData,
+    fieldIds,
+  )
+
+  return [...new Set(fieldIds)].reduce((failures, fieldId) => {
+    if (suppressedFieldIds.has(fieldId)) {
+      return failures
+    }
+
     const field = findFormFieldById(schema, fieldId)
 
     if (!field || !isMissingFieldValue(field, formData[field.id])) {
@@ -232,6 +268,7 @@ const getMissingFieldFailures = (schema, formData, fieldIds) =>
       },
     ]
   }, [])
+}
 
 const dedupeRuleFailures = (failures) => {
   const seen = new Set()
@@ -279,6 +316,10 @@ const validateRulesForFieldIds = (schema, formData, fieldIds) => {
       return
     }
 
+    if (isRuleOptionalGroupEmpty(rule, formData)) {
+      return
+    }
+
     if (rule.type === 'required') {
       const value = formData[rule.field]
       const isEmpty = isEmptyValue(value)
@@ -301,7 +342,7 @@ const validateRulesForFieldIds = (schema, formData, fieldIds) => {
     if (missingFieldIds.length > 0) {
       assignRuleError(
         rule.field,
-        getRuleDependencyErrorMessage(schema, rule, missingFieldIds),
+        getRuleDependencyErrorMessage(schema, rule, missingFieldIds, formData),
       )
       return
     }
@@ -332,11 +373,46 @@ const validateRulesForFieldIds = (schema, formData, fieldIds) => {
   return failures
 }
 
+const cloneFormData = (formData) =>
+  Object.fromEntries(
+    Object.entries(formData).map(([fieldId, value]) => [
+      fieldId,
+      Array.isArray(value)
+        ? value.map((row) => ({ ...row }))
+        : value && typeof value === 'object'
+          ? { ...value }
+          : value,
+    ]),
+  )
+
+const createImportedProfileId = () =>
+  globalThis.crypto?.randomUUID?.() ??
+  `imported-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+
+const getImportedProfileBranchName = (formData) =>
+  formData['basic.当前管理支部名'] ||
+  formData['talk.入党谈话时所属党支部'] ||
+  formData['candidate.确定发展对象时支部名称'] ||
+  formData['probationary.预备党员时所在党支部'] ||
+  ''
+
+const buildImportedProfileMeta = (formData, source = {}) => ({
+  name: formData['basic.姓名'] || '未命名人员',
+  studentId: formData['basic.学号'] || '',
+  status: formData['basic.当前发展状态'] || '',
+  branchName: getImportedProfileBranchName(formData),
+  sheetName: source.sheetName ?? '',
+  rowStart: source.rowStart ?? null,
+  rowEnd: source.rowEnd ?? null,
+  blockIndex: source.blockIndex ?? null,
+})
+
 const initialFormData = buildInitialFormData(formSchema)
 
 const useFormStore = create((set, get) => ({
   formSchema,
   formData: initialFormData,
+  importedProfiles: [],
   activeTemplateId: DEFAULT_TEMPLATE_ID,
   selectedFieldId: null,
   selectedFieldSource: null,
@@ -446,6 +522,51 @@ const useFormStore = create((set, get) => ({
     })),
 
   setZoom: (zoom) => set({ zoom }),
+
+  appendImportedProfiles: (records) =>
+    set((state) => ({
+      importedProfiles: [
+        ...state.importedProfiles,
+        ...records.map((record) => {
+          const nextFormData = cloneFormData(record.formData ?? initialFormData)
+
+          return {
+            id: createImportedProfileId(),
+            formData: nextFormData,
+            source: { ...(record.source ?? {}) },
+            meta: buildImportedProfileMeta(nextFormData, record.source),
+          }
+        }),
+      ],
+    })),
+
+  removeImportedProfile: (profileId) =>
+    set((state) => ({
+      importedProfiles: state.importedProfiles.filter(
+        (profile) => profile.id !== profileId,
+      ),
+    })),
+
+  clearImportedProfiles: () => set({ importedProfiles: [] }),
+
+  loadImportedProfileToForm: (profileId) => {
+    const profile = get().importedProfiles.find((item) => item.id === profileId)
+
+    if (!profile) {
+      return null
+    }
+
+    const nextFormData = cloneFormData(profile.formData)
+
+    set({
+      formData: nextFormData,
+      validationErrors: {},
+      selectedFieldId: null,
+      selectedFieldSource: null,
+    })
+
+    return profile
+  },
 
   validateForm: () => {
     const fieldErrors = validateFields(get().formSchema, get().formData)

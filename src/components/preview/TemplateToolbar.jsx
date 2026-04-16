@@ -1,5 +1,6 @@
 import {
   CheckCircleOutlined,
+  ImportOutlined,
   QuestionCircleOutlined,
   ReloadOutlined,
 } from '@ant-design/icons'
@@ -22,7 +23,12 @@ const helpContent = (
   </div>
 )
 
-function TemplateToolbar({ onValidate, onValidateCurrentTemplate, onReset }) {
+function TemplateToolbar({
+  onOpenImportDrawer,
+  onValidate,
+  onValidateCurrentTemplate,
+  onReset,
+}) {
   const activeTemplateId = useFormStore((state) => state.activeTemplateId)
   const zoom = useFormStore((state) => state.zoom)
   const setActiveTemplateId = useFormStore((state) => state.setActiveTemplateId)
@@ -79,6 +85,13 @@ function TemplateToolbar({ onValidate, onValidateCurrentTemplate, onReset }) {
           </div>
         </div>
 
+        <Button
+          className={styles['template-toolbar__action--secondary']}
+          icon={<ImportOutlined />}
+          onClick={onOpenImportDrawer}
+        >
+          导入数据
+        </Button>
         <Button
           className={styles['template-toolbar__action--secondary']}
           icon={<CheckCircleOutlined />}

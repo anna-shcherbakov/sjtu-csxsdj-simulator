@@ -58,6 +58,7 @@
 }
 
 .app-shell {
+  min-width: 1180px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -184,27 +185,6 @@
 
 .sidebar-panel {
   padding: 0;
-}
-
-@media (max-width: 1280px) {
-  .app-content {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .app-sidebar {
-    min-width: 0;
-    flex-basis: auto;
-    width: auto;
-  }
-
-  .app-splitter {
-    display: none;
-  }
-
-  .app-preview {
-    min-height: 72vh;
-  }
 }
 
 @media (max-width: 900px) {
