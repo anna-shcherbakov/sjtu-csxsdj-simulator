@@ -895,28 +895,12 @@ const firstPhaseRules = [
       ],
     },
   ),
-  createCustomRule(
-    FIELD_IDS.activistArchiveDate,
-    '积极分子党委备案日期应与确定积极分子日期一致',
-    (formData) => {
-      const positiveSelectionDate = formData[FIELD_IDS.positiveSelectionDate]
-      const activistArchiveDate = formData[FIELD_IDS.activistArchiveDate]
-
-      if (isEmptyValue(positiveSelectionDate) || isEmptyValue(activistArchiveDate)) {
-        return true
-      }
-
-      const isValid = isSameDate(activistArchiveDate, positiveSelectionDate, {
-        leftValidatorName: CHINESE_DATE_VALIDATOR,
-        rightValidatorName: CHINESE_DATE_VALIDATOR,
-      })
-
-      return isValid === true ? true : '积极分子党委备案日期应与确定积极分子日期一致'
-    },
-    {
-      dependentFields: [FIELD_IDS.positiveSelectionDate, FIELD_IDS.activistArchiveDate],
-    },
-  ),
+  createSameOrAfterRule({
+    earlierField: FIELD_IDS.positiveSelectionDate,
+    earlierLabel: '确定积极分子日期',
+    laterField: FIELD_IDS.activistArchiveDate,
+    laterLabel: '积极分子党委备案日期',
+  }),
   ...ACTIVIST_QUARTERS.flatMap((quarter) =>
     createQuarterRules({
       ...quarter,

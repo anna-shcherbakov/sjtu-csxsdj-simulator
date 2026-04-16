@@ -25,3 +25,4 @@ dist-ssr
 
 template-prompts
 tmp-images
+tmp*
