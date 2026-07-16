@@ -504,7 +504,7 @@ function App() {
               alt=""
               aria-hidden="true"
               className={styles['app-toolbar__logo']}
-              src="/scs-logo.svg"
+              src={`${import.meta.env.BASE_URL}scs-logo.svg`}
             />
             <h1 className={styles['app-toolbar__title']}>计算机学院党建材料教程</h1>
           </div>

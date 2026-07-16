@@ -271,7 +271,7 @@ function CoverPage({ formData, zoom }) {
   return (
     <TemplatePage contentClassName={c('wish-cover-page')} zoom={zoom}>
       <div className={c('wish-cover-page__emblem-wrap')}>
-        <img alt="" aria-hidden="true" className={c('wish-cover-page__emblem')} src="/danghui.jpg" />
+        <img alt="" aria-hidden="true" className={c('wish-cover-page__emblem')} src={`${import.meta.env.BASE_URL}danghui.jpg`} />
       </div>
 
       <div className={c('wish-cover-page__title-small')}>中 国 共 产 党</div>
