@@ -1,10 +1,3 @@
-.training-field-anchor--inline-mini {
-  display: inline-block;
-  min-width: 34px;
-  text-align: center;
-  border-bottom: 1px solid #000;
-}
-
 .training-cover-page--probationary {
   align-items: stretch;
 }
@@ -139,10 +132,6 @@
 
 .training-basic-table__col--probationary-6 {
   width: 22.6%;
-}
-
-.training-quarter-footer-cell {
-  padding: 10px 16px !important;
 }
 
 .training-page-title--compact {

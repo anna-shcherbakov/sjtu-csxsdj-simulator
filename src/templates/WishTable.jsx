@@ -1,6 +1,9 @@
 import clsx from 'clsx'
 import A4Page from '../components/shared/A4Page'
-import FieldAnchorText from '../components/shared/FieldAnchorText'
+import {
+  TemplateField,
+  VerticalText as BaseVerticalText,
+} from './shared/TemplatePrimitives'
 import styles from './WishTable.module.css'
 
 const c = (...names) => clsx(names.map((name) => styles[name]).filter(Boolean))
@@ -81,8 +84,9 @@ function TemplatePage({ children, contentClassName = '', zoom }) {
 
 function InlineField({ className, fieldId, value }) {
   return (
-    <FieldAnchorText
-      className={clsx(c('wish-field-anchor'), className)}
+    <TemplateField
+      baseClassName={c('wish-field-anchor')}
+      className={className}
       emptyClassName={c('wish-field-anchor--empty')}
       fieldId={fieldId}
       selectedClassName={c('wish-field-anchor--selected')}
@@ -129,11 +133,10 @@ function BlankLine({ className }) {
 
 function VerticalText({ className, text }) {
   return (
-    <div className={clsx(c('wish-vertical-text'), className)}>
-      {Array.from(text).map((char, index) => (
-        <span key={`${char}-${index}`}>{char === ' ' ? '\u00A0' : char}</span>
-      ))}
-    </div>
+    <BaseVerticalText
+      className={clsx(c('wish-vertical-text'), className)}
+      text={text}
+    />
   )
 }
 
@@ -157,47 +160,58 @@ function ListRowField({ className, fieldId, value }) {
   )
 }
 
-function BoundDateRow({ dateFieldId, dateValue }) {
+function DateRow({ dateFieldId = null, dateValue = '' }) {
   return (
     <div className={c('wish-box-signoff__date-row')}>
       <span>日期：</span>
-      <LineField
-        className={c('wish-date-line')}
-        fieldId={dateFieldId}
-        value={dateValue}
-      />
+      {dateFieldId ? (
+        <LineField
+          className={c('wish-date-line')}
+          fieldId={dateFieldId}
+          value={dateValue}
+        />
+      ) : (
+        <BlankLine className={c('wish-date-line')} />
+      )}
     </div>
   )
 }
 
-function BlankDateRow() {
-  return (
-    <div className={c('wish-box-signoff__date-row')}>
-      <span>日期：</span>
-      <BlankLine className={c('wish-date-line')} />
-    </div>
-  )
-}
-
-function BranchFooter({ dateFieldId = null, dateValue = '' }) {
+function OrganizationFooter({
+  dateFieldId = null,
+  dateValue = '',
+  organizationLabel,
+  signatureLabel,
+  stamp = false,
+}) {
   return (
     <div className={c('wish-box-signoff')}>
       <div className={c('wish-box-signoff__row', 'wish-box-signoff__row--spread')}>
         <div className={c('wish-box-signoff__item')}>
-          <span>支部名称：</span>
-          <BlankLine className={c('wish-name-line')} />
+          <span>{organizationLabel}</span>
+          {stamp ? (
+            <span className={c('wish-stamp-gap')} />
+          ) : (
+            <BlankLine className={c('wish-name-line')} />
+          )}
         </div>
         <div className={c('wish-box-signoff__item')}>
-          <span>支部书记签名或盖章</span>
+          <span>{signatureLabel}</span>
           <BlankLine className={c('wish-sign-line')} />
         </div>
       </div>
-      {dateFieldId ? (
-        <BoundDateRow dateFieldId={dateFieldId} dateValue={dateValue} />
-      ) : (
-        <BlankDateRow />
-      )}
+      <DateRow dateFieldId={dateFieldId} dateValue={dateValue} />
     </div>
+  )
+}
+
+function BranchFooter(props) {
+  return (
+    <OrganizationFooter
+      {...props}
+      organizationLabel="支部名称："
+      signatureLabel="支部书记签名或盖章"
+    />
   )
 }
 
@@ -225,45 +239,24 @@ function ConversationFooter() {
 
 function GeneralBranchFooter({ dateFieldId = null, dateValue = '' }) {
   return (
-    <div className={c('wish-box-signoff')}>
-      <div className={c('wish-box-signoff__row', 'wish-box-signoff__row--spread')}>
-        <div className={c('wish-box-signoff__item')}>
-          <span>总支部名称</span>
-          <BlankLine className={c('wish-name-line')} />
-        </div>
-        <div className={c('wish-box-signoff__item')}>
-          <span>总支部书记签名或盖章</span>
-          <BlankLine className={c('wish-sign-line')} />
-        </div>
-      </div>
-      {dateFieldId ? (
-        <BoundDateRow dateFieldId={dateFieldId} dateValue={dateValue} />
-      ) : (
-        <BlankDateRow />
-      )}
-    </div>
+    <OrganizationFooter
+      dateFieldId={dateFieldId}
+      dateValue={dateValue}
+      organizationLabel="总支部名称"
+      signatureLabel="总支部书记签名或盖章"
+    />
   )
 }
 
 function CommitteeFooter({ dateFieldId = null, dateValue = '' }) {
   return (
-    <div className={c('wish-box-signoff')}>
-      <div className={c('wish-box-signoff__row', 'wish-box-signoff__row--spread')}>
-        <div className={c('wish-box-signoff__item')}>
-          <span>基层党委盖章</span>
-          <span className={c('wish-stamp-gap')} />
-        </div>
-        <div className={c('wish-box-signoff__item')}>
-          <span>党委书记签名或盖章</span>
-          <BlankLine className={c('wish-sign-line')} />
-        </div>
-      </div>
-      {dateFieldId ? (
-        <BoundDateRow dateFieldId={dateFieldId} dateValue={dateValue} />
-      ) : (
-        <BlankDateRow />
-      )}
-    </div>
+    <OrganizationFooter
+      dateFieldId={dateFieldId}
+      dateValue={dateValue}
+      organizationLabel="基层党委盖章"
+      signatureLabel="党委书记签名或盖章"
+      stamp
+    />
   )
 }
 
@@ -845,7 +838,7 @@ function IntroducerOpinionsPage({ formData, zoom }) {
                       <span>签名或盖章</span>
                       <BlankLine className={c('wish-sign-line', 'wish-sign-line--medium')} />
                     </div>
-                    <BoundDateRow
+                    <DateRow
                       dateFieldId={FIELD_IDS.introducerDate}
                       dateValue={getValue(formData, FIELD_IDS.introducerDate)}
                     />
@@ -872,7 +865,7 @@ function IntroducerOpinionsPage({ formData, zoom }) {
                       <span>签名或盖章</span>
                       <BlankLine className={c('wish-sign-line', 'wish-sign-line--medium')} />
                     </div>
-                    <BoundDateRow
+                    <DateRow
                       dateFieldId={FIELD_IDS.introducerDate}
                       dateValue={getValue(formData, FIELD_IDS.introducerDate)}
                     />
@@ -887,139 +880,105 @@ function IntroducerOpinionsPage({ formData, zoom }) {
   )
 }
 
+const APPROVAL_FOOTERS = {
+  branch: BranchFooter,
+  committee: CommitteeFooter,
+  conversation: ConversationFooter,
+  generalBranch: GeneralBranchFooter,
+}
+
+function ApprovalPage({ className, formData, sections, zoom }) {
+  return (
+    <TemplatePage
+      contentClassName={clsx(c('wish-approval-page'), className)}
+      zoom={zoom}
+    >
+      {sections.map((section) => {
+        const Footer = APPROVAL_FOOTERS[section.footer]
+        const footer = Footer ? (
+          <Footer
+            dateFieldId={section.dateFieldId}
+            dateValue={getValue(formData, section.dateFieldId)}
+          />
+        ) : null
+
+        return (
+          <SectionBox
+            bodyClassName={c(`wish-section-box__body--${section.bodyVariant}`)}
+            footer={footer}
+            key={section.title}
+            title={section.title}
+          >
+            {section.fieldId ? (
+              <BlockField
+                className={c('wish-field-anchor--essay', 'wish-field-anchor--approval-body')}
+                fieldId={section.fieldId}
+                value={getValue(formData, section.fieldId)}
+              />
+            ) : (
+              <div className={c('wish-empty-body')} />
+            )}
+          </SectionBox>
+        )
+      })}
+    </TemplatePage>
+  )
+}
+
 function BranchResolutionAndUpperOrgPage({ formData, zoom }) {
   return (
-    <TemplatePage contentClassName={c('wish-approval-page')} zoom={zoom}>
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--medium')}
-        footer={
-          <BranchFooter
-            dateFieldId={FIELD_IDS.branchResolutionDate}
-            dateValue={getValue(formData, FIELD_IDS.branchResolutionDate)}
-          />
-        }
-        title="支部大会通过接收申请人为预备党员的决议"
-      >
-        <BlockField
-          className={c('wish-field-anchor--essay', 'wish-field-anchor--approval-body')}
-          fieldId={FIELD_IDS.branchResolution}
-          value={getValue(formData, FIELD_IDS.branchResolution)}
-        />
-      </SectionBox>
-
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--medium')}
-        footer={<ConversationFooter />}
-        title="上级党组织指派专人进行谈话情况和对申请入党的意见"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-    </TemplatePage>
+    <ApprovalPage
+      formData={formData}
+      sections={[
+        { bodyVariant: 'medium', dateFieldId: FIELD_IDS.branchResolutionDate, fieldId: FIELD_IDS.branchResolution, footer: 'branch', title: '支部大会通过接收申请人为预备党员的决议' },
+        { bodyVariant: 'medium', footer: 'conversation', title: '上级党组织指派专人进行谈话情况和对申请入党的意见' },
+      ]}
+      zoom={zoom}
+    />
   )
 }
 
 function GeneralBranchAndCommitteeApprovalPage({ formData, zoom }) {
   return (
-    <TemplatePage contentClassName={c('wish-approval-page')} zoom={zoom}>
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--medium')}
-        footer={<GeneralBranchFooter />}
-        title="总支部审查（审批）意见"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--medium')}
-        footer={
-          <CommitteeFooter
-            dateFieldId={FIELD_IDS.committeeApprovalDate}
-            dateValue={getValue(formData, FIELD_IDS.committeeApprovalDate)}
-          />
-        }
-        title="基层党委审批意见"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-    </TemplatePage>
+    <ApprovalPage
+      formData={formData}
+      sections={[
+        { bodyVariant: 'medium', footer: 'generalBranch', title: '总支部审查（审批）意见' },
+        { bodyVariant: 'medium', dateFieldId: FIELD_IDS.committeeApprovalDate, footer: 'committee', title: '基层党委审批意见' },
+      ]}
+      zoom={zoom}
+    />
   )
 }
 
 function FormalConversionDecisionPage({ formData, zoom }) {
   return (
-    <TemplatePage contentClassName={c('wish-approval-page', 'wish-approval-page--triple')} zoom={zoom}>
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--compact')}
-        footer={
-          <BranchFooter
-            dateFieldId={FIELD_IDS.formalResolutionDate}
-            dateValue={getValue(formData, FIELD_IDS.formalResolutionDate)}
-          />
-        }
-        title="支部大会通过预备党员能否转为正式党员的决议"
-      >
-        <BlockField
-          className={c('wish-field-anchor--essay', 'wish-field-anchor--approval-body')}
-          fieldId={FIELD_IDS.formalResolution}
-          value={getValue(formData, FIELD_IDS.formalResolution)}
-        />
-      </SectionBox>
-
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--compact')}
-        footer={<GeneralBranchFooter />}
-        title="总支部审查（审批）意见"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--compact')}
-        footer={
-          <CommitteeFooter
-            dateFieldId={FIELD_IDS.formalCommitteeDate}
-            dateValue={getValue(formData, FIELD_IDS.formalCommitteeDate)}
-          />
-        }
-        title="基层党委审批意见"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-    </TemplatePage>
+    <ApprovalPage
+      className={c('wish-approval-page--triple')}
+      formData={formData}
+      sections={[
+        { bodyVariant: 'compact', dateFieldId: FIELD_IDS.formalResolutionDate, fieldId: FIELD_IDS.formalResolution, footer: 'branch', title: '支部大会通过预备党员能否转为正式党员的决议' },
+        { bodyVariant: 'compact', footer: 'generalBranch', title: '总支部审查（审批）意见' },
+        { bodyVariant: 'compact', dateFieldId: FIELD_IDS.formalCommitteeDate, footer: 'committee', title: '基层党委审批意见' },
+      ]}
+      zoom={zoom}
+    />
   )
 }
 
 function ExtendedConversionDecisionPage({ zoom }) {
   return (
-    <TemplatePage contentClassName={c('wish-approval-page', 'wish-approval-page--remark')} zoom={zoom}>
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--compact')}
-        footer={<BranchFooter />}
-        title="支部大会通过延长预备期的党员能否转为正式党员的决议"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--compact')}
-        footer={<GeneralBranchFooter />}
-        title="总支部审查（审批）意见"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-
-      <SectionBox
-        bodyClassName={c('wish-section-box__body--compact')}
-        footer={<CommitteeFooter />}
-        title="基层党委审批意见"
-      >
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-
-      <SectionBox bodyClassName={c('wish-section-box__body--remark')} title="备注">
-        <div className={c('wish-empty-body')} />
-      </SectionBox>
-    </TemplatePage>
+    <ApprovalPage
+      className={c('wish-approval-page--remark')}
+      formData={{}}
+      sections={[
+        { bodyVariant: 'compact', footer: 'branch', title: '支部大会通过延长预备期的党员能否转为正式党员的决议' },
+        { bodyVariant: 'compact', footer: 'generalBranch', title: '总支部审查（审批）意见' },
+        { bodyVariant: 'compact', footer: 'committee', title: '基层党委审批意见' },
+        { bodyVariant: 'remark', title: '备注' },
+      ]}
+      zoom={zoom}
+    />
   )
 }
 

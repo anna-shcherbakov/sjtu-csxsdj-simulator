@@ -1,6 +1,13 @@
 import clsx from 'clsx'
 import A4Page from '../components/shared/A4Page'
-import FieldAnchorText from '../components/shared/FieldAnchorText'
+import {
+  TrainingCoverPage,
+  TrainingField,
+  TrainingInstructionsPage,
+  TrainingLineField,
+  TrainingVerticalFramePage,
+} from './shared/TrainingTemplatePrimitives'
+import { VerticalText } from './shared/TemplatePrimitives'
 import styles from './ProbationaryTable.module.css'
 import sharedStyles from './templates.module.css'
 
@@ -88,23 +95,12 @@ const FIELD_IDS = {
 
 const getFieldValue = (formData, fieldId) => formData[fieldId]
 
-function VerticalText({ className, text }) {
-  return (
-    <div className={className}>
-      {Array.from(text).map((char, index) => (
-        <span key={`${char}-${index}`}>{char === ' ' ? '\u00A0' : char}</span>
-      ))}
-    </div>
-  )
-}
-
 function InlineField({ fieldId, value, className }) {
   return (
-    <FieldAnchorText
-      className={clsx(c('training-field-anchor'), className)}
-      emptyClassName={c('training-field-anchor--empty')}
+    <TrainingField
+      c={c}
+      className={className}
       fieldId={fieldId}
-      selectedClassName={c('training-field-anchor--selected')}
       value={value}
     />
   )
@@ -112,13 +108,12 @@ function InlineField({ fieldId, value, className }) {
 
 function LineField({ fieldId, value, className }) {
   return (
-    <span className={className}>
-      <InlineField
-        className={c('training-field-anchor--line')}
-        fieldId={fieldId}
-        value={value}
-      />
-    </span>
+    <TrainingLineField
+      c={c}
+      className={className}
+      fieldId={fieldId}
+      value={value}
+    />
   )
 }
 
@@ -129,6 +124,45 @@ function TableCellField({ fieldId, value, className }) {
       fieldId={fieldId}
       value={value}
     />
+  )
+}
+
+function OpinionSignoff({
+  dateFieldId,
+  dateValue,
+  signatureLabel,
+  stackSignature,
+}) {
+  if (stackSignature) {
+    return (
+      <div className={c('training-opinion-signoff', 'training-opinion-signoff--probationary-stacked')}>
+        <div className={c('training-opinion-signoff__row', 'training-opinion-signoff__row--probationary-stacked')}>
+          <span>{signatureLabel}</span>
+          <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
+        </div>
+        <div className={c('training-opinion-signoff__row', 'training-opinion-signoff__row--probationary-stacked')}>
+          <span>日期：</span>
+          <LineField
+            className={c('training-signature-line', 'training-signature-line--date')}
+            fieldId={dateFieldId}
+            value={dateValue}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={c('training-inline-signature', 'training-inline-signature--right')}>
+      <span>{signatureLabel}</span>
+      <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
+      <span>日期：</span>
+      <LineField
+        className={c('training-signature-line', 'training-signature-line--date')}
+        fieldId={dateFieldId}
+        value={dateValue}
+      />
+    </div>
   )
 }
 
@@ -197,30 +231,6 @@ function QuarterSection({
   )
 }
 
-function VerticalFramePage({ children, title, zoom }) {
-  return (
-    <A4Page
-      className={c('training-template-page')}
-      contentClassName={c('training-opinion-page')}
-      zoom={zoom}
-    >
-      <table className={c('training-large-opinion-table')}>
-        <tbody>
-          <tr>
-            <td className={c('training-vertical-cell')}>
-              <VerticalText
-                className={c('training-vertical-text', 'training-vertical-text--long')}
-                text={title}
-              />
-            </td>
-            <td className={c('training-opinion-cell')}>{children}</td>
-          </tr>
-        </tbody>
-      </table>
-    </A4Page>
-  )
-}
-
 function OpinionPage({
   dateFieldId,
   dateValue,
@@ -232,7 +242,7 @@ function OpinionPage({
   zoom,
 }) {
   return (
-    <VerticalFramePage title={title} zoom={zoom}>
+    <TrainingVerticalFramePage c={c} title={title} zoom={zoom}>
       <div className={c('training-opinion-layout')}>
         <InlineField
           className={c('training-field-anchor--block', 'training-field-anchor--opinion')}
@@ -240,35 +250,14 @@ function OpinionPage({
           value={opinionValue}
         />
 
-        {stackSignature ? (
-          <div className={c('training-opinion-signoff', 'training-opinion-signoff--probationary-stacked')}>
-            <div className={c('training-opinion-signoff__row', 'training-opinion-signoff__row--probationary-stacked')}>
-              <span>{signatureLabel}</span>
-              <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
-            </div>
-            <div className={c('training-opinion-signoff__row', 'training-opinion-signoff__row--probationary-stacked')}>
-              <span>日期：</span>
-              <LineField
-                className={c('training-signature-line', 'training-signature-line--date')}
-                fieldId={dateFieldId}
-                value={dateValue}
-              />
-            </div>
-          </div>
-        ) : (
-          <div className={c('training-inline-signature', 'training-inline-signature--right')}>
-            <span>{signatureLabel}</span>
-            <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
-            <span>日期：</span>
-            <LineField
-              className={c('training-signature-line', 'training-signature-line--date')}
-              fieldId={dateFieldId}
-              value={dateValue}
-            />
-          </div>
-        )}
+        <OpinionSignoff
+          dateFieldId={dateFieldId}
+          dateValue={dateValue}
+          signatureLabel={signatureLabel}
+          stackSignature={stackSignature}
+        />
       </div>
-    </VerticalFramePage>
+    </TrainingVerticalFramePage>
   )
 }
 
@@ -281,39 +270,18 @@ function BlankOpinionPage({
   zoom,
 }) {
   return (
-    <VerticalFramePage title={title} zoom={zoom}>
+    <TrainingVerticalFramePage c={c} title={title} zoom={zoom}>
       <div className={c('training-opinion-layout')}>
         <div className={c('training-empty-body')} />
 
-        {stackSignature ? (
-          <div className={c('training-opinion-signoff', 'training-opinion-signoff--probationary-stacked')}>
-            <div className={c('training-opinion-signoff__row', 'training-opinion-signoff__row--probationary-stacked')}>
-              <span>{signatureLabel}</span>
-              <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
-            </div>
-            <div className={c('training-opinion-signoff__row', 'training-opinion-signoff__row--probationary-stacked')}>
-              <span>日期：</span>
-              <LineField
-                className={c('training-signature-line', 'training-signature-line--date')}
-                fieldId={dateFieldId}
-                value={dateValue}
-              />
-            </div>
-          </div>
-        ) : (
-          <div className={c('training-inline-signature', 'training-inline-signature--right')}>
-            <span>{signatureLabel}</span>
-            <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
-            <span>日期：</span>
-            <LineField
-              className={c('training-signature-line', 'training-signature-line--date')}
-              fieldId={dateFieldId}
-              value={dateValue}
-            />
-          </div>
-        )}
+        <OpinionSignoff
+          dateFieldId={dateFieldId}
+          dateValue={dateValue}
+          signatureLabel={signatureLabel}
+          stackSignature={stackSignature}
+        />
       </div>
-    </VerticalFramePage>
+    </TrainingVerticalFramePage>
   )
 }
 
@@ -347,30 +315,21 @@ function EducationRecordPage({
             <td className={c('training-quarter-record-table__body')}>
               <div className={c('training-quarter-record-page', 'training-quarter-record-page--probationary')}>
                 <div className={c('training-quarter-sections', 'training-quarter-sections--probationary')}>
-                  <QuarterSection
-                    dateFieldId={quarterA.dateFieldId}
-                    dateValue={formData[quarterA.dateFieldId]}
-                    endMonthFieldId={quarterA.endMonthFieldId}
-                    endMonthValue={formData[quarterA.endMonthFieldId]}
-                    opinionFieldId={quarterA.opinionFieldId}
-                    opinionValue={formData[quarterA.opinionFieldId]}
-                    quarterLabel={quarterA.label}
-                    reportLabel={quarterA.reportLabel}
-                    startMonthFieldId={quarterA.startMonthFieldId}
-                    startMonthValue={formData[quarterA.startMonthFieldId]}
-                  />
-                  <QuarterSection
-                    dateFieldId={quarterB.dateFieldId}
-                    dateValue={formData[quarterB.dateFieldId]}
-                    endMonthFieldId={quarterB.endMonthFieldId}
-                    endMonthValue={formData[quarterB.endMonthFieldId]}
-                    opinionFieldId={quarterB.opinionFieldId}
-                    opinionValue={formData[quarterB.opinionFieldId]}
-                    quarterLabel={quarterB.label}
-                    reportLabel={quarterB.reportLabel}
-                    startMonthFieldId={quarterB.startMonthFieldId}
-                    startMonthValue={formData[quarterB.startMonthFieldId]}
-                  />
+                  {[quarterA, quarterB].map((quarter) => (
+                    <QuarterSection
+                      dateFieldId={quarter.dateFieldId}
+                      dateValue={formData[quarter.dateFieldId]}
+                      endMonthFieldId={quarter.endMonthFieldId}
+                      endMonthValue={formData[quarter.endMonthFieldId]}
+                      key={quarter.label}
+                      opinionFieldId={quarter.opinionFieldId}
+                      opinionValue={formData[quarter.opinionFieldId]}
+                      quarterLabel={quarter.label}
+                      reportLabel={quarter.reportLabel}
+                      startMonthFieldId={quarter.startMonthFieldId}
+                      startMonthValue={formData[quarter.startMonthFieldId]}
+                    />
+                  ))}
                 </div>
               </div>
             </td>
@@ -383,105 +342,43 @@ function EducationRecordPage({
 
 function Page1Cover({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('training-template-page')}
-      contentClassName={c('training-cover-page', 'training-cover-page--probationary')}
+    <TrainingCoverPage
+      c={c}
+      fields={[
+        {
+          label: '姓 名',
+          fieldId: FIELD_IDS.personName,
+          value: getFieldValue(formData, FIELD_IDS.personName),
+        },
+        {
+          label: '所 在 单 位',
+          fieldId: FIELD_IDS.organizationOrClass,
+          value: getFieldValue(formData, FIELD_IDS.organizationOrClass),
+        },
+        { label: '党委(党工委)', compact: true, fixedText: '计算机学院党委' },
+        {
+          label: '所 在 党 支 部',
+          fieldId: FIELD_IDS.probationaryPartyBranch,
+          value: getFieldValue(formData, FIELD_IDS.probationaryPartyBranch),
+        },
+      ]}
+      imprint="中共上海交通大学委员会组织部制"
+      title="预备党员培养考察记录册"
+      variant="probationary"
       zoom={zoom}
-    >
-      <h2 className={c('training-cover-page__title', 'training-cover-page__title--probationary')}>
-        预备党员培养考察记录册
-      </h2>
-
-      <div className={c('training-cover-page__info', 'training-cover-page__info--probationary')}>
-        <div className={c('training-cover-line', 'training-cover-line--probationary')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--probationary')}>
-            姓 名
-          </div>
-          <LineField
-            className={c('training-cover-line__content', 'training-cover-line__content--probationary')}
-            fieldId={FIELD_IDS.personName}
-            value={getFieldValue(formData, FIELD_IDS.personName)}
-          />
-        </div>
-        <div className={c('training-cover-line', 'training-cover-line--probationary')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--probationary')}>
-            所 在 单 位
-          </div>
-          <LineField
-            className={c('training-cover-line__content', 'training-cover-line__content--probationary')}
-            fieldId={FIELD_IDS.organizationOrClass}
-            value={getFieldValue(formData, FIELD_IDS.organizationOrClass)}
-          />
-        </div>
-        <div className={c('training-cover-line', 'training-cover-line--probationary')}>
-          <div
-            className={c(
-              'training-cover-line__label',
-              'training-cover-line__label--probationary',
-              'training-cover-line__label--compact',
-            )}
-          >
-            党委(党工委)
-          </div>
-          <div
-            className={c(
-              'training-cover-line__content',
-              'training-cover-line__content--probationary',
-              'training-cover-line__content--fixed',
-            )}
-          >
-            计算机学院党委
-          </div>
-        </div>
-        <div className={c('training-cover-line', 'training-cover-line--probationary')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--probationary')}>
-            所 在 党 支 部
-          </div>
-          <LineField
-            className={c('training-cover-line__content', 'training-cover-line__content--probationary')}
-            fieldId={FIELD_IDS.probationaryPartyBranch}
-            value={getFieldValue(formData, FIELD_IDS.probationaryPartyBranch)}
-          />
-        </div>
-      </div>
-
-      <div className={c('training-cover-page__imprint', 'training-cover-page__imprint--probationary')}>
-        中共上海交通大学委员会组织部制
-      </div>
-    </A4Page>
+    />
   )
 }
 
 function Page2Instructions({ zoom }) {
   return (
-    <A4Page
-      className={c('training-template-page')}
-      contentClassName={c('training-instructions-page', 'training-instructions-page--probationary')}
+    <TrainingInstructionsPage
+      c={c}
+      footer="☆注： 是否审核《入党培养考察记录册》或同类材料 ☑是□否"
+      sections={INSTRUCTION_SECTIONS}
+      variant="probationary"
       zoom={zoom}
-    >
-      <h2 className={c('training-page-title', 'training-page-title--probationary-instructions')}>
-        填写说明
-      </h2>
-
-      <div className={c('training-instruction-sections', 'training-instruction-sections--probationary')}>
-        {INSTRUCTION_SECTIONS.map((section) => (
-          <div key={section.marker} className={c('training-instruction-section', 'training-instruction-section--probationary')}>
-            <div className={c('training-instruction-section__marker', 'training-instruction-section__marker--probationary')}>
-              {section.marker}
-            </div>
-            <div className={c('training-instruction-section__content', 'training-instruction-section__content--probationary')}>
-              {section.lines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className={c('training-instructions-footer', 'training-instructions-footer--probationary')}>
-        ☆注： 是否审核《入党培养考察记录册》或同类材料 ☑是□否
-      </div>
-    </A4Page>
+    />
   )
 }
 
@@ -853,7 +750,7 @@ function Page7PublicConsultation({ formData, zoom }) {
 
 function Page8PublicNotice({ formData, zoom }) {
   return (
-    <VerticalFramePage title="预备党员转正前公示情况" zoom={zoom}>
+    <TrainingVerticalFramePage c={c} title="预备党员转正前公示情况" zoom={zoom}>
       <div className={c('training-opinion-layout', 'training-opinion-layout--notice', 'training-opinion-layout--probationary-notice')}>
         <p
           className={c(
@@ -890,7 +787,7 @@ function Page8PublicNotice({ formData, zoom }) {
         </p>
         <div className={c('training-public-notice-spacer', 'training-public-notice-spacer--probationary')} />
       </div>
-    </VerticalFramePage>
+    </TrainingVerticalFramePage>
   )
 }
 

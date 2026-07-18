@@ -1,6 +1,10 @@
 import clsx from 'clsx'
 import A4Page from '../components/shared/A4Page'
-import FieldAnchorText from '../components/shared/FieldAnchorText'
+import {
+  TemplateField,
+  TemplateLineField,
+  VerticalText,
+} from './shared/TemplatePrimitives'
 import styles from './TalkTable.module.css'
 
 const c = (...names) => clsx(names.map((name) => styles[name]).filter(Boolean))
@@ -21,30 +25,27 @@ const NEGATIVE_REVIEW_ITEM = '有否摘抄他人入党申请书或网上范例�
 
 function PartyField({ className, ...props }) {
   return (
-    <FieldAnchorText
+    <TemplateField
       {...props}
-      className={clsx(c('party-field-anchor'), className)}
+      baseClassName={c('party-field-anchor')}
+      className={className}
       emptyClassName={c('party-field-anchor--empty')}
       selectedClassName={c('party-field-anchor--selected')}
     />
   )
 }
 
-function VerticalText({ text, className }) {
-  return (
-    <div className={className}>
-      {Array.from(text).map((char, index) => (
-        <span key={`${char}-${index}`}>{char === ' ' ? '\u00A0' : char}</span>
-      ))}
-    </div>
-  )
-}
-
 function LineField({ fieldId, value, className }) {
   return (
-    <span className={className}>
-      <PartyField className={c('party-field-anchor--line')} fieldId={fieldId} value={value} />
-    </span>
+    <TemplateLineField
+      anchorClassName={c('party-field-anchor--line')}
+      baseClassName={c('party-field-anchor')}
+      className={className}
+      emptyClassName={c('party-field-anchor--empty')}
+      fieldId={fieldId}
+      selectedClassName={c('party-field-anchor--selected')}
+      value={value}
+    />
   )
 }
 

@@ -1,6 +1,13 @@
 import clsx from 'clsx'
 import A4Page from '../components/shared/A4Page'
-import FieldAnchorText from '../components/shared/FieldAnchorText'
+import {
+  TrainingCoverPage,
+  TrainingField,
+  TrainingInstructionsPage,
+  TrainingLineField,
+  TrainingVerticalFramePage,
+} from './shared/TrainingTemplatePrimitives'
+import { VerticalText } from './shared/TemplatePrimitives'
 import styles from './ActivistTable.module.css'
 import sharedStyles from './templates.module.css'
 
@@ -37,23 +44,12 @@ const ACTIVIST_INSTRUCTION_SECTIONS = [
   },
 ]
 
-function VerticalText({ className, text }) {
-  return (
-    <div className={className}>
-      {Array.from(text).map((char, index) => (
-        <span key={`${char}-${index}`}>{char === ' ' ? '\u00A0' : char}</span>
-      ))}
-    </div>
-  )
-}
-
 function InlineField({ fieldId, value, className }) {
   return (
-    <FieldAnchorText
-      className={clsx(c('training-field-anchor'), className)}
-      emptyClassName={c('training-field-anchor--empty')}
+    <TrainingField
+      c={c}
+      className={className}
       fieldId={fieldId}
-      selectedClassName={c('training-field-anchor--selected')}
       value={value}
     />
   )
@@ -61,13 +57,12 @@ function InlineField({ fieldId, value, className }) {
 
 function LineField({ fieldId, value, className }) {
   return (
-    <span className={className}>
-      <InlineField
-        className={c('training-field-anchor--line')}
-        fieldId={fieldId}
-        value={value}
-      />
-    </span>
+    <TrainingLineField
+      c={c}
+      className={className}
+      fieldId={fieldId}
+      value={value}
+    />
   )
 }
 
@@ -154,149 +149,77 @@ function BranchOpinionPage({
   zoom,
 }) {
   return (
-    <A4Page
-      className={c('training-template-page')}
-      contentClassName={c('training-opinion-page')}
+    <TrainingVerticalFramePage
+      c={c}
+      columnWidth={NARROW_VERTICAL_COL_WIDTH}
+      title={title}
       zoom={zoom}
     >
-      <table className={c('training-large-opinion-table')}>
-        <colgroup>
-          <col style={{ width: NARROW_VERTICAL_COL_WIDTH }} />
-          <col />
-        </colgroup>
-        <tbody>
-          <tr>
-            <td className={c('training-vertical-cell')}>
-              <VerticalText
-                className={c('training-vertical-text', 'training-vertical-text--long')}
-                text={title}
-              />
-            </td>
-            <td className={c('training-opinion-cell')}>
-              <div className={c('training-opinion-layout')}>
-                <InlineField
-                  className={c('training-field-anchor--block', 'training-field-anchor--opinion')}
-                  fieldId={opinionFieldId}
-                  value={opinionValue}
-                />
+      <div className={c('training-opinion-layout')}>
+        <InlineField
+          className={c('training-field-anchor--block', 'training-field-anchor--opinion')}
+          fieldId={opinionFieldId}
+          value={opinionValue}
+        />
 
-                <div className={c('training-inline-signature', 'training-inline-signature--right')}>
-                  <span>党支部书记签字：</span>
-                  {showSignatureLine ? (
-                    signatureFieldId ? (
-                      <LineField
-                        className={c('training-signature-line', 'training-signature-line--medium')}
-                        fieldId={signatureFieldId}
-                        value={signatureValue}
-                      />
-                    ) : (
-                      <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
-                    )
-                  ) : null}
-                  {stackDateBelow ? <span className={c('training-inline-signature__break')} /> : null}
-                  <span>日期：</span>
-                  <LineField
-                    className={c('training-signature-line', 'training-signature-line--date')}
-                    fieldId={dateFieldId}
-                    value={dateValue}
-                  />
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </A4Page>
+        <div className={c('training-inline-signature', 'training-inline-signature--right')}>
+          <span>党支部书记签字：</span>
+          {showSignatureLine ? (
+            signatureFieldId ? (
+              <LineField
+                className={c('training-signature-line', 'training-signature-line--medium')}
+                fieldId={signatureFieldId}
+                value={signatureValue}
+              />
+            ) : (
+              <span className={c('training-signature-placeholder', 'training-signature-placeholder--wide')} />
+            )
+          ) : null}
+          {stackDateBelow ? <span className={c('training-inline-signature__break')} /> : null}
+          <span>日期：</span>
+          <LineField
+            className={c('training-signature-line', 'training-signature-line--date')}
+            fieldId={dateFieldId}
+            value={dateValue}
+          />
+        </div>
+      </div>
+    </TrainingVerticalFramePage>
   )
 }
 
 function Page1Cover({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('training-template-page')}
-      contentClassName={c('training-cover-page', 'training-cover-page--activist')}
+    <TrainingCoverPage
+      c={c}
+      fields={[
+        { label: '姓 名', fieldId: 'basic.姓名', value: formData['basic.姓名'] },
+        { label: '所 在 单 位', fieldId: 'basic.班级', value: formData['basic.班级'] },
+        { label: '党委(党工委)', compact: true, fixedText: '计算机学院党委' },
+        {
+          label: '所 在 党 支 部',
+          fieldId: 'activist.确定积极分子时所在党支部',
+          value: formData['activist.确定积极分子时所在党支部'],
+        },
+      ]}
+      imprint="中共上海交通大学委员会组织部制"
+      title="入党培养考察记录册"
+      variant="activist"
       zoom={zoom}
-    >
-      <h2 className={c('training-cover-page__title', 'training-cover-page__title--activist')}>
-        入党培养考察记录册
-      </h2>
-
-      <div className={c('training-cover-page__info', 'training-cover-page__info--activist')}>
-        <div className={c('training-cover-line', 'training-cover-line--activist')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--activist')}>
-            姓 名
-          </div>
-          <LineField
-            className={c('training-cover-line__content', 'training-cover-line__content--activist')}
-            fieldId="basic.姓名"
-            value={formData['basic.姓名']}
-          />
-        </div>
-        <div className={c('training-cover-line', 'training-cover-line--activist')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--activist')}>
-            所 在 单 位
-          </div>
-          <LineField
-            className={c('training-cover-line__content', 'training-cover-line__content--activist')}
-            fieldId="basic.班级"
-            value={formData['basic.班级']}
-          />
-        </div>
-        <div className={c('training-cover-line', 'training-cover-line--activist')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--activist', 'training-cover-line__label--compact')}>
-            党委(党工委)
-          </div>
-          <div className={c('training-cover-line__content', 'training-cover-line__content--fixed', 'training-cover-line__content--activist')}>
-            计算机学院党委
-          </div>
-        </div>
-        <div className={c('training-cover-line', 'training-cover-line--activist')}>
-          <div className={c('training-cover-line__label', 'training-cover-line__label--activist')}>
-            所 在 党 支 部
-          </div>
-          <LineField
-            className={c('training-cover-line__content', 'training-cover-line__content--activist')}
-            fieldId="activist.确定积极分子时所在党支部"
-            value={formData['activist.确定积极分子时所在党支部']}
-          />
-        </div>
-      </div>
-
-      <div className={c('training-cover-page__imprint', 'training-cover-page__imprint--activist')}>
-        中共上海交通大学委员会组织部制
-      </div>
-    </A4Page>
+    />
   )
 }
 
 function Page2Instructions({ zoom }) {
   return (
-    <A4Page
-      className={c('training-template-page')}
-      contentClassName={c('training-instructions-page', 'training-instructions-page--activist')}
+    <TrainingInstructionsPage
+      c={c}
+      footer="☆注：是否审核《入党申请人登记暨谈话表》或同类材料 □是□否"
+      sections={ACTIVIST_INSTRUCTION_SECTIONS}
+      titleStyle={{ fontSize: 32 }}
+      variant="activist"
       zoom={zoom}
-    >
-      <h2 style={{fontSize: 32}} className={c('training-page-title', 'training-page-title--activist-instructions')}>
-        填写说明
-      </h2>
-
-      <div className={c('training-instruction-sections', 'training-instruction-sections--activist')}>
-        {ACTIVIST_INSTRUCTION_SECTIONS.map((section) => (
-          <div key={section.marker} className={c('training-instruction-section')}>
-            <div className={c('training-instruction-section__marker')}>{section.marker}</div>
-            <div className={c('training-instruction-section__content')}>
-              {section.lines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className={c('training-instructions-footer', 'training-instructions-footer--activist')}>
-        ☆注：是否审核《入党申请人登记暨谈话表》或同类材料 □是□否
-      </div>
-    </A4Page>
+    />
   )
 }
 
@@ -583,7 +506,14 @@ function Page4Blank({ zoom }) {
   )
 }
 
-function Page5Quarter12({ formData, zoom }) {
+const ACTIVIST_QUARTERS = [
+  { label: '第一季度', numeral: '一', prefix: 'season1_1' },
+  { label: '第二季度', numeral: '二', prefix: 'season1_2' },
+  { label: '第三季度', numeral: '三', prefix: 'season1_3' },
+  { label: '第四季度', numeral: '四', prefix: 'season1_4' },
+]
+
+function ActivistQuarterPage({ formData, quarters, zoom }) {
   return (
     <A4Page
       className={c('training-template-page')}
@@ -599,30 +529,28 @@ function Page5Quarter12({ formData, zoom }) {
             <td className={c('training-quarter-block-cell')}>
               <table className={c('training-quarter-inner-table')}>
                 <tbody>
-                  <QuarterSection
-                    dateFieldId="season1_1.联系人意见（一）落款日期"
-                    dateValue={formData['season1_1.联系人意见（一）落款日期']}
-                    endMonthFieldId="season1_1.电子版（一）所在季度截止月份"
-                    endMonthValue={formData['season1_1.电子版（一）所在季度截止月份']}
-                    opinionFieldId="season1_1.联系人意见（一）"
-                    opinionValue={formData['season1_1.联系人意见（一）']}
-                    quarterLabel="第一季度"
-                    reportLabel="电子版（一）"
-                    startMonthFieldId="season1_1.电子版（一）所在季度起始月份"
-                    startMonthValue={formData['season1_1.电子版（一）所在季度起始月份']}
-                  />
-                  <QuarterSection
-                    dateFieldId="season1_2.联系人意见（二）落款日期"
-                    dateValue={formData['season1_2.联系人意见（二）落款日期']}
-                    endMonthFieldId="season1_2.电子版（二）所在季度截止月份"
-                    endMonthValue={formData['season1_2.电子版（二）所在季度截止月份']}
-                    opinionFieldId="season1_2.联系人意见（二）"
-                    opinionValue={formData['season1_2.联系人意见（二）']}
-                    quarterLabel="第二季度"
-                    reportLabel="电子版（二）"
-                    startMonthFieldId="season1_2.电子版（二）所在季度起始月份"
-                    startMonthValue={formData['season1_2.电子版（二）所在季度起始月份']}
-                  />
+                  {quarters.map(({ label, numeral, prefix }) => {
+                    const dateFieldId = `${prefix}.联系人意见（${numeral}）落款日期`
+                    const endMonthFieldId = `${prefix}.电子版（${numeral}）所在季度截止月份`
+                    const opinionFieldId = `${prefix}.联系人意见（${numeral}）`
+                    const startMonthFieldId = `${prefix}.电子版（${numeral}）所在季度起始月份`
+
+                    return (
+                      <QuarterSection
+                        dateFieldId={dateFieldId}
+                        dateValue={formData[dateFieldId]}
+                        endMonthFieldId={endMonthFieldId}
+                        endMonthValue={formData[endMonthFieldId]}
+                        key={prefix}
+                        opinionFieldId={opinionFieldId}
+                        opinionValue={formData[opinionFieldId]}
+                        quarterLabel={label}
+                        reportLabel={`电子版（${numeral}）`}
+                        startMonthFieldId={startMonthFieldId}
+                        startMonthValue={formData[startMonthFieldId]}
+                      />
+                    )
+                  })}
                 </tbody>
               </table>
             </td>
@@ -630,6 +558,16 @@ function Page5Quarter12({ formData, zoom }) {
         </tbody>
       </table>
     </A4Page>
+  )
+}
+
+function Page5Quarter12({ formData, zoom }) {
+  return (
+    <ActivistQuarterPage
+      formData={formData}
+      quarters={ACTIVIST_QUARTERS.slice(0, 2)}
+      zoom={zoom}
+    />
   )
 }
 
@@ -649,51 +587,11 @@ function Page6HalfYearOpinion({ formData, zoom }) {
 
 function Page7Quarter34({ formData, zoom }) {
   return (
-    <A4Page
-      className={c('training-template-page')}
-      contentClassName={c('training-quarter-page', 'training-quarter-page--activist')}
+    <ActivistQuarterPage
+      formData={formData}
+      quarters={ACTIVIST_QUARTERS.slice(2)}
       zoom={zoom}
-    >
-      <table style={{margin: '96px 4px'}} className={c('training-quarter-table', 'training-quarter-table--activist')}>
-        <tbody>
-          <tr>
-            <td className={c('training-vertical-cell')} rowSpan={4}>
-              <VerticalText className={c('training-vertical-text')} text="培养考察情况" />
-            </td>
-            <td className={c('training-quarter-block-cell')}>
-              <table className={c('training-quarter-inner-table')}>
-                <tbody>
-                  <QuarterSection
-                    dateFieldId="season1_3.联系人意见（三）落款日期"
-                    dateValue={formData['season1_3.联系人意见（三）落款日期']}
-                    endMonthFieldId="season1_3.电子版（三）所在季度截止月份"
-                    endMonthValue={formData['season1_3.电子版（三）所在季度截止月份']}
-                    opinionFieldId="season1_3.联系人意见（三）"
-                    opinionValue={formData['season1_3.联系人意见（三）']}
-                    quarterLabel="第三季度"
-                    reportLabel="电子版（三）"
-                    startMonthFieldId="season1_3.电子版（三）所在季度起始月份"
-                    startMonthValue={formData['season1_3.电子版（三）所在季度起始月份']}
-                  />
-                  <QuarterSection
-                    dateFieldId="season1_4.联系人意见（四）落款日期"
-                    dateValue={formData['season1_4.联系人意见（四）落款日期']}
-                    endMonthFieldId="season1_4.电子版（四）所在季度截止月份"
-                    endMonthValue={formData['season1_4.电子版（四）所在季度截止月份']}
-                    opinionFieldId="season1_4.联系人意见（四）"
-                    opinionValue={formData['season1_4.联系人意见（四）']}
-                    quarterLabel="第四季度"
-                    reportLabel="电子版（四）"
-                    startMonthFieldId="season1_4.电子版（四）所在季度起始月份"
-                    startMonthValue={formData['season1_4.电子版（四）所在季度起始月份']}
-                  />
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </A4Page>
+    />
   )
 }
 
