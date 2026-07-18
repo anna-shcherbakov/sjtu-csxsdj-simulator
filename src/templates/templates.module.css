@@ -1,8 +1,4 @@
 .training-template-page {
-  font-family: SimSun, 'Songti SC', STSong, serif;
-  color: #000;
-  border-color: #c8ccd2;
-  border-radius: 2px;
 }
 
 .training-field-anchor {
@@ -10,24 +6,24 @@
   min-height: 0;
   padding: 0 2px;
   border-radius: 0;
-  color: #000;
+  color: var(--paper-ink);
   font-weight: 400;
 }
 
 .training-field-anchor--empty {
-  color: #7a7a7a;
+  color: var(--field-empty);
   background: transparent;
   border-color: transparent;
 }
 
 .training-field-anchor--selected {
-  background: rgba(196, 32, 38, 0.18);
+  background: var(--field-selected);
   border-color: rgba(196, 32, 38, 0.5);
   box-shadow: 0 0 0 1px rgba(196, 32, 38, 0.08);
 }
 
 .training-field-anchor:hover {
-  background: rgba(196, 32, 38, 0.1);
+  background: var(--field-hover);
   border-color: rgba(196, 32, 38, 0.28);
 }
 

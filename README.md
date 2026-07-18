@@ -18,8 +18,8 @@
 当前内置 4 套模板：
 
 - 模板 1：入党申请人登记暨谈话表（4 页）
-- 模板 2：入党培养考察记录册（14 页）
-- 模板 3：预备党员培养考察记录册（9 页）
+- 模板 2：入党培养考察记录册（12 页）
+- 模板 3：预备党员培养考察记录册（10 页）
 - 模板 4：入党志愿书（14 页）
 
 ## 技术栈
@@ -70,6 +70,18 @@ npm run preview
 npm run lint
 ```
 
+模板字段与页数静态检查：
+
+```bash
+npm run check:templates
+```
+
+40 页布局指纹与字段联动回归测试（使用本机 Chrome）：
+
+```bash
+npm run test:templates
+```
+
 ## 使用说明
 
 1. 启动项目后，在左侧表单中填写或修改字段值。
@@ -90,7 +102,7 @@ npm run lint
 │  │  ├─ preview/        # 右侧预览与工具栏组件
 │  │  └─ shared/         # A4 页面、字段锚点等通用组件
 │  ├─ data/               # formSchema、模板元数据、字段校验函数
-│  ├─ templates/         # 各材料模板页面
+│  ├─ templates/         # 模板页面、页面配置、字段定义与共享版式组件
 │  ├─ store/              # Zustand 状态管理
 │  ├─ App.jsx             # 页面主入口
 │  └─ styles.css          # 全局样式
@@ -104,7 +116,10 @@ npm run lint
 ## 开发约定
 
 - 左侧表单由 `src/data/formSchema.js` 统一驱动。
-- 右侧模板页面由 `src/templates/*.jsx` 维护。
+- 右侧模板由 `src/templates/*.jsx` 中的专属页面和有限页面配置共同维护。
+- 模板字段 ID 统一定义在 `src/templates/config/templateFields.js`，页面 JSX 不直接书写业务字段 ID。
+- 页数和页序由 `src/templates/config/templateContracts.js` 约束；季度记录、意见页等同源结构位于 `src/templates/shared/`。
+- 修改模板布局后需运行 `npm run test:templates`。只有确认变更是预期版式调整时，才运行 `npm run update:template-baselines` 更新布局基线。
 - 模板切换只影响右侧预览，不切换左侧表单 schema。
 - 字段校验支持两层：
   - 字段自身的 `validation`

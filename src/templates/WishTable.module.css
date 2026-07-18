@@ -1,14 +1,10 @@
 .wish-template-page {
-  font-family: SimSun, 'Songti SC', STSong, serif;
-  color: #000;
-  border-color: #c8ccd2;
-  border-radius: 2px;
 }
 
 .wish-page {
   box-sizing: border-box;
   height: 100%;
-  padding: 58px 72px 64px;
+  padding: 95px 96px 96px 111px;
   color: #000;
 }
 
@@ -17,24 +13,24 @@
   min-height: 0;
   padding: 0 2px;
   border-radius: 0;
-  color: #000;
+  color: var(--paper-ink);
   font-weight: 400;
 }
 
 .wish-field-anchor--empty {
-  color: #7a7a7a;
+  color: var(--field-empty);
   background: transparent;
   border-color: transparent;
 }
 
 .wish-field-anchor--selected {
-  background: rgba(196, 32, 38, 0.18);
+  background: var(--field-selected);
   border-color: rgba(196, 32, 38, 0.5);
   box-shadow: 0 0 0 1px rgba(196, 32, 38, 0.08);
 }
 
 .wish-field-anchor:hover {
-  background: rgba(196, 32, 38, 0.1);
+  background: var(--field-hover);
   border-color: rgba(196, 32, 38, 0.28);
 }
 
@@ -165,6 +161,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-left: 101px;
 }
 
 .wish-cover-page__emblem-wrap {
@@ -172,8 +169,8 @@
 }
 
 .wish-cover-page__emblem {
-  width: 122px;
-  height: 122px;
+  width: 160px;
+  height: 160px;
   object-fit: contain;
 }
 
@@ -195,7 +192,7 @@
 }
 
 .wish-cover-page__name-row {
-  margin-top: 238px;
+  margin-top: 278px;
   display: flex;
   width: 420px;
   align-items: flex-end;
@@ -313,15 +310,45 @@
 }
 
 .wish-table__label {
-  padding: 8px 6px;
-  font-size: 16px;
+  padding: 3px 4px;
+  font-size: 11px;
   text-align: center;
   letter-spacing: 0.1em;
 }
 
 .wish-table__value {
   padding: 0;
-  font-size: 16px;
+  font-size: 11px;
+}
+
+.wish-basic-info-table > tbody > tr:nth-child(1) {
+  height: 52px;
+}
+
+.wish-basic-info-table > tbody > tr:nth-child(2),
+.wish-basic-info-table > tbody > tr:nth-child(3) {
+  height: 42px;
+}
+
+.wish-basic-info-table > tbody > tr:nth-child(4) {
+  height: 43px;
+}
+
+.wish-basic-info-table > tbody > tr:nth-child(5) {
+  height: 42px;
+}
+
+.wish-basic-info-table > tbody > tr:nth-child(6),
+.wish-basic-info-table > tbody > tr:nth-child(7) {
+  height: 41px;
+}
+
+.wish-basic-info-table > tbody > tr:nth-child(8) {
+  height: 42px;
+}
+
+.wish-basic-info-table__spacer-row {
+  height: 62px;
 }
 
 .wish-table__value > .wish-field-anchor {
@@ -359,7 +386,7 @@
 
 .wish-basic-info-table__essay-cell {
   padding: 0;
-  height: 446px;
+  height: 521px;
   vertical-align: top;
 }
 
@@ -368,25 +395,26 @@
 }
 
 .wish-continued-essay-box {
-  height: 274px;
+  box-sizing: border-box;
+  flex: 0 0 188px;
   border: 1px solid #000;
 }
 
 .wish-resume-table {
-  margin-top: 16px;
+  margin-top: 41px;
 }
 
 .wish-resume-table th,
 .wish-resume-table td {
-  padding: 8px 6px;
-  font-size: 15px;
+  padding: 3px;
+  font-size: 11px;
   text-align: center;
   vertical-align: top;
 }
 
 .wish-resume-table__title {
-  padding: 10px 0 !important;
-  font-size: 18px !important;
+  padding: 3px 0 !important;
+  font-size: 13px !important;
   font-weight: 700;
   letter-spacing: 0.25em;
   text-indent: 0.25em;
@@ -396,8 +424,24 @@
   padding: 0 !important;
 }
 
+.wish-resume-table > thead > tr:nth-child(1),
+.wish-resume-table > tbody > tr {
+  height: 29px;
+}
+
+.wish-resume-table > thead > tr:nth-child(2) {
+  height: 34px;
+}
+
+.wish-resume-table .wish-field-anchor--list-row-cell {
+  min-height: 27px;
+  padding: 2px 3px;
+}
+
 .wish-league-table {
-  margin-top: 18px;
+  flex: 0 0 586px;
+  height: 586px;
+  margin-top: 21px;
 }
 
 .wish-league-table__label {
@@ -426,6 +470,23 @@
   font-size: 15px;
 }
 
+.wish-form-page--awards .wish-history-table {
+  height: 718px;
+}
+
+.wish-form-page--awards .wish-spouse-table {
+  height: 210px;
+  margin-top: 0;
+}
+
+.wish-form-page--awards,
+.wish-form-page--family,
+.wish-form-page--issue-continuation,
+.wish-form-page--introducer {
+  padding-right: 118px;
+  padding-left: 119px;
+}
+
 .wish-history-table__label {
   width: 24%;
   padding: 12px 10px;
@@ -450,6 +511,28 @@
 }
 
 .wish-spouse-table--continued {
+  margin-top: 0;
+}
+
+.wish-form-page--family .wish-spouse-table--continued {
+  height: 169px;
+}
+
+.wish-form-page--family .wish-spouse-table--continued > tbody > tr {
+  height: 84px;
+}
+
+.wish-form-page--family .wish-spouse-table__label {
+  padding: 3px;
+  font-size: 11px;
+}
+
+.wish-form-page--family .wish-spouse-table__value > .wish-field-anchor {
+  padding: 3px;
+}
+
+.wish-form-page--family .wish-family-table {
+  height: 750px;
   margin-top: 0;
 }
 
@@ -595,6 +678,18 @@
   flex-direction: column;
 }
 
+.wish-form-page--introducer .wish-introducer-section {
+  min-height: 0;
+}
+
+.wish-form-page--introducer .wish-introducer-table > tbody > tr:nth-child(1) {
+  height: 516px;
+}
+
+.wish-form-page--introducer .wish-introducer-table > tbody > tr:nth-child(2) {
+  height: 414px;
+}
+
 .wish-introducer-section > .wish-field-anchor {
   flex: 1;
   min-height: 0;
@@ -622,14 +717,24 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  margin-right: 21px;
+  margin-left: 8px;
 }
 
 .wish-approval-page--triple {
   gap: 14px;
 }
 
+.wish-approval-page--triple .wish-section-box__body--compact {
+  min-height: 150px;
+}
+
 .wish-approval-page--remark {
   gap: 12px;
+}
+
+.wish-approval-page--remark .wish-section-box__body--compact {
+  min-height: 100px;
 }
 
 .wish-section-box {
@@ -658,7 +763,7 @@
 }
 
 .wish-section-box__body--medium {
-  min-height: 228px;
+  min-height: 315px;
 }
 
 .wish-section-box__body--compact {

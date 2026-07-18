@@ -1,8 +1,4 @@
 .party-template-page {
-  font-family: SimSun, 'Songti SC', STSong, serif;
-  color: #000;
-  border-color: #c8ccd2;
-  border-radius: 2px;
 }
 
 .party-field-anchor {
@@ -10,24 +6,24 @@
   min-height: 0;
   padding: 0 2px;
   border-radius: 0;
-  color: #000;
+  color: var(--paper-ink);
   font-weight: 400;
 }
 
 .party-field-anchor--empty {
-  color: #7a7a7a;
+  color: var(--field-empty);
   background: transparent;
   border-color: transparent;
 }
 
 .party-field-anchor--selected {
-  background: rgba(196, 32, 38, 0.18);
+  background: var(--field-selected);
   border-color: rgba(196, 32, 38, 0.5);
   box-shadow: 0 0 0 1px rgba(196, 32, 38, 0.08);
 }
 
 .party-field-anchor:hover {
-  background: rgba(196, 32, 38, 0.1);
+  background: var(--field-hover);
   border-color: rgba(196, 32, 38, 0.28);
 }
 
@@ -39,10 +35,10 @@
 }
 
 .party-cover-page__title {
-  margin: 296px 0 0;
+  margin: 182px 0 0;
   width: max-content;
   max-width: none;
-  font-size: 54px;
+  font-size: 36px;
   line-height: 1.18;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -52,33 +48,35 @@
 }
 
 .party-cover-page__info {
-  width: 560px;
+  width: 433px;
   max-width: 100%;
-  margin-top: 258px;
+  margin-top: 207px;
   display: flex;
   flex-direction: column;
-  gap: 56px;
+  gap: 10px;
 }
 
 .party-cover-line {
   display: flex;
   align-items: flex-end;
-  gap: 26px;
+  gap: 14px;
 }
 
 .party-cover-line__label {
-  flex: 0 0 150px;
-  font-size: 24px;
+  flex: 0 0 100px;
+  font-size: 18px;
   line-height: 1.2;
   letter-spacing: 0.14em;
   color: #000;
+  box-sizing: border-box;
+  padding-left: 10px;
   white-space: nowrap;
 }
 
 .party-cover-line__label--name {
   display: flex;
   justify-content: center;
-  gap: 44px;
+  gap: 28px;
   letter-spacing: 0;
 }
 
@@ -90,15 +88,15 @@
 .party-line-fill {
   display: flex;
   align-items: flex-end;
-  min-height: 36px;
+  min-height: 32px;
   padding: 0 8px 3px 8px;
   border-bottom: 1px solid #000;
 }
 
 .party-cover-page__imprint {
-  margin-top: auto;
-  margin-bottom: 58px;
-  font-size: 28px;
+  margin-top: 151px;
+  margin-bottom: 0;
+  font-size: 16px;
   line-height: 1.4;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -123,6 +121,14 @@
   flex-direction: column;
 }
 
+.party-registration-page {
+  padding: 86px 89px 188px;
+}
+
+.party-interview-page {
+  padding: 96px 104px 108px 89px;
+}
+
 .party-registration-table,
 .party-interview-table,
 .party-remark-table {
@@ -140,9 +146,9 @@
 }
 
 .party-registration-table--basic td {
-  padding: 8px 7px;
-  font-size: 15px;
-  line-height: 1.45;
+  padding: 3px;
+  font-size: 11px;
+  line-height: 1.2;
 }
 
 .party-col-label {
@@ -165,9 +171,9 @@
 }
 
 .party-table-label--stacked {
-  line-height: 1.45;
-  letter-spacing: 0.12em;
-  text-indent: 0.12em;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-indent: 0.06em;
 }
 
 .party-table-label--stacked > span {
@@ -175,8 +181,8 @@
 }
 
 .party-table-label--wide {
-  font-size: 15px;
-  line-height: 1.45;
+  font-size: 11px;
+  line-height: 1.2;
 }
 
 .party-table-value {
@@ -208,15 +214,47 @@
 }
 
 .party-registration-table--basic tbody tr:nth-child(1) td {
-  height: 56px;
+  height: 51px;
 }
 
 .party-registration-table--basic tbody tr:nth-child(2) td {
-  height: 84px;
+  height: 51px;
 }
 
 .party-registration-table--basic tbody tr:nth-child(3) td {
-  height: 92px;
+  height: 51px;
+}
+
+.party-registration-table--basic col:nth-child(1) {
+  width: 10.57%;
+}
+
+.party-registration-table--basic col:nth-child(2) {
+  width: 16.32%;
+}
+
+.party-registration-table--basic col:nth-child(3) {
+  width: 9.48%;
+}
+
+.party-registration-table--basic col:nth-child(4) {
+  width: 15.96%;
+}
+
+.party-registration-table--basic col:nth-child(5) {
+  width: 7.47%;
+}
+
+.party-registration-table--basic col:nth-child(6) {
+  width: 16.88%;
+}
+
+.party-registration-table--basic col:nth-child(7) {
+  width: 7.39%;
+}
+
+.party-registration-table--basic col:nth-child(8) {
+  width: 15.93%;
 }
 
 .party-registration-table--review {
@@ -224,27 +262,31 @@
 }
 
 .party-registration-table--review td {
-  padding: 8px 10px;
-  font-size: 14px;
-  line-height: 1.55;
+  padding: 5px 7px;
+  font-size: 11px;
+  line-height: 1.4;
   vertical-align: top;
 }
 
 .party-registration-table--review tbody tr {
-  height: 58px;
+  height: 61px;
 }
 
 .party-registration-table--review tbody tr:nth-child(5),
 .party-registration-table--review tbody tr:nth-child(6) {
-  height: 78px;
+  height: 61px;
 }
 
 .party-review-col-title {
-  width: 64px;
+  width: 37px;
 }
 
 .party-review-col-result {
-  width: 48px;
+  width: 39px;
+}
+
+.party-registration-table--review col:nth-child(4) {
+  width: 71px;
 }
 
 .party-review-vertical-cell,
@@ -275,7 +317,7 @@
 }
 
 .party-vertical-text--review {
-  font-size: 17px;
+  font-size: 12px;
   line-height: 1.18;
 }
 
@@ -294,14 +336,14 @@
 .party-review-judge__label {
   display: inline-block;
   color: #000;
-  font-size: 14px;
+  font-size: 11px;
 }
 
 .party-review-judge__mark {
   position: absolute;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -56%);
-  font-size: 20px;
+  font-size: 15px;
   line-height: 1;
   color: #000;
   pointer-events: none;
@@ -367,7 +409,7 @@
 }
 
 .party-interview-vertical-cell {
-  width: 76px;
+  width: 37px;
 }
 
 .party-vertical-text--interview {
@@ -382,7 +424,7 @@
 
 .party-interview-main {
   height: 100%;
-  min-height: 918px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding: 14px 14px 12px;
@@ -448,7 +490,7 @@
 }
 
 .party-interview-table__remark-row td {
-  height: 76px;
+  height: 69px;
   font-size: 15px;
 }
 

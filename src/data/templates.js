@@ -1,229 +1,58 @@
-const TALK_TABLE_FIELD_IDS = [
-  'basic.姓名',
-  'basic.性别',
-  'basic.民族',
-  'basic.籍贯',
-  'basic.班级',
-  'basic.学号',
-  'basic.入团年月',
-  'basic.身份证号',
-  'submit.入党申请书落款日期',
-  'talk.曾任职务',
-  'talk.入党谈话时所属党支部',
-  'talk.申请人谈话日期',
-  'talk.谈话记录（收到入党申请书后一个月完成）',
-]
-
-const ACTIVIST_TABLE_FIELD_IDS = [
-  'basic.姓名',
-  'basic.班级',
-  'basic.性别',
-  'basic.出生年月',
-  'basic.身份证号',
-  'basic.电话',
-  'basic.学号',
-  'basic.入团年月',
-  'submit.入党申请书落款日期',
-  'acknowledge.现任职务',
-  'acknowledge.支委会(党员大会)对确定入党积极分子的意见',
-  'acknowledge.确定积极分子日期',
-  'activist.确定积极分子时所在党支部',
-  'activist.入党联系人1',
-  'activist.入党联系人1入党时间（预备时间）',
-  'activist.入党联系人1转正时间',
-  'activist.入党联系人1党内职务',
-  'activist.入党联系人2',
-  'activist.入党联系人2入党时间（预备时间）',
-  'activist.入党联系人2转正时间',
-  'activist.入党联系人2党内职务',
-  'activist.积极分子党委备案日期',
-  'activist.备注',
-  'season1_1.积极分子期间思想汇报电子版（一）',
-  'season1_1.电子版（一）落款日期',
-  'season1_1.电子版（一）所在季度起始月份',
-  'season1_1.电子版（一）所在季度截止月份',
-  'season1_1.联系人意见（一）',
-  'season1_1.联系人意见（一）落款日期',
-  'season1_2.积极分子期间思想汇报电子版（二）',
-  'season1_2.电子版（二）落款日期',
-  'season1_2.电子版（二）所在季度起始月份',
-  'season1_2.电子版（二）所在季度截止月份',
-  'season1_2.联系人意见（二）',
-  'season1_2.联系人意见（二）落款日期',
-  'season1_half.党支部意见（半年）',
-  'season1_half.党支部意见（半年）落款日期',
-  'season1_3.积极分子期间思想汇报电子版（三）',
-  'season1_3.电子版（三）落款日期',
-  'season1_3.电子版（三）所在季度起始月份',
-  'season1_3.电子版（三）所在季度截止月份',
-  'season1_3.联系人意见（三）',
-  'season1_3.联系人意见（三）落款日期',
-  'season1_4.积极分子期间思想汇报电子版（四）',
-  'season1_4.电子版（四）落款日期',
-  'season1_4.电子版（四）所在季度起始月份',
-  'season1_4.电子版（四）所在季度截止月份',
-  'season1_4.联系人意见（四）',
-  'season1_4.联系人意见（四）落款日期',
-  'season1_annual.党支部意见（一年）',
-  'season1_annual.党支部意见（一年）落款日期',
-  'candidate.发展对象群众座谈会日期',
-  'candidate.支委会（党员大会意见）',
-  'candidate.支委会日期',
-  'candidate.学工副书记（负责人）意见日期',
-  'candidate.党委备案日期（确定发展对象日期）',
-  'candidate.发展对象公示起始日期',
-  'candidate.发展对象公示结束日期',
-  'candidate.党支部审查意见',
-  'candidate.党支部审查意见日期',
-  'candidate.党委预审意见日期',
-  'candidate.确定发展对象时支部名称',
-  'candidate.教育培训情况-培训班名称',
-  'candidate.教育培训情况-结业日期',
-  'candidate.培训情况',
-  'candidate.政治审查报告日期',
-  'wish.志愿书编号',
-]
-
-const PROBATIONARY_TABLE_FIELD_IDS = [
-  'basic.姓名',
-  'basic.班级',
-  'probationary.预备党员时所在党支部',
-  'basic.性别',
-  'basic.出生年月',
-  'basic.籍贯',
-  'probationary.文化程度',
-  'probationary.预备党员现任职务',
-  'submit.入党申请书落款日期',
-  'acknowledge.确定积极分子日期',
-  'candidate.党委备案日期（确定发展对象日期）',
-  'wish.支部大会通过预备的日期',
-  'wish.预备党员考察期截止日期',
-  'probationary.入党考察人1',
-  'probationary.入党考察人1职务',
-  'probationary.入党考察人1是否正式党员',
-  'probationary.入党考察人2',
-  'probationary.入党考察人2职务',
-  'probationary.入党考察人2是否正式党员',
-  'wish.党委审批日期',
-  'probationary.入党宣誓日期',
-  'probationary.入党宣誓地点',
-  'probationary.入党时主要优缺点',
-  'probationary.备注',
-  'season2_1.电子版（一）所在季度起始月份',
-  'season2_1.电子版（一）所在季度截止月份',
-  'season2_1.考察人意见（一）',
-  'season2_1.考察人意见（一）落款日期',
-  'season2_2.电子版（二）所在季度起始月份',
-  'season2_2.电子版（二）所在季度截止月份',
-  'season2_2.考察人意见（二）',
-  'season2_2.考察人意见（二）落款日期',
-  'season2_half.党支部意见（半年）',
-  'season2_half.党支部意见（半年）落款日期',
-  'season2_3.电子版（三）所在季度起始月份',
-  'season2_3.电子版（三）所在季度截止月份',
-  'season2_3.考察人意见（三）',
-  'season2_3.考察人意见（三）落款日期',
-  'season2_4.电子版（四）所在季度起始月份',
-  'season2_4.电子版（四）所在季度截止月份',
-  'season2_4.考察人意见（四）',
-  'season2_4.考察人意见（四）落款日期',
-  'formal.群众座谈会日期',
-  'formal.预备党员转正公示起始日期',
-  'formal.预备党员转正公示结束日期',
-  'formal.支部大会通过预备党员能否转为正式党员的决议落款日期',
-  'formal.预备党员转正前党支部审查意见（预备党员考察册结束）',
-  'formal.预备党员转正前党支部审查意见落款日期',
-]
-
-const WISH_TABLE_FIELD_IDS = [
-  'basic.姓名',
-  'basic.性别',
-  'basic.民族',
-  'basic.出生年月',
-  'basic.籍贯',
-  'basic.出生地',
-  'basic.身份证号',
-  'basic.入团年月',
-  'wish.学历',
-  'wish.学位或职称',
-  'wish.单位、职务或职业',
-  'wish.现居住地',
-  'wish.有何专长',
-  'wish.志愿书电子版内容',
-  'wish.本人经历',
-  'wish.加入共青团时所在学校',
-  'wish.何时何地何原因受过何种奖励',
-  'wish.是否有配偶',
-  'wish.配偶姓名',
-  'wish.配偶民族',
-  'wish.配偶出生年月',
-  'wish.配偶籍贯',
-  'wish.配偶学历',
-  'wish.配偶参加工作时间',
-  'wish.配偶政治面貌',
-  'wish.配偶单位、职务或职业',
-  'wish.家庭其他成员',
-  'wish.入党介绍人1意见',
-  'wish.入党介绍人2意见',
-  'wish.入党介绍人意见落款日期',
-  'wish.支部大会通过接收申请人为预备党员的决议',
-  'wish.支部大会通过预备的日期',
-  'wish.党委审批日期',
-  'formal.支部大会通过预备党员能否转为正式党员的决议（回到入党志愿书）',
-  'formal.支部大会通过预备党员能否转为正式党员的决议落款日期',
-  'formal.基层党委审批意见落款日期',
-]
+import { TEMPLATE_FIELD_IDS } from "../templates/config/templateFields.js";
 
 export const TEMPLATE_OPTIONS = [
   {
-    id: 'party-applicant-document',
-    label: '模板 1 · 入党申请人登记暨谈话表',
-    displayLabel: '入党申请人登记暨谈话表',
-    shortLabel: '模板 1',
-    description: '4 页固定 A4 文档，包括封面、登记表、谈话记录和空白页。',
+    id: "party-applicant-document",
+    label: "模板 1 · 入党申请人登记暨谈话表",
+    displayLabel: "入党申请人登记暨谈话表",
+    shortLabel: "模板 1",
+    description: "4 页固定 A4 文档，包括封面、登记表、谈话记录和空白页。",
     pageCount: 4,
-    fieldIds: TALK_TABLE_FIELD_IDS,
+    fieldIds: TEMPLATE_FIELD_IDS["party-applicant-document"],
   },
   {
-    id: 'party-training-inspection-book',
-    label: '模板 2 · 入党培养考察记录册',
-    displayLabel: '入党培养考察记录册',
-    shortLabel: '模板 2',
-    description: '14 页固定 A4 文档，包括封面、意见页、基本情况页、季度考察页和空白页。',
+    id: "party-training-inspection-book",
+    label: "模板 2 · 入党培养考察记录册",
+    displayLabel: "入党培养考察记录册",
+    shortLabel: "模板 2",
+    description:
+      "12 页固定 A4 文档，包括封面、填写说明、基本情况、季度考察和发展对象审查页面。",
+    pageCount: 12,
+    fieldIds: TEMPLATE_FIELD_IDS["party-training-inspection-book"],
+  },
+  {
+    id: "party-training-inspection-book-v2",
+    label: "模板 3 · 预备党员培养考察记录册",
+    displayLabel: "预备党员培养考察记录册",
+    shortLabel: "模板 3",
+    description:
+      "10 页固定 A4 文档，包括封面内页、填写说明、基本情况、教育考察记录、转正前征求意见、公示和支部审查意见。",
+    pageCount: 10,
+    fieldIds: TEMPLATE_FIELD_IDS["party-training-inspection-book-v2"],
+  },
+  {
+    id: "party-application-wish-book",
+    label: "模板 4 · 入党志愿书",
+    displayLabel: "入党志愿书",
+    shortLabel: "模板 4",
+    description:
+      "14 页固定 A4 文档，包括封面、说明、誓词、基本信息、本人经历、政审、家庭成员、介绍人意见和审批页。",
     pageCount: 14,
-    fieldIds: ACTIVIST_TABLE_FIELD_IDS,
+    fieldIds: TEMPLATE_FIELD_IDS["party-application-wish-book"],
   },
-  {
-    id: 'party-training-inspection-book-v2',
-    label: '模板 3 · 预备党员培养考察记录册',
-    displayLabel: '预备党员培养考察记录册',
-    shortLabel: '模板 3',
-    description: '9 页固定 A4 文档，包括封面、填写说明、预备党员基本情况、教育考察记录、转正前征求意见、公示和支部审查意见。',
-    pageCount: 9,
-    fieldIds: PROBATIONARY_TABLE_FIELD_IDS,
-  },
-  {
-    id: 'party-application-wish-book',
-    label: '模板 4 · 入党志愿书',
-    displayLabel: '入党志愿书',
-    shortLabel: '模板 4',
-    description: '14 页固定 A4 文档，包括封面、说明、誓词、基本信息、本人经历、政审、家庭成员、介绍人意见和审批页。',
-    pageCount: 14,
-    fieldIds: WISH_TABLE_FIELD_IDS,
-  },
-]
+];
 
 const TEMPLATE_FIELD_INDEX = Object.fromEntries(
   TEMPLATE_OPTIONS.map((template) => [template.id, new Set(template.fieldIds)]),
-)
+);
 
 export const getTemplateIdsByFieldId = (fieldId) =>
-  TEMPLATE_OPTIONS.filter((template) => TEMPLATE_FIELD_INDEX[template.id]?.has(fieldId)).map(
-    (template) => template.id,
-  )
+  TEMPLATE_OPTIONS.filter((template) =>
+    TEMPLATE_FIELD_INDEX[template.id]?.has(fieldId),
+  ).map((template) => template.id);
 
 export const templateHasField = (templateId, fieldId) =>
-  TEMPLATE_FIELD_INDEX[templateId]?.has(fieldId) ?? false
+  TEMPLATE_FIELD_INDEX[templateId]?.has(fieldId) ?? false;
 
 export const getTemplateReferenceStatuses = (fieldId) =>
   TEMPLATE_OPTIONS.map((template) => ({
@@ -231,13 +60,13 @@ export const getTemplateReferenceStatuses = (fieldId) =>
     displayLabel: template.displayLabel,
     shortLabel: template.shortLabel,
     referenced: templateHasField(template.id, fieldId),
-  }))
+  }));
 
 export const getTemplateById = (templateId) =>
-  TEMPLATE_OPTIONS.find((template) => template.id === templateId) ?? null
+  TEMPLATE_OPTIONS.find((template) => template.id === templateId) ?? null;
 
 export const getTemplateFieldIds = (templateId) =>
-  getTemplateById(templateId)?.fieldIds ?? []
+  getTemplateById(templateId)?.fieldIds ?? [];
 
-export const DEFAULT_TEMPLATE_ID = TEMPLATE_OPTIONS[0].id
-export const DEFAULT_ZOOM = 100
+export const DEFAULT_TEMPLATE_ID = TEMPLATE_OPTIONS[0].id;
+export const DEFAULT_ZOOM = 100;

@@ -4,9 +4,17 @@
 }
 
 .a4-page {
+  --paper-font: SimSun, "Songti SC", STSong, serif;
+  --paper-ink: #000;
+  --field-empty: #7a7a7a;
+  --field-selected: rgba(196, 32, 38, 0.18);
+  --field-hover: rgba(196, 32, 38, 0.1);
+
   background: #fff;
-  border: 1px solid #e4d8c7;
-  border-radius: 6px;
+  border: 1px solid #c8ccd2;
+  border-radius: 2px;
+  color: var(--paper-ink);
+  font-family: var(--paper-font);
   overflow: hidden;
   box-shadow:
     0 24px 48px rgba(68, 50, 33, 0.14),
@@ -14,6 +22,7 @@
 }
 
 .a4-page__content {
+  box-sizing: border-box;
   height: 100%;
 }
 

@@ -2,27 +2,29 @@
   align-items: stretch;
 }
 
-.training-cover-page__title--activist {
-  margin: 182px 0 0;
+.training-cover-page__title--activist.training-cover-page__title--activist {
+  margin: 208px 0 0;
   text-align: center;
-  font-size: 46px;
+  font-size: 35px;
   line-height: 1.25;
   letter-spacing: 0.06em;
 }
 
-.training-cover-page__info--activist {
-  width: 520px;
-  margin: 224px auto 0;
-  gap: 14px;
+.training-cover-page__info--activist.training-cover-page__info--activist {
+  width: 554px;
+  margin: 249px 0 0 132px;
+  align-self: center;
+  flex: none;
+  gap: 0;
 }
 
 .training-cover-line--activist {
   gap: 12px;
 }
 
-.training-cover-line__label--activist {
+.training-cover-line__label--activist.training-cover-line__label--activist {
   flex: 0 0 158px;
-  font-size: 25px;
+  font-size: 20px;
   line-height: 1.3;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -35,9 +37,9 @@
   text-indent: 0.06em;
 }
 
-.training-cover-line__content--activist {
-  min-height: 40px;
-  font-size: 24px;
+.training-cover-line__content--activist.training-cover-line__content--activist {
+  min-height: 34px;
+  font-size: 18px;
   line-height: 1.25;
   padding: 0 8px 4px;
 }
@@ -51,10 +53,10 @@
   white-space: nowrap;
 }
 
-.training-cover-page__imprint--activist {
-  margin-bottom: 88px;
+.training-cover-page__imprint--activist.training-cover-page__imprint--activist {
+  margin: 154px 0 0;
   text-align: center;
-  font-size: 25px;
+  font-size: 18px;
   letter-spacing: 0.06em;
 }
 
@@ -162,15 +164,16 @@
   flex-direction: column;
 }
 
-.training-page-title--activist-instructions {
+.training-page-title--activist-instructions.training-page-title--activist-instructions {
+  margin-top: 171px;
   letter-spacing: 0.08em;
 }
 
-.training-instruction-sections--activist {
-  margin: 28px 0 0 26px;
+.training-instruction-sections--activist.training-instruction-sections--activist {
+  margin: 40px 18px 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   color: #000;
   font-size: 17px;
   line-height: 1.85;
@@ -182,26 +185,28 @@
   gap: 6px;
 }
 
-.training-instruction-section__marker {
+.training-instruction-section__marker--activist.training-instruction-section__marker--activist {
   flex: 0 0 42px;
   white-space: nowrap;
-  font-size: 24px;
+  font-size: 16px;
+  line-height: 1.9;
 }
 
 .training-instruction-section__content {
   flex: 1;
 }
 
-.training-instruction-section__content p {
+.training-instruction-section__content--activist.training-instruction-section__content--activist
+  p {
   margin: 0;
-  font-size: 24px;
+  font-size: 16px;
+  line-height: 1.9;
 }
 
-.training-instructions-footer--activist {
-  margin-top: auto;
-  padding-top: 28px;
-  padding-left: 26px;
-  font-size: 18px;
+.training-instructions-footer--activist.training-instructions-footer--activist {
+  margin-top: 50px;
+  padding: 0 18px;
+  font-size: 14px;
   line-height: 1.7;
 }
 
@@ -218,7 +223,7 @@
 }
 
 .training-basic-page--activist {
-  padding: 22px 36px 40px;
+  padding: 55px 74px 40px;
 }
 
 .training-basic-table--activist .training-basic-table__col--label {
@@ -231,8 +236,49 @@
 
 .training-basic-table--activist td {
   padding: 0 8px;
-  font-size: 15px;
+  font-size: 11px;
   line-height: 1.5;
+}
+
+.training-basic-table--activist tr:nth-child(1) td {
+  height: 37px;
+}
+
+.training-basic-table--activist tr:nth-child(2) td {
+  height: 37px;
+}
+
+.training-basic-table--activist tr:nth-child(3) td {
+  height: 38px;
+}
+
+.training-basic-table--activist tr:nth-child(4) td {
+  height: 37px;
+}
+
+.training-basic-table--activist tr:nth-child(5) td {
+  height: 65px;
+}
+
+.training-basic-table--activist tr:nth-child(6) td {
+  height: 228px !important;
+}
+
+.training-basic-table--activist tr:nth-child(7) td {
+  height: 38px;
+}
+
+.training-basic-table--activist tr:nth-child(8) td,
+.training-basic-table--activist tr:nth-child(9) td {
+  height: 56px;
+}
+
+.training-basic-table--activist tr:nth-child(10) td {
+  height: 94px !important;
+}
+
+.training-basic-table--activist tr:nth-child(11) td {
+  height: 68px !important;
 }
 
 .training-basic-table--activist .training-basic-table__label,
@@ -256,20 +302,6 @@
   position: relative;
 }
 
-.training-basic-table--activist tr:nth-child(1) td {
-  height: 38px;
-}
-
-.training-basic-table--activist tr:nth-child(2) td,
-.training-basic-table--activist tr:nth-child(3) td,
-.training-basic-table--activist tr:nth-child(4) td {
-  height: 40px;
-}
-
-.training-basic-table--activist tr:nth-child(5) td {
-  height: 64px;
-}
-
 .training-basic-table--activist .training-basic-table__section-label {
   width: 136px;
   padding: 10px 8px;
@@ -291,6 +323,18 @@
 
 .training-basic-table__record--activist {
   min-height: 178px;
+}
+
+.training-basic-table__record--committee {
+  box-sizing: border-box;
+  height: 93px;
+  min-height: 0;
+  padding: 6px 8px;
+}
+
+.training-basic-table__committee-spacer {
+  flex: 1;
+  min-height: 0;
 }
 
 .training-basic-table--activist .training-field-anchor--opinion {
@@ -389,6 +433,18 @@
   padding-bottom: 10px;
 }
 
+.training-opinion-page {
+  padding: 95px 74px 54px;
+}
+
+.training-opinion-page .training-opinion-layout {
+  min-height: 884px;
+}
+
+.training-split-page {
+  padding: 95px 74px 54px;
+}
+
 .training-mass-signoff {
   margin-top: auto;
   display: flex;
@@ -404,11 +460,11 @@
 }
 
 .training-quarter-page--activist {
-  padding: 12px 22px 18px;
+  padding: 0 79px 0 70px;
 }
 
 .training-quarter-table--activist .training-vertical-cell {
-  width: 88px;
+  width: 145px;
 }
 
 .training-quarter-table--activist .training-quarter-title-cell {
@@ -448,7 +504,7 @@
 }
 
 .training-quarter-table--activist .training-quarter-opinion-cell {
-  height: 344px;
+  height: 375px;
   padding: 10px 12px !important;
   vertical-align: top;
 }
@@ -476,11 +532,11 @@
 }
 
 .training-split-section--deputy {
-  min-height: 484px;
+  min-height: 510px;
 }
 
 .training-split-section--record {
-  min-height: 372px;
+  min-height: 397px;
 }
 
 .training-split-signoff {
@@ -525,11 +581,11 @@
 }
 
 .training-section-page--activist-review {
-  padding-top: 0;
+  padding: 0 74px 54px;
 }
 
 .training-activist-review-table {
-  margin-top: 34px;
+  margin-top: 95px !important;
 }
 
 .training-activist-review-table .training-section-title-cell,
@@ -542,8 +598,8 @@
 }
 
 .training-activist-review-table__head {
-  padding: 9px 8px !important;
-  font-size: 15px;
+  padding: 3px 5px !important;
+  font-size: 11px;
   font-weight: 500;
   text-align: center;
 }
@@ -553,11 +609,11 @@
 }
 
 .training-activist-review-table__value {
-  padding: 8px !important;
+  padding: 2px !important;
 }
 
 .training-field-anchor--review-cell {
-  min-height: 40px;
+  min-height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -582,13 +638,13 @@
 
 .training-activist-review-table__method-label,
 .training-activist-review-table__check {
-  padding: 8px 6px !important;
-  font-size: 15px;
+  padding: 3px !important;
+  font-size: 11px;
   text-align: center;
 }
 
 .training-activist-review-table__check {
-  height: 38px;
+  height: 36px;
 }
 
 .training-activist-review-table__body {
@@ -597,7 +653,7 @@
 }
 
 .training-political-body {
-  min-height: 560px;
+  min-height: 562px;
   display: flex;
   flex-direction: column;
 }
@@ -640,7 +696,55 @@
 }
 
 .training-section-page--activist-notice {
-  padding-top: 4px;
+  padding: 0 74px 54px;
+}
+
+.training-section-table--activist-notice {
+  margin-top: 95px !important;
+}
+
+.training-activist-review-table > tbody > tr:nth-child(1) {
+  height: 41px;
+}
+
+.training-activist-review-table > tbody > tr:nth-child(2) {
+  height: 40px;
+}
+
+.training-activist-review-table > tbody > tr:nth-child(3) {
+  height: 37px;
+}
+
+.training-activist-review-table > tbody > tr:nth-child(4) {
+  height: 36px;
+}
+
+.training-activist-review-table > tbody > tr:nth-child(5) {
+  height: 43px;
+}
+
+.training-activist-review-table > tbody > tr:nth-child(6) {
+  height: 48px;
+}
+
+.training-activist-review-table > tbody > tr:nth-child(7) {
+  height: 606px;
+}
+
+.training-section-table--activist-notice > tbody > tr:nth-child(1) {
+  height: 278px;
+}
+
+.training-section-table--activist-notice > tbody > tr:nth-child(2) {
+  height: 270px;
+}
+
+.training-section-table--activist-notice > tbody > tr:nth-child(3) {
+  height: 302px;
+}
+
+.training-section-table--activist-notice > tbody > tr:nth-child(4) {
+  height: 57px;
 }
 
 .training-section-table--activist-notice .training-section-body-cell--notice {

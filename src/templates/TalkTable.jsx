@@ -5,6 +5,9 @@ import {
   TemplateLineField,
   VerticalText,
 } from './shared/TemplatePrimitives'
+import TemplateDocument from './shared/TemplateDocument'
+import { definePages } from './config/defineTemplate'
+import { TALK_FIELDS } from './config/templateFields'
 import styles from './TalkTable.module.css'
 
 const c = (...names) => clsx(names.map((name) => styles[name]).filter(Boolean))
@@ -76,8 +79,8 @@ function Page1Cover({ formData, zoom }) {
           <div className={c('party-cover-line__content')}>
             <LineField
               className={c('party-line-fill')}
-              fieldId="basic.姓名"
-              value={formData['basic.姓名']}
+              fieldId={TALK_FIELDS.name}
+              value={formData[TALK_FIELDS.name]}
             />
           </div>
         </div>
@@ -87,8 +90,8 @@ function Page1Cover({ formData, zoom }) {
           <div className={c('party-cover-line__content')}>
             <LineField
               className={c('party-line-fill')}
-              fieldId="talk.入党谈话时所属党支部"
-              value={formData['talk.入党谈话时所属党支部']}
+              fieldId={TALK_FIELDS.partyBranch}
+              value={formData[TALK_FIELDS.partyBranch]}
             />
           </div>
         </div>
@@ -125,32 +128,32 @@ function Page2Registration({ formData, zoom }) {
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.姓名"
-                value={formData['basic.姓名']}
+                fieldId={TALK_FIELDS.name}
+                value={formData[TALK_FIELDS.name]}
               />
             </td>
             <td className={c('party-table-label')}>性别</td>
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.性别"
-                value={formData['basic.性别']}
+                fieldId={TALK_FIELDS.gender}
+                value={formData[TALK_FIELDS.gender]}
               />
             </td>
             <td className={c('party-table-label')}>民族</td>
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.民族"
-                value={formData['basic.民族']}
+                fieldId={TALK_FIELDS.ethnicity}
+                value={formData[TALK_FIELDS.ethnicity]}
               />
             </td>
             <td className={c('party-table-label')}>籍贯</td>
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.籍贯"
-                value={formData['basic.籍贯']}
+                fieldId={TALK_FIELDS.nativePlace}
+                value={formData[TALK_FIELDS.nativePlace]}
               />
             </td>
           </tr>
@@ -162,8 +165,8 @@ function Page2Registration({ formData, zoom }) {
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.班级"
-                value={formData['basic.班级']}
+                fieldId={TALK_FIELDS.organizationOrClass}
+                value={formData[TALK_FIELDS.organizationOrClass]}
               />
             </td>
             <td className={c('party-table-label', 'party-table-label--stacked')}>
@@ -173,24 +176,24 @@ function Page2Registration({ formData, zoom }) {
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.学号"
-                value={formData['basic.学号']}
+                fieldId={TALK_FIELDS.studentId}
+                value={formData[TALK_FIELDS.studentId]}
               />
             </td>
             <td className={c('party-table-label')}>入团年月</td>
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.入团年月"
-                value={formData['basic.入团年月']}
+                fieldId={TALK_FIELDS.leagueJoinYearMonth}
+                value={formData[TALK_FIELDS.leagueJoinYearMonth]}
               />
             </td>
             <td className={c('party-table-label')}>曾任职务</td>
             <td className={c('party-table-value')}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="talk.曾任职务"
-                value={formData['talk.曾任职务']}
+                fieldId={TALK_FIELDS.formerPosition}
+                value={formData[TALK_FIELDS.formerPosition]}
               />
             </td>
           </tr>
@@ -201,16 +204,16 @@ function Page2Registration({ formData, zoom }) {
             <td className={c('party-table-value')} colSpan={3}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="submit.入党申请书落款日期"
-                value={formData['submit.入党申请书落款日期']}
+                fieldId={TALK_FIELDS.applicationDate}
+                value={formData[TALK_FIELDS.applicationDate]}
               />
             </td>
             <td className={c('party-table-label')}>身份证号</td>
             <td className={c('party-table-value')} colSpan={3}>
               <PartyField
                 className={c('party-field-anchor')}
-                fieldId="basic.身份证号"
-                value={formData['basic.身份证号']}
+                fieldId={TALK_FIELDS.idNumber}
+                value={formData[TALK_FIELDS.idNumber]}
               />
             </td>
           </tr>
@@ -291,8 +294,8 @@ function Page3InterviewRecord({ formData, zoom }) {
                 <div className={c('party-interview-record-box')}>
                   <PartyField
                     className={c('party-field-anchor', 'party-field-anchor--record')}
-                    fieldId="talk.谈话记录（收到入党申请书后一个月完成）"
-                    value={formData['talk.谈话记录（收到入党申请书后一个月完成）']}
+                    fieldId={TALK_FIELDS.interviewRecord}
+                    value={formData[TALK_FIELDS.interviewRecord]}
                   />
                 </div>
 
@@ -314,8 +317,8 @@ function Page3InterviewRecord({ formData, zoom }) {
                       <span className={c('party-signature-group__label')}>日期：</span>
                       <LineField
                         className={c('party-signature-group__line')}
-                        fieldId="talk.申请人谈话日期"
-                        value={formData['talk.申请人谈话日期']}
+                        fieldId={TALK_FIELDS.interviewDate}
+                        value={formData[TALK_FIELDS.interviewDate]}
                       />
                     </div>
                   </div>
@@ -346,14 +349,28 @@ function Page4Blank({ zoom }) {
   )
 }
 
+const TALK_PAGE_COMPONENTS = {
+  blank: Page4Blank,
+  cover: Page1Cover,
+  interviewRecord: Page3InterviewRecord,
+  registration: Page2Registration,
+}
+
+const TALK_PAGES = definePages('party-applicant-document', [
+  { id: 'cover', component: 'cover' },
+  { id: 'registration', component: 'registration' },
+  { id: 'interview-record', component: 'interviewRecord' },
+  { id: 'blank', component: 'blank' },
+])
+
 function TalkTable({ formData, zoom }) {
   return (
-    <>
-      <Page1Cover formData={formData} zoom={zoom} />
-      <Page2Registration formData={formData} zoom={zoom} />
-      <Page3InterviewRecord formData={formData} zoom={zoom} />
-      <Page4Blank zoom={zoom} />
-    </>
+    <TemplateDocument
+      components={TALK_PAGE_COMPONENTS}
+      formData={formData}
+      pages={TALK_PAGES}
+      zoom={zoom}
+    />
   )
 }
 
