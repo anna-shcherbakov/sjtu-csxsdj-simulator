@@ -10,39 +10,18 @@ concurrency:
 
 jobs:
   validate:
-    name: Validate (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-22.04
-          - windows-latest
-          - macos-latest
+    name: Validate web application
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Linux dependencies
-        if: matrix.os == 'ubuntu-22.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 24
           cache: npm
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Cache Rust artifacts
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: './src-tauri -> target'
 
       - name: Install frontend dependencies
         run: npm ci
@@ -50,5 +29,5 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build Tauri app without bundling
-        run: npm run tauri build -- --ci --no-bundle
+      - name: Build web application
+        run: npm run build

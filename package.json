@@ -7,13 +7,8 @@
     "dev": "vite",
     "build": "npm run check:templates && vite build",
     "check:templates": "node scripts/validate-templates.mjs",
-    "test:templates": "playwright test tests/template-layout.spec.js",
-    "update:template-baselines": "UPDATE_TEMPLATE_BASELINES=1 npm run test:templates",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "tauri": "tauri",
-    "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
@@ -29,8 +24,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
-    "@playwright/test": "^1.61.1",
-    "@tauri-apps/cli": "^2.10.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.0",

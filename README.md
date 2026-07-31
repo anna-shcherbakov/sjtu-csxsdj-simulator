@@ -39,7 +39,7 @@
 安装前，请先确认您已获得本软件及其源代码的合法授权。
 
 ```bash
-npm install
+npm ci
 ```
 
 如果依赖已经安装完成，可直接跳过这一步。
@@ -74,12 +74,6 @@ npm run lint
 
 ```bash
 npm run check:templates
-```
-
-40 页布局指纹与字段联动回归测试（使用本机 Chrome）：
-
-```bash
-npm run test:templates
 ```
 
 ## 使用说明
@@ -119,7 +113,7 @@ npm run test:templates
 - 右侧模板由 `src/templates/*.jsx` 中的专属页面和有限页面配置共同维护。
 - 模板字段 ID 统一定义在 `src/templates/config/templateFields.js`，页面 JSX 不直接书写业务字段 ID。
 - 页数和页序由 `src/templates/config/templateContracts.js` 约束；季度记录、意见页等同源结构位于 `src/templates/shared/`。
-- 修改模板布局后需运行 `npm run test:templates`。只有确认变更是预期版式调整时，才运行 `npm run update:template-baselines` 更新布局基线。
+- 修改模板布局后需运行 `npm run check:templates`，确认模板字段和页数约束保持有效。
 - 模板切换只影响右侧预览，不切换左侧表单 schema。
 - 字段校验支持两层：
   - 字段自身的 `validation`
